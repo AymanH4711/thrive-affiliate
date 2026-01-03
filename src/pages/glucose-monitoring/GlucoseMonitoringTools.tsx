@@ -1,4 +1,4 @@
-// src/pages/glucose-monitoring-tools.tsx
+// src/pages/glucose-monitoring/GlucoseMonitoringTools.tsx
 import { Link } from 'react-router-dom';
 import { Smartphone, Activity, BarChart3, Zap, Clock, TrendingUp, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
 
@@ -6,49 +6,78 @@ export default function GlucoseMonitoringTools() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-emerald-50 to-teal-50 py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
+      <section className="bg-gradient-to-br from-purple-900 to-purple-800 text-white py-16">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <Link to="/reverse-prediabetes" className="inline-flex items-center text-purple-200 hover:text-white mb-6 transition">
+            <ArrowRight className="w-4 h-4 mr-2 rotate-180" /> Back to Plan
+          </Link>
+          <span className="bg-purple-500/20 text-purple-100 border border-purple-500/30 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase mb-4 inline-block">
+            Step 3 of 5
+          </span>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            Track Your Progress
+          </h1>
+          <p className="text-2xl text-purple-100 mb-4">Glucose Monitoring Tools & Technology</p>
+          <p className="text-xl text-purple-50 leading-relaxed max-w-2xl">
+            From traditional meters to cutting-edge CGMs, discover the best glucose monitoring technology for your needs–with honest reviews, comparisons, and buying guides.
+          </p>
+        </div>
+      </section>
+      <div className="container mx-auto px-4 mt-4 mb-4">
+        <div className="bg-yellow-50 rounded-lg p-4 text-sm text-yellow-800 flex items-start gap-2">
+          <span>⚠️</span>
+          <p>Medical Disclaimer: These statements have not been evaluated by the FDA. This content is for educational purposes only and is not intended to diagnose, treat, cure, or prevent any disease. Always consult with qualified healthcare providers before starting supplements or making health changes.</p>
+        </div>
+      </div>
+
+      {/* PROGRESS INDICATOR - 5 STEPS INLINE */}
+      <section className="bg-purple-50 border-b border-purple-100 py-6">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <p className="text-sm font-semibold text-purple-800 mb-4">Your Progress Through Reversal:</p>
+          <div className="flex items-center justify-center gap-4 flex-wrap">
+            {/* Diet */}
+            <Link to="/prediabetes-diet" className="flex items-center gap-4 hover:opacity-80 transition">
+              <div className="w-10 h-10 bg-gray-400 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                <CheckCircle className="w-5 h-5" />
+              </div>
+              <span className="font-semibold text-gray-600 hover:text-purple-600 text-sm">Diet</span>
+            </Link>
             
-            {/* Left - Text */}
-            <div className="order-2 md:order-1">
-              <div className="inline-block bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full text-sm font-semibold mb-4">
-                Complete Device Guide 2025
+            <div className="w-8 h-1 bg-purple-300"></div>
+            
+            {/* Exercise */}
+            <Link to="/prediabetes-exercise" className="flex items-center gap-4 hover:opacity-80 transition">
+              <div className="w-10 h-10 bg-gray-400 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                <CheckCircle className="w-5 h-5" />
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Glucose Monitoring Tools & Technology
-              </h1>
-              <p className="text-xl text-gray-700 mb-6">
-                Choose the Right Device for Data-Driven Blood Sugar Management
-              </p>
-              <p className="text-lg text-gray-600 mb-8">
-                From traditional meters to cutting-edge CGMs, discover the best glucose monitoring technology for your needs—with honest reviews, comparisons, and buying guides.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a href="#compare-devices" className="inline-flex items-center justify-center gap-2 bg-emerald-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-emerald-700 transition">
-                  Compare Devices
-                  <ArrowRight className="w-5 h-5" />
-                </a>
-                <Link to="/categories/glucose-monitoring" className="inline-flex items-center justify-center gap-2 border-2 border-emerald-600 text-emerald-600 font-semibold px-6 py-3 rounded-lg hover:bg-emerald-50 transition">
-                  View All Reviews
-                </Link>
+              <span className="font-semibold text-gray-600 hover:text-purple-600 text-sm">Exercise</span>
+            </Link>
+            
+            <div className="w-8 h-1 bg-purple-300"></div>
+            
+            {/* Monitoring - Current */}
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                <CheckCircle className="w-5 h-5" />
               </div>
+              <span className="font-semibold text-purple-700 text-sm">Monitor</span>
             </div>
+            
+            <div className="w-8 h-1 bg-gray-300"></div>
+            
+            {/* Supplements */}
+            <Link to="/natural-blood-sugar" className="flex items-center gap-4 hover:opacity-80 transition">
+              <div className="w-10 h-10 bg-gray-400 text-white rounded-full flex items-center justify-center font-bold text-sm">4</div>
+              <span className="font-semibold text-gray-600 hover:text-purple-600 text-sm">Supplements</span>
+            </Link>
 
-            {/* Right - Image */}
-            <div className="order-1 md:order-2">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl max-w-xl mx-auto">
-                <img 
-                  src="/images/glucose-monitoring-hero.webp" 
-                  alt="Modern glucose monitoring devices and technology"
-                  className="w-full h-[350px] md:h-[450px] object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=450&fit=crop';
-                  }}
-                />
-              </div>
-            </div>
+            <div className="w-8 h-1 bg-gray-300"></div>
 
+            {/* Sleep & Stress */}
+            <Link to="/prediabetes-sleep-stress" className="flex items-center gap-4 hover:opacity-80 transition">
+              <div className="w-10 h-10 bg-gray-400 text-white rounded-full flex items-center justify-center font-bold text-sm">5</div>
+              <span className="font-semibold text-gray-600 hover:text-purple-600 text-sm">Sleep & Stress</span>
+            </Link>
           </div>
         </div>
       </section>
@@ -68,7 +97,7 @@ export default function GlucoseMonitoringTools() {
               { title: 'Smartphone Apps & Integration', link: '#apps' },
               { title: 'Buying Guide', link: '#buying-guide' },
             ].map((item, i) => (
-              <a key={i} href={item.link} className="text-emerald-600 hover:text-emerald-700 hover:underline">
+              <a key={i} href={item.link} className="text-purple-600 hover:text-purple-700 hover:underline">
                 {item.title}
               </a>
             ))}
@@ -87,7 +116,7 @@ export default function GlucoseMonitoringTools() {
               You can't manage what you don't measure. Glucose monitoring gives you real-time data to make informed decisions about food, exercise, and medications.
             </p>
             
-            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl p-8 my-6">
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-8 my-6">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Benefits of Regular Monitoring:</h3>
               <div className="grid md:grid-cols-2 gap-4">
                 {[
@@ -99,7 +128,7 @@ export default function GlucoseMonitoringTools() {
                   'Share data with your doctor',
                 ].map((benefit, i) => (
                   <div key={i} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-800">{benefit}</span>
                   </div>
                 ))}
@@ -122,10 +151,10 @@ export default function GlucoseMonitoringTools() {
             
             <div className="grid md:grid-cols-2 gap-6">
               {/* BGM Card */}
-              <div className="bg-white border-2 border-emerald-200 rounded-xl p-6 hover:shadow-lg transition">
+              <div className="bg-white border-2 border-purple-200 rounded-xl p-6 hover:shadow-lg transition">
                 <div className="flex items-start gap-4">
-                  <div className="bg-emerald-100 p-3 rounded-lg">
-                    <Activity className="w-8 h-8 text-emerald-600" />
+                  <div className="bg-purple-100 p-3 rounded-lg">
+                    <Activity className="w-8 h-8 text-purple-600" />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">Blood Glucose Meters (BGM)</h3>
@@ -179,7 +208,7 @@ export default function GlucoseMonitoringTools() {
                   { feature: 'Speed', desc: '5 seconds or less for results' },
                   { feature: 'Memory', desc: 'Stores 200-500+ readings with date/time' },
                   { feature: 'Display', desc: 'Large, backlit screen for easy reading' },
-                  { feature: 'Strip Cost', desc: 'Most important ongoing expense—check before buying' },
+                  { feature: 'Strip Cost', desc: 'Most important ongoing expense–check before buying' },
                 ].map((item, i) => (
                   <div key={i} className="bg-white rounded-lg p-4 border border-gray-200">
                     <h4 className="font-bold text-gray-900 mb-1">{item.feature}</h4>
@@ -215,11 +244,11 @@ export default function GlucoseMonitoringTools() {
                   best: 'Best for dexterity issues'
                 },
               ].map((device, i) => (
-                <div key={i} className="bg-white border-2 border-emerald-200 rounded-xl p-6">
+                <div key={i} className="bg-white border-2 border-purple-200 rounded-xl p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h4 className="text-xl font-bold text-gray-900">{device.name}</h4>
-                      <p className="text-sm text-emerald-600 font-semibold">{device.best}</p>
+                      <p className="text-sm text-purple-600 font-semibold">{device.best}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-gray-900">{device.price}</p>
@@ -314,7 +343,7 @@ export default function GlucoseMonitoringTools() {
             
             <div className="overflow-x-auto">
               <table className="w-full bg-white border-2 border-gray-200 rounded-xl overflow-hidden">
-                <thead className="bg-emerald-600 text-white">
+                <thead className="bg-purple-600 text-white">
                   <tr>
                     <th className="px-6 py-4 text-left">Feature</th>
                     <th className="px-6 py-4 text-left">Blood Glucose Meter</th>
@@ -341,7 +370,7 @@ export default function GlucoseMonitoringTools() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-6 mt-8">
-              <div className="bg-emerald-50 border-l-4 border-emerald-600 rounded-r-xl p-6">
+              <div className="bg-purple-50 border-l-4 border-purple-600 rounded-r-xl p-6">
                 <h3 className="font-bold text-lg text-gray-900 mb-3">Choose BGM if you:</h3>
                 <ul className="space-y-1 text-sm text-gray-700">
                   <li>• Don't take insulin</li>
@@ -365,8 +394,8 @@ export default function GlucoseMonitoringTools() {
             </div>
           </section>
 
-          {/* Section 6: Top Devices Summary */}
-          <section className="mb-16" id="compare-devices">
+          {/* Top Picks */}
+          <section className="mb-16" id="top-devices">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Top Picks for 2025</h2>
             
             <div className="space-y-6">
@@ -374,14 +403,14 @@ export default function GlucoseMonitoringTools() {
                 { award: '🏆 Best Overall CGM', device: 'Dexcom G7', reason: 'Most accurate, best app, smallest sensor' },
                 { award: '💰 Best Value CGM', device: 'FreeStyle Libre 3', reason: 'Great accuracy at half the cost of Dexcom' },
                 { award: '🎯 Best Traditional Meter', device: 'Contour Next One', reason: 'Accurate, affordable strips, excellent app integration' },
-                { award: '👴 Best for Seniors', device: 'Prodigy Voice', reason: 'Talking meter with large display and simple interface' },
+                { award: '🎤 Best for Seniors', device: 'Prodigy Voice', reason: 'Talking meter with large display and simple interface' },
                 { award: '📱 Best App Experience', device: 'OneTouch Verio Reflect', reason: 'Color-coded guidance and personalized insights' },
               ].map((pick, i) => (
-                <div key={i} className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-xl p-6">
+                <div key={i} className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl p-6">
                   <div className="flex items-start gap-4">
                     <div className="text-3xl">{pick.award.split(' ')[0]}</div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-bold text-emerald-700 mb-1">{pick.award}</h3>
+                      <h3 className="text-lg font-bold text-purple-700 mb-1">{pick.award}</h3>
                       <p className="text-xl font-bold text-gray-900 mb-2">{pick.device}</p>
                       <p className="text-gray-700">{pick.reason}</p>
                     </div>
@@ -389,24 +418,13 @@ export default function GlucoseMonitoringTools() {
                 </div>
               ))}
             </div>
-
-            <div className="bg-emerald-600 text-white rounded-xl p-8 mt-8 text-center">
-              <h3 className="text-2xl font-bold mb-4">See Detailed Device Reviews</h3>
-              <p className="text-lg mb-6 text-emerald-50">
-                Read in-depth reviews, compare specs, and find the best device for your needs
-              </p>
-              <Link to="/categories/glucose-monitoring" className="inline-flex items-center gap-2 bg-white text-emerald-600 font-semibold px-8 py-3 rounded-lg hover:bg-emerald-50 transition">
-                View All Reviews
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-            </div>
           </section>
 
           {/* Section 7: Apps */}
           <section id="apps" className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Smartphone Apps & Data Integration</h2>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Modern glucose monitoring is about more than just numbers—it's about insights. The best apps help you understand patterns and make better decisions.
+              Modern glucose monitoring is about more than just numbers–it's about insights. The best apps help you understand patterns and make better decisions.
             </p>
             
             <div className="grid md:grid-cols-2 gap-6">
@@ -448,7 +466,7 @@ export default function GlucoseMonitoringTools() {
                       </li>
                     ))}
                   </ul>
-                  <p className="text-sm font-semibold text-emerald-600">{app.price}</p>
+                  <p className="text-sm font-semibold text-purple-600">{app.price}</p>
                 </div>
               ))}
             </div>
@@ -458,7 +476,7 @@ export default function GlucoseMonitoringTools() {
           <section id="buying-guide" className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Buying Guide: How to Choose</h2>
             
-            <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-8">
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-8">
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Ask Yourself These Questions:</h3>
               <div className="space-y-6">
                 {[
@@ -483,7 +501,7 @@ export default function GlucoseMonitoringTools() {
                     a: 'CGM with alerts can be lifesaving if you don\'t feel low blood sugar symptoms.'
                   }
                 ].map((item, i) => (
-                  <div key={i} className="bg-white rounded-lg p-5 border border-emerald-200">
+                  <div key={i} className="bg-white rounded-lg p-5 border border-purple-200">
                     <p className="font-bold text-gray-900 mb-2">{item.q}</p>
                     <p className="text-gray-700 text-sm">{item.a}</p>
                   </div>
@@ -494,7 +512,7 @@ export default function GlucoseMonitoringTools() {
             <div className="bg-yellow-50 border-l-4 border-yellow-500 rounded-r-xl p-6 mt-8">
               <h3 className="font-semibold text-lg text-gray-900 mb-3">💡 Pro Tips:</h3>
               <ul className="space-y-2 text-gray-700">
-                <li>• <span className="font-semibold">Check insurance first:</span> Many CGMs are covered—ask your doctor for a prescription</li>
+                <li>• <span className="font-semibold">Check insurance first:</span> Many CGMs are covered–ask your doctor for a prescription</li>
                 <li>• <span className="font-semibold">Consider strip costs:</span> For BGMs, ongoing strip expenses matter more than meter price</li>
                 <li>• <span className="font-semibold">Try before you buy:</span> Many companies offer free trials or starter kits</li>
                 <li>• <span className="font-semibold">Ask your pharmacist:</span> They can help you compare options and check compatibility</li>
@@ -502,59 +520,50 @@ export default function GlucoseMonitoringTools() {
             </div>
           </section>
 
-          {/* Final CTA */}
-          <section className="mb-16">
-            <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-2xl p-8 md:p-12 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">Data is Power</h2>
-              <p className="text-xl mb-8 leading-relaxed">
-                The right monitoring device gives you the information you need to take control of your blood sugar and your health.
+          {/* MAIN CTA - NEXT STEP */}
+          <section className="py-20 bg-gradient-to-br from-purple-600 to-pink-600 text-white text-center">
+            <div className="container mx-auto px-4 max-w-2xl">
+              <Zap className="w-12 h-12 text-purple-200 mx-auto mb-6" />
+              <h2 className="text-3xl font-bold mb-4">Ready for Step 4?</h2>
+              <p className="text-purple-100 mb-8 text-lg">
+                You've tracked your progress. Now it's time to add the final piece: natural supplement support to accelerate your results.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/categories/glucose-monitoring" className="inline-flex items-center gap-2 bg-white text-emerald-600 font-semibold px-8 py-3 rounded-lg hover:bg-emerald-50 transition">
-                  Browse All Devices
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-                <Link to="/prediabetes-support" className="inline-flex items-center gap-2 bg-emerald-700 text-white font-semibold px-8 py-3 rounded-lg hover:bg-emerald-800 transition border-2 border-white">
-                  Blood Sugar Guide
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-              </div>
-            </div>
-          </section>
-
-          {/* Related Resources */}
-          <section className="mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Related Resources</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              <Link to="/seniors-glucose-monitoring" className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border border-emerald-200 hover:shadow-lg transition">
-                <Activity className="w-10 h-10 text-emerald-600 mb-3" />
-                <h3 className="font-bold text-lg mb-2">Seniors Guide</h3>
-                <p className="text-gray-600 text-sm mb-4">Monitoring tips for older adults</p>
-                <span className="text-emerald-600 font-semibold text-sm inline-flex items-center gap-1">
-                  Read Guide <ArrowRight className="w-4 h-4" />
-                </span>
-              </Link>
-
-              <Link to="/natural-blood-sugar" className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border border-emerald-200 hover:shadow-lg transition">
-                <TrendingUp className="w-10 h-10 text-emerald-600 mb-3" />
-                <h3 className="font-bold text-lg mb-2">Natural Support</h3>
-                <p className="text-gray-600 text-sm mb-4">Herbs and foods for blood sugar</p>
-                <span className="text-emerald-600 font-semibold text-sm inline-flex items-center gap-1">
-                  Explore <ArrowRight className="w-4 h-4" />
-                </span>
-              </Link>
-
-              <Link to="/insulin-resistance-management" className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border border-emerald-200 hover:shadow-lg transition">
-                <BarChart3 className="w-10 h-10 text-emerald-600 mb-3" />
-                <h3 className="font-bold text-lg mb-2">Insulin Resistance</h3>
-                <p className="text-gray-600 text-sm mb-4">Improve insulin sensitivity</p>
-                <span className="text-emerald-600 font-semibold text-sm inline-flex items-center gap-1">
-                  Learn More <ArrowRight className="w-4 h-4" />
-                </span>
+              <Link 
+                to="/natural-blood-sugar" 
+                className="inline-flex items-center justify-center gap-2 bg-purple-200 text-purple-900 font-bold px-10 py-4 rounded-xl hover:bg-white transition shadow-lg text-lg"
+              >
+                Complete Step 4: Supplement Support
+                <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
           </section>
 
+          {/* Supplement Support CTA */}
+          <section className="py-16 bg-purple-50 border-t border-purple-200 rounded-xl mb-16">
+            <div className="container mx-auto px-4 max-w-4xl text-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                Next: Optimize Your Supplements
+              </h2>
+              <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+                Now that you're tracking accurately, fill nutritional gaps with 
+                evidence-based supplements to accelerate your results.
+              </p>
+              <Link 
+                to="/supplements"
+                className="inline-flex items-center justify-center gap-2 bg-purple-600 text-white font-bold px-10 py-4 rounded-xl hover:bg-purple-700 transition shadow-lg"
+              >
+                Explore All Supplements
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </div>
+          </section>
+
+        </div>
+        <div className="container mx-auto px-4 mb-8">
+          <div className="bg-blue-50 rounded-lg p-4 text-sm text-blue-800 flex items-start gap-2">
+            <span>💰</span>
+            <p>Affiliate Disclosure: Thrive Health may earn commissions from affiliate partnerships and supplement links. This does not affect product pricing. We only recommend products we believe in based on research and quality standards.</p>
+          </div>
         </div>
       </article>
     </main>
