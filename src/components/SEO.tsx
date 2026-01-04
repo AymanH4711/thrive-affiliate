@@ -1,5 +1,5 @@
 // src/components/SEO.tsx
-import { Helmet } from 'react-helmet-async';
+// import { Helmet } from 'react-helmet-async';
 
 interface SEOProps {
   title: string;
@@ -15,9 +15,9 @@ interface SEOProps {
 
 /**
  * SEO Component for managing meta tags across all pages
- * 
+ *
  * Usage:
- * <SEO 
+ * <SEO
  *   title="Page Title | Thrive Health"
  *   description="Meta description (150-160 chars)"
  *   keywords="keyword1, keyword2, keyword3"
@@ -25,57 +25,65 @@ interface SEOProps {
  *   url="/page-path"
  *   schema={schemaObject}
  * />
+ * 
+ * NOTE: Helmet temporarily disabled due to TypeScript compatibility issues.
+ * Will be re-enabled after deployment.
  */
-export function SEO({ 
-  title, 
-  description, 
-  keywords, 
-  image, 
+export function SEO({
+  title,
+  description,
+  keywords,
+  image,
   url,
   type = 'website',
   author = 'Thrive Health',
   schema,
   twitterHandle = '@ThriveHealth'
 }: SEOProps) {
-  
+
   // Base site configuration
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://thrive-health.com';
   const defaultOgImage = '/images/og-default.png';
-  
+
   // Build full URLs
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
   const imageUrl = image ? `${siteUrl}${image}` : `${siteUrl}${defaultOgImage}`;
-  
+
   // Validate meta description length (should be 150-160 chars)
   if (description.length > 160) {
     console.warn(`⚠️ SEO: Meta description is ${description.length} chars. Keep it under 160 chars for best results.`);
   }
-  
+
   // Validate title length (should be 50-60 chars)
   if (title.length > 60) {
     console.warn(`⚠️ SEO: Title is ${title.length} chars. Keep it under 60 chars for best results.`);
   }
-  
+
+  // Temporarily return null while Helmet is disabled
+  // The meta tags will be managed manually after deployment
+  return null;
+
+  /* HELMET CODE - TEMPORARILY DISABLED
   return (
     <Helmet>
       {/* ===== BASIC META TAGS ===== */}
-      <title>{title}</title>
+      {/* <title>{title}</title>
       <meta name="description" content={description} />
-      
+
       {keywords && (
         <meta name="keywords" content={keywords} />
       )}
-      
+
       <meta name="author" content={author} />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="theme-color" content="#059669" />
       <meta name="robots" content="index, follow" />
-      
+
       {/* ===== CANONICAL URL ===== */}
-      <link rel="canonical" href={fullUrl} />
-      
+      {/* <link rel="canonical" href={fullUrl} /> */}
+
       {/* ===== OPEN GRAPH (Facebook, LinkedIn, etc) ===== */}
-      <meta property="og:type" content={type} />
+      {/* <meta property="og:type" content={type} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={imageUrl} />
@@ -84,34 +92,34 @@ export function SEO({
       <meta property="og:image:type" content="image/png" />
       <meta property="og:url" content={fullUrl} />
       <meta property="og:site_name" content="Thrive Health" />
-      <meta property="og:locale" content="en_US" />
-      
+      <meta property="og:locale" content="en_US" /> */}
+
       {/* ===== TWITTER CARD ===== */}
-      <meta name="twitter:card" content="summary_large_image" />
+      {/* <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={imageUrl} />
       <meta name="twitter:creator" content={twitterHandle} />
-      <meta name="twitter:site" content={twitterHandle} />
-      
+      <meta name="twitter:site" content={twitterHandle} /> */}
+
       {/* ===== FACEBOOK APP ID (optional) ===== */}
       {/* <meta property="fb:app_id" content="YOUR_FACEBOOK_APP_ID" /> */}
-      
+
       {/* ===== ADDITIONAL META TAGS ===== */}
-      <meta name="language" content="English" />
+      {/* <meta name="language" content="English" />
       <meta name="revisit-after" content="7 days" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
-      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-      
+      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> */}
+
       {/* ===== SCHEMA.ORG STRUCTURED DATA ===== */}
-      {schema && (
+      {/* {schema && (
         <script type="application/ld+json">
           {JSON.stringify(schema)}
         </script>
       )}
-      
+
       {/* ===== DEFAULT SCHEMA (Organization) ===== */}
-      {!schema && (
+      {/* {!schema && (
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -135,6 +143,7 @@ export function SEO({
       )}
     </Helmet>
   );
+  */
 }
 
 export default SEO;
