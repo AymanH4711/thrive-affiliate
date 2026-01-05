@@ -10,6 +10,10 @@
     ],
     "module": "ESNext",
     "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     /* Tailwind stuff */
     "baseUrl": ".",
     "paths": {
@@ -23,7 +27,6 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-    "jsx": "react-jsx",
     /* Linting */
     "strict": false,
     "noImplicitAny": false,
