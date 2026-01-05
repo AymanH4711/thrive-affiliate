@@ -1,8 +1,7 @@
 {
-  "root": "thrive-affiliate",
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
-  "outputDirectory": "dist",
+  "installCommand": "cd thrive-affiliate && npm install",
+  "buildCommand": "cd thrive-affiliate && npm run build",
+  "outputDirectory": "thrive-affiliate/dist",
   "rewrites": [
     {
       "source": "/(.*)",
