@@ -1,7 +1,3 @@
-﻿cd D:\Ayman\Thrive\thrive-affiliate
-
-# Create a clean, valid vercel.json
-@"
 {
   "buildCommand": "npm run build",
   "installCommand": "npm install",
@@ -13,9 +9,3 @@
     }
   ]
 }
-"@ | Out-File -FilePath vercel.json -Encoding UTF8 -NoNewline
-
-# Commit and push
-git add vercel.json
-git commit -m "Fix: Remove invalid framework null value from vercel.json"
-git push origin main
