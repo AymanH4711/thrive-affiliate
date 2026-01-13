@@ -12,7 +12,8 @@ import {
   Map,
   ShieldCheck,
   Users,
-  AlertCircle
+  AlertCircle,
+  Download // ✅ Added Download icon
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -106,7 +107,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ⚠️ MEDICAL DISCLAIMER - COMPACT (Moved After Hero) */}
+      {/* ⚠️ MEDICAL DISCLAIMER */}
       <section className="py-4 bg-amber-50 border-b-2 border-amber-200">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
@@ -123,7 +124,32 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. THE 5 PILLARS (Your Core Framework) */}
+      {/* 🎁 FREE RESOURCE CTA - NEW SECTION */}
+      <section className="bg-emerald-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Get Your Free 7-Day Blood Sugar Reset Guide
+          </h2>
+          <p className="text-lg text-gray-600 mb-6">
+            Join thousands of people reversing prediabetes with our proven method.
+          </p>
+          
+          <a 
+            href="/downloads/7-day-blood-sugar-reset.pdf" 
+            download 
+            className="inline-flex items-center gap-2 bg-emerald-600 text-white px-8 py-4 rounded-lg hover:bg-emerald-700 transition font-semibold text-lg"
+          >
+            <Download size={20} />
+            Download Free Guide (PDF)
+          </a>
+          
+          <p className="text-sm text-gray-500 mt-4">
+            No email required • Immediate download • 12 pages
+          </p>
+        </div>
+      </section>
+
+      {/* 2. THE 5 PILLARS */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -181,7 +207,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. GUIDED PATHWAYS (Segmentation) */}
+      {/* 3. GUIDED PATHWAYS */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
@@ -257,7 +283,6 @@ export default function HomePage() {
             <Link to="/natural-blood-sugar" className="group">
               <div className="rounded-xl overflow-hidden mb-4 relative h-64">
                 <div className="absolute inset-0 bg-gray-200 animate-pulse group-hover:bg-transparent transition-all duration-500">
-                   {/* Placeholder for real image */}
                    <img 
                      src="/images/supplements-guide.jpg" 
                      alt="Supplements Guide" 
@@ -346,7 +371,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 💰 AFFILIATE DISCLOSURE - COMPACT */}
+      {/* 💰 AFFILIATE DISCLOSURE */}
       <section className="py-4 bg-blue-50 border-t-2 border-blue-200">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
