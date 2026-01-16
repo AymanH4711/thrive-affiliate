@@ -374,7 +374,6 @@ export default function HomePage() {
           </p>
         </div>
         
-        {/* Add the modal */}
         <DownloadModal isOpen={isDownloadOpen} onClose={() => setIsDownloadOpen(false)} />
       </section>
 
