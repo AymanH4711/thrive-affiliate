@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SEO } from '../components/SEO'; // ✅ Using SEO Component
+import { DownloadModal } from '../components/DownloadModal';
 import { 
   ArrowRight, 
   Heart, 
@@ -12,10 +14,13 @@ import {
   Map,
   ShieldCheck,
   Users,
-  AlertCircle
+  AlertCircle,
+  Download
 } from 'lucide-react';
 
 export default function HomePage() {
+  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
+
   // Schema for Organization
   const schema = {
     "@context": "https://schema.org",
@@ -344,6 +349,33 @@ export default function HomePage() {
             We respect your privacy. Unsubscribe at any time.
           </p>
         </div>
+      </section>
+
+      {/* 🎁 FREE RESOURCE CTA - MODAL VERSION */}
+      <section className="bg-emerald-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Get Your Free Resources
+          </h2>
+          <p className="text-lg text-gray-600 mb-6">
+            Download our guides to get started reversing your prediabetes today.
+          </p>
+          
+          <button 
+            onClick={() => setIsDownloadOpen(true)}
+            className="inline-flex items-center gap-2 bg-emerald-600 text-white px-8 py-4 rounded-lg hover:bg-emerald-700 transition font-semibold text-lg"
+          >
+            <Download size={20} />
+            Download Your Free Guides
+          </button>
+          
+          <p className="text-sm text-gray-500 mt-4">
+            Choose from 4 resources • No email required for download • Instant access
+          </p>
+        </div>
+        
+        {/* Add the modal */}
+        <DownloadModal isOpen={isDownloadOpen} onClose={() => setIsDownloadOpen(false)} />
       </section>
 
       {/* 💰 AFFILIATE DISCLOSURE - COMPACT */}
