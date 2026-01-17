@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { X, Download, Mail } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 interface DownloadModalProps {
   isOpen: boolean;
@@ -73,53 +74,61 @@ export const DownloadModal = ({ isOpen, onClose }: DownloadModalProps) => {
     setError('');
 
     try {
-      // Step 1: Add email to Mailchimp
-      const mailchimpResponse = await fetch(
-        'https://us20.api.mailchimp.com/3.0/lists/2ac1la0b7a/members',
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `apikey a853bf48e30da18fda9fe73d7fad61fa-us20`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email_address: email,
-            status: 'subscribed',
-            merge_fields: {
-              FNAME: email.split('@')[0],
-              DOWNLOADS: selectedPdfs.join(', ')
-            }
-          })
-        }
-      );
+      // Get environment variables (these are set in Netlify dashboard)
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_a5jkfzj';
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_DOWNLOAD || 'template_download';
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'jIg8H78CXxzH5v9ya';
 
-      // Step 2: Download selected PDFs
+      // Get the selected file names
       const selectedFiles = downloadOptions
         .filter(opt => selectedPdfs.includes(opt.id))
-        .map(opt => opt.file);
+        .map(opt => opt.title)
+        .join(', ');
 
-      selectedFiles.forEach(file => {
-        const link = document.createElement('a');
-        link.href = file;
-        link.download = file.split('/').pop() || 'download.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      });
+      // Send email with EmailJS
+      const result = await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          user_email: email,
+          downloaded_resources: selectedFiles,
+          message: `Download request for: ${selectedFiles}`
+        },
+        publicKey
+      );
 
-      // Step 3: Show success message
-      setSubmitted(true);
-      setEmail('');
-      setSelectedPdfs(['reset']);
+      if (result.status === 200) {
+        // Download the selected PDFs
+        const selectedFilePaths = downloadOptions
+          .filter(opt => selectedPdfs.includes(opt.id))
+          .map(opt => opt.file);
 
-      // Auto-close after 3 seconds
-      setTimeout(() => {
-        onClose();
-        setSubmitted(false);
-      }, 3000);
+        selectedFilePaths.forEach(file => {
+          const link = document.createElement('a');
+          link.href = file;
+          link.download = file.split('/').pop() || 'download.pdf';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          // Small delay between downloads
+          setTimeout(() => {}, 300);
+        });
+
+        // Show success message
+        setSubmitted(true);
+        setEmail('');
+        setSelectedPdfs(['reset']);
+
+        // Auto-close after 3 seconds
+        setTimeout(() => {
+          onClose();
+          setSubmitted(false);
+        }, 3000);
+      }
 
     } catch (err) {
-      setError('Error saving your info. Please try again.');
+      setError('Error processing your download. Please try again.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -153,7 +162,7 @@ export const DownloadModal = ({ isOpen, onClose }: DownloadModalProps) => {
               <div className="text-3xl">✅</div>
               <div>
                 <p className="font-bold text-emerald-900">Perfect!</p>
-                <p className="text-emerald-700 text-sm">Your resources are downloading. Check your email for a welcome message!</p>
+                <p className="text-emerald-700 text-sm">Your resources are downloading. Check your email for a confirmation!</p>
               </div>
             </div>
           </div>
@@ -204,7 +213,7 @@ export const DownloadModal = ({ isOpen, onClose }: DownloadModalProps) => {
                     required
                   />
                   <p className="text-xs text-gray-500 mt-2">
-                    We'll send you a welcome email with your downloads + weekly tips
+                    We'll send you a confirmation email + occasional health tips
                   </p>
                 </div>
 
@@ -218,7 +227,7 @@ export const DownloadModal = ({ isOpen, onClose }: DownloadModalProps) => {
                   className="w-full bg-emerald-600 text-white font-bold py-3 rounded-lg hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   <Download size={20} />
-                  {loading ? 'Preparing downloads...' : 'Download Now'}
+                  {loading ? 'Processing...' : 'Download Now'}
                 </button>
 
                 <p className="text-center text-xs text-gray-500">
