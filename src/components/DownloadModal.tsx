@@ -24,7 +24,7 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, setIsOpen }) => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    // FIX 1: Prevent default form submission to stop homepage redirect [cite: 2]
+    // FIX: e.preventDefault() stops the automatic redirect to the homepage 
     e.preventDefault();
     
     if (selectedResources.length === 0) {
@@ -32,31 +32,29 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, setIsOpen }) => {
       return;
     }
 
-    // FIX 2: Start loading state [cite: 19]
     setIsLoading(true);
 
     try {
-      // FIX 3: Use EmailJS to bypass Mailchimp CORS restrictions [cite: 21, 23]
+      // Use your actual EmailJS credentials here
       await emailjs.send(
-        'service_id', // Replace with your Service ID from EmailJS [cite: 31]
-        'template_download', // Replace with your Template ID [cite: 30]
+        'YOUR_SERVICE_ID', 
+        'template_download', 
         {
           email: email,
           downloaded_resources: selectedResources.join(', '),
         },
-        'public_key' // Replace with your Public Key
+        'YOUR_PUBLIC_KEY'
       );
 
-      // FIX 4: Success - Reset everything and close modal
-      alert("Success! Your guides are on their way to your inbox.");
+      alert("Success! Check your inbox for the guides.");
       setEmail('');
       setSelectedResources([]);
-      setIsOpen(false);
+      setIsOpen(false); // Closes the modal on success
     } catch (error) {
       console.error("EmailJS Error:", error);
-      alert("Failed to send email. Please try again later.");
+      alert("Failed to send email. Please try again.");
     } finally {
-      // FIX 5: ALWAYS stop loading, even if it fails [cite: 3, 19]
+      // FIX: Ensures loading stops even if the request fails 
       setIsLoading(false);
     }
   };
@@ -64,29 +62,29 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, setIsOpen }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-8 rounded-lg max-w-md w-full relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+      <div className="bg-white p-8 rounded-2xl max-w-md w-full relative shadow-2xl">
         <button 
           onClick={() => setIsOpen(false)}
-          className="absolute top-4 right-4 text-gray-500 hover:text-black"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-900 transition"
         >
           ✕
         </button>
         
-        <h2 className="text-2xl font-bold mb-4">Download Your Free Guides</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Download Free Guides</h2>
         
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <p className="mb-2 font-semibold">Select Resources:</p>
+          <div className="mb-6">
+            <p className="mb-3 font-semibold text-gray-700">Select your resources:</p>
             {resources.map(res => (
-              <label key={res.id} className="flex items-center mb-2 cursor-pointer">
+              <label key={res.id} className="flex items-center mb-3 cursor-pointer group">
                 <input
                   type="checkbox"
-                  className="mr-2"
+                  className="w-5 h-5 mr-3 border-gray-300 rounded text-emerald-600 focus:ring-emerald-500"
                   checked={selectedResources.includes(res.id)}
                   onChange={() => handleCheckboxChange(res.id)}
                 />
-                {res.label}
+                <span className="text-gray-700 group-hover:text-emerald-700 transition">{res.label}</span>
               </label>
             ))}
           </div>
@@ -94,8 +92,8 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, setIsOpen }) => {
           <input
             type="email"
             required
-            placeholder="Enter your email address"
-            className="w-full p-2 border border-gray-300 rounded mb-4"
+            placeholder="Your email address"
+            className="w-full p-3 border border-gray-200 rounded-xl mb-4 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -103,11 +101,11 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, setIsOpen }) => {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3 rounded text-white font-bold ${
-              isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
+            className={`w-full py-4 rounded-xl text-white font-bold transition shadow-lg ${
+              isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-200'
             }`}
           >
-            {isLoading ? 'Sending...' : 'Download Now'}
+            {isLoading ? 'Sending...' : 'Access My Guides'}
           </button>
         </form>
       </div>
