@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { SEO } from '../components/SEO'; // ✅ Using SEO Component
-import { DownloadModal } from '../components/DownloadModal';
+import { SEO } from '../components/SEO';
+import DownloadModal from '../components/DownloadModal';
 import { 
   ArrowRight, 
   Heart, 
@@ -374,7 +374,7 @@ export default function HomePage() {
           </p>
         </div>
         
-        <DownloadModal isOpen={isDownloadOpen} onClose={() => setIsDownloadOpen(false)} />
+        <DownloadModal isOpen={isDownloadOpen} setIsOpen={setIsDownloadOpen} />
       </section>
 
       {/* 💰 AFFILIATE DISCLOSURE - COMPACT */}
