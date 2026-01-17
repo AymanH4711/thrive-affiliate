@@ -8,34 +8,34 @@ interface DownloadModalProps {
 
 const downloadOptions = [
   {
-    id: 'quickstart',
-    title: '7-Day Quick Start Guide',
-    description: 'Complete daily action plan to begin your journey',
-    file: '/downloads/7-day-quick-start.txt',
+    id: 'reset',
+    title: '7-Day Blood Sugar Reset',
+    description: 'Complete daily action plan with meal suggestions',
+    file: '/downloads/7-day-blood-sugar-reset.pdf',
     icon: '📋',
     selected: true
   },
   {
     id: 'supplements',
     title: 'Supplement Buying Guide',
-    description: 'Which supplements actually work + dosages & brands',
-    file: '/downloads/supplement-buying-guide.txt',
+    description: 'Which supplements actually work + dosages',
+    file: '/downloads/supplement-buying-guide.pdf',
     icon: '💊',
     selected: false
   },
   {
     id: 'shopping',
     title: 'Blood Sugar Shopping List',
-    description: 'Complete grocery list for blood sugar management',
-    file: '/downloads/shopping-list.txt',
+    description: 'What to buy at the grocery store',
+    file: '/downloads/shopping-list.pdf',
     icon: '🛒',
     selected: false
   },
   {
     id: 'tracking',
     title: 'A1C Tracking Sheet',
-    description: 'Monitor your progress over 12 weeks with daily tracking',
-    file: '/downloads/a1c-tracking-sheet.txt',
+    description: 'Monitor your progress over 12 weeks',
+    file: '/downloads/a1c-tracking-sheet.pdf',
     icon: '📊',
     selected: false
   }
@@ -43,7 +43,7 @@ const downloadOptions = [
 
 export const DownloadModal = ({ isOpen, onClose }: DownloadModalProps) => {
   const [email, setEmail] = useState('');
-  const [selectedPdfs, setSelectedPdfs] = useState(['quickstart']);
+  const [selectedPdfs, setSelectedPdfs] = useState(['reset']);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -74,22 +74,12 @@ export const DownloadModal = ({ isOpen, onClose }: DownloadModalProps) => {
 
     try {
       // Step 1: Add email to Mailchimp
-      const mailchimpApiKey = import.meta.env.VITE_MAILCHIMP_API_KEY;
-      const mailchimpListId = import.meta.env.VITE_MAILCHIMP_LIST_ID;
-      const mailchimpServer = import.meta.env.VITE_MAILCHIMP_SERVER;
-
-      if (!mailchimpApiKey || !mailchimpListId || !mailchimpServer) {
-        setError('Email service not configured. Please try again later.');
-        setLoading(false);
-        return;
-      }
-
       const mailchimpResponse = await fetch(
-        `https://${mailchimpServer}.api.mailchimp.com/3.0/lists/${mailchimpListId}/members`,
+        'https://us20.api.mailchimp.com/3.0/lists/2ac1la0b7a/members',
         {
           method: 'POST',
           headers: {
-            'Authorization': `apikey ${mailchimpApiKey}`,
+            'Authorization': `apikey a853bf48e30da18fda9fe73d7fad61fa-us20`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -120,7 +110,7 @@ export const DownloadModal = ({ isOpen, onClose }: DownloadModalProps) => {
       // Step 3: Show success message
       setSubmitted(true);
       setEmail('');
-      setSelectedPdfs(['quickstart']);
+      setSelectedPdfs(['reset']);
 
       // Auto-close after 3 seconds
       setTimeout(() => {
