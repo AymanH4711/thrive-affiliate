@@ -1,242 +1,164 @@
 import { useState } from 'react';
 import { X, Download, Mail } from 'lucide-react';
-import emailjs from '@emailjs/browser';
 
 interface DownloadModalProps {
   isOpen: boolean;
   onClose: () => void;
+  title?: string;
+  description?: string;
 }
 
-const downloadOptions = [
-  {
-    id: 'reset',
-    title: '7-Day Blood Sugar Reset',
-    description: 'Complete daily action plan with meal suggestions',
-    file: '/downloads/7-day-blood-sugar-reset.pdf',
-    icon: '📋',
-    selected: true
-  },
-  {
-    id: 'supplements',
-    title: 'Supplement Buying Guide',
-    description: 'Which supplements actually work + dosages',
-    file: '/downloads/supplement-buying-guide.pdf',
-    icon: '💊',
-    selected: false
-  },
-  {
-    id: 'shopping',
-    title: 'Blood Sugar Shopping List',
-    description: 'What to buy at the grocery store',
-    file: '/downloads/shopping-list.pdf',
-    icon: '🛒',
-    selected: false
-  },
-  {
-    id: 'tracking',
-    title: 'A1C Tracking Sheet',
-    description: 'Monitor your progress over 12 weeks',
-    file: '/downloads/a1c-tracking-sheet.pdf',
-    icon: '📊',
-    selected: false
-  }
-];
-
-export const DownloadModal = ({ isOpen, onClose }: DownloadModalProps) => {
+export const DownloadModal = ({
+  isOpen,
+  onClose,
+  title = "Get Your Free 7-Day Blood Sugar Reset Guide",
+  description = "Join thousands reversing prediabetes. Enter your email to download."
+}: DownloadModalProps) => {
   const [email, setEmail] = useState('');
-  const [selectedPdfs, setSelectedPdfs] = useState(['reset']);
+  const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
-  const togglePdf = (id: string) => {
-    setSelectedPdfs(prev => 
-      prev.includes(id) 
-        ? prev.filter(p => p !== id)
-        : [...prev, id]
-    );
-  };
-
-  const handleDownload = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!email) {
-      setError('Please enter your email address');
-      return;
-    }
-
-    if (selectedPdfs.length === 0) {
-      setError('Please select at least one resource');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
+    setIsLoading(true);
 
     try {
-      // Get environment variables (these are set in Netlify dashboard)
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_a5jkfzj';
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_DOWNLOAD || 'template_download';
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'jIg8H78CXxzH5v9ya';
+      // Send to Mailchimp via EmailJS
+      const templateParams = {
+        user_email: email,
+        downloaded_resources: '7-Day Blood Sugar Reset Guide'
+      };
 
-      // Get the selected file names
-      const selectedFiles = downloadOptions
-        .filter(opt => selectedPdfs.includes(opt.id))
-        .map(opt => opt.title)
-        .join(', ');
-
-      // Send email with EmailJS
-      const result = await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          user_email: email,
-          downloaded_resources: selectedFiles,
-          message: `Download request for: ${selectedFiles}`
+      // Replace with your EmailJS service ID, template ID, and public key
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        publicKey
-      );
+        body: JSON.stringify({
+          service_id: 'your_service_id', // Get from EmailJS
+          template_id: 'template_download', // Created template
+          user_id: 'your_public_key', // Get from EmailJS
+          template_params: templateParams
+        })
+      });
 
-      if (result.status === 200) {
-        // Download the selected PDFs
-        const selectedFilePaths = downloadOptions
-          .filter(opt => selectedPdfs.includes(opt.id))
-          .map(opt => opt.file);
-
-        selectedFilePaths.forEach(file => {
-          const link = document.createElement('a');
-          link.href = file;
-          link.download = file.split('/').pop() || 'download.pdf';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          
-          // Small delay between downloads
-          setTimeout(() => {}, 300);
-        });
-
-        // Show success message
+      if (response.ok) {
         setSubmitted(true);
-        setEmail('');
-        setSelectedPdfs(['reset']);
+        
+        // Trigger PDF download
+        const link = document.createElement('a');
+        link.href = '/downloads/7-day-blood-sugar-reset.pdf';
+        link.download = '7-day-blood-sugar-reset.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
-        // Auto-close after 3 seconds
+        // Close modal after 2 seconds
         setTimeout(() => {
           onClose();
+          setEmail('');
           setSubmitted(false);
-        }, 3000);
+        }, 2000);
       }
-
-    } catch (err) {
-      setError('Error processing your download. Please try again.');
-      console.error(err);
+    } catch (error) {
+      console.error('Error sending email:', error);
+      alert('There was an error. Please try downloading directly.');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-        
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg max-w-md w-full shadow-xl">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6 flex items-center justify-between border-b">
-          <div>
-            <h2 className="text-2xl font-bold">Get Your Free Resources</h2>
-            <p className="text-emerald-100 text-sm mt-1">Choose what you need to get started</p>
-          </div>
+        <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-4 flex items-center justify-between">
+          <h2 className="text-xl font-bold">{title}</h2>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-white/20 rounded-lg transition"
+            className="hover:opacity-80 transition"
+            aria-label="Close modal"
           >
             <X size={24} />
           </button>
         </div>
 
-        {/* Success Message */}
-        {submitted && (
-          <div className="bg-emerald-50 border-l-4 border-emerald-600 p-6 m-6">
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">✅</div>
-              <div>
-                <p className="font-bold text-emerald-900">Perfect!</p>
-                <p className="text-emerald-700 text-sm">Your resources are downloading. Check your email for a confirmation!</p>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Content */}
+        <div className="px-6 py-6">
+          {!submitted ? (
+            <>
+              <p className="text-gray-600 mb-4">{description}</p>
 
-        {!submitted && (
-          <>
-            {/* PDF Selection Grid */}
-            <div className="p-6">
-              <p className="text-gray-600 font-semibold mb-4">Select the resources you want:</p>
-              
-              <div className="space-y-3 mb-6">
-                {downloadOptions.map(option => (
-                  <label 
-                    key={option.id}
-                    className="flex items-start p-4 border-2 border-gray-200 rounded-lg hover:border-emerald-400 hover:bg-emerald-50 cursor-pointer transition"
-                  >
-                    <input 
-                      type="checkbox"
-                      checked={selectedPdfs.includes(option.id)}
-                      onChange={() => togglePdf(option.id)}
-                      className="w-5 h-5 text-emerald-600 rounded mt-1 cursor-pointer accent-emerald-600"
-                    />
-                    <div className="ml-4 flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl">{option.icon}</span>
-                        <h3 className="font-bold text-gray-900">{option.title}</h3>
-                      </div>
-                      <p className="text-sm text-gray-600 mt-1">{option.description}</p>
-                    </div>
-                  </label>
-                ))}
-              </div>
-
-              {/* Email Form */}
-              <form onSubmit={handleDownload} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Email Input */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
-                    <Mail className="w-4 h-4 inline mr-2" />
-                    Your Email Address
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    Your Email
                   </label>
-                  <input 
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-emerald-600 focus:outline-none"
-                    required
-                  />
-                  <p className="text-xs text-gray-500 mt-2">
-                    We'll send you a confirmation email + occasional health tips
-                  </p>
+                  <div className="relative">
+                    <Mail size={18} className="absolute left-3 top-3 text-gray-400" />
+                    <input
+                      type="email"
+                      id="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      required
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    />
+                  </div>
                 </div>
 
-                {error && (
-                  <div className="text-red-600 text-sm font-semibold">{error}</div>
-                )}
-
-                <button 
+                {/* Submit Button */}
+                <button
                   type="submit"
-                  disabled={loading}
-                  className="w-full bg-emerald-600 text-white font-bold py-3 rounded-lg hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  disabled={isLoading}
+                  className="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  <Download size={20} />
-                  {loading ? 'Processing...' : 'Download Now'}
+                  <Download size={18} />
+                  {isLoading ? 'Preparing...' : 'Download Guide'}
                 </button>
 
-                <p className="text-center text-xs text-gray-500">
-                  ✓ No spam • ✓ Unsubscribe anytime • ✓ Instant download
+                {/* Privacy Note */}
+                <p className="text-xs text-gray-500 text-center">
+                  We'll send you the guide + occasional health tips. You can unsubscribe anytime.
                 </p>
               </form>
+
+              {/* Skip Option */}
+              <button
+                onClick={() => {
+                  const link = document.createElement('a');
+                  link.href = '/downloads/7-day-blood-sugar-reset.pdf';
+                  link.download = '7-day-blood-sugar-reset.pdf';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  onClose();
+                }}
+                className="mt-4 w-full text-center text-sm text-emerald-600 hover:text-emerald-700 transition"
+              >
+                Skip for now → Download without email
+              </button>
+            </>
+          ) : (
+            /* Success Message */
+            <div className="text-center py-8">
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Download className="text-emerald-600" size={32} />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                Download Started!
+              </h3>
+              <p className="text-gray-600">
+                Check your downloads folder. We've also sent you the guide to your email.
+              </p>
             </div>
-          </>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
