@@ -38,7 +38,7 @@ export const HomePage = () => {
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link 
-                  to="/prediabetes"
+                  to="/prediabetes-support"
                   className="inline-flex items-center justify-center gap-2 bg-emerald-600 text-white px-8 py-4 rounded-lg hover:bg-emerald-700 transition font-semibold text-lg"
                 >
                   Start Your Journey <ChevronRight size={20} />
@@ -111,7 +111,7 @@ export const HomePage = () => {
         <div className="grid md:grid-cols-5 gap-6">
           {/* Pillar 1: Nutrition */}
           <Link 
-            to="/prediabetes/diet"
+            to="/prediabetes-support"
             className="group bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition text-center"
           >
             <div className="text-4xl mb-3">🥗</div>
@@ -126,7 +126,7 @@ export const HomePage = () => {
 
           {/* Pillar 2: Movement */}
           <Link 
-            to="/prediabetes/exercise"
+            to="/prediabetes-support"
             className="group bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition text-center"
           >
             <div className="text-4xl mb-3">🏃</div>
@@ -141,7 +141,7 @@ export const HomePage = () => {
 
           {/* Pillar 3: Monitoring */}
           <Link 
-            to="/glucose-monitoring"
+            to="/glucose-monitoring-tools"
             className="group bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition text-center"
           >
             <div className="text-4xl mb-3">📊</div>
@@ -171,7 +171,7 @@ export const HomePage = () => {
 
           {/* Pillar 5: Sleep & Stress */}
           <Link 
-            to="/prediabetes/sleep-stress"
+            to="/prediabetes-support"
             className="group bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition text-center"
           >
             <div className="text-4xl mb-3">😴</div>
@@ -251,7 +251,7 @@ export const HomePage = () => {
               </li>
             </ul>
             <Link
-              to="/insulin-resistance"
+              to="/insulin-resistance-management"
               className="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition font-semibold text-center block"
             >
               Go to Advanced Protocols

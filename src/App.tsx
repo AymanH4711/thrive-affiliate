@@ -1,10 +1,10 @@
 // src/App.tsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Header from "./components/layout/Header";
+import { Header } from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 
 // Main Pages
-import HomePage from "./pages/HomePage";
+import { HomePage } from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import BlogPage from "./pages/BlogPage";
 import BlogArticlePage from "./pages/BlogArticlePage";

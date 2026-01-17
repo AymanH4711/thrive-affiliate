@@ -13,9 +13,9 @@ export const Header = () => {
   };
 
   // Determine if Blood Sugar Support dropdown should be open
-  const isBloodSugarActive = location.pathname.includes('/blood-sugar') || 
-                             location.pathname.includes('/prediabetes') ||
+  const isBloodSugarActive = location.pathname.includes('/prediabetes') || 
                              location.pathname.includes('/insulin-resistance') ||
+                             location.pathname.includes('/blood-sugar') ||
                              location.pathname.includes('/glucose-monitoring') ||
                              location.pathname.includes('/weight-wellness') ||
                              location.pathname.includes('/seniors');
@@ -48,22 +48,22 @@ export const Header = () => {
 
             {/* Dropdown Menu */}
             <div className="absolute left-0 mt-0 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
-              <Link to="/prediabetes" onClick={handleNavClick} className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">
+              <Link to="/prediabetes-support" onClick={handleNavClick} className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">
                 Prediabetes Support
               </Link>
-              <Link to="/insulin-resistance" onClick={handleNavClick} className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">
+              <Link to="/insulin-resistance-management" onClick={handleNavClick} className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">
                 Insulin Resistance
               </Link>
-              <Link to="/blood-sugar" onClick={handleNavClick} className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">
+              <Link to="/natural-blood-sugar" onClick={handleNavClick} className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">
                 Natural Blood Sugar
               </Link>
-              <Link to="/glucose-monitoring" onClick={handleNavClick} className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">
+              <Link to="/glucose-monitoring-tools" onClick={handleNavClick} className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">
                 Glucose Monitoring
               </Link>
               <Link to="/weight-wellness" onClick={handleNavClick} className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">
                 Weight & Wellness
               </Link>
-              <Link to="/seniors" onClick={handleNavClick} className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">
+              <Link to="/seniors-glucose-monitoring" onClick={handleNavClick} className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">
                 Seniors' Guide
               </Link>
             </div>
@@ -110,22 +110,22 @@ export const Header = () => {
             </button>
             {openDropdown === 'blood-sugar' && (
               <div className="pl-4 space-y-2 mt-2">
-                <Link to="/prediabetes" onClick={handleNavClick} className="block text-gray-600 hover:text-emerald-600">
+                <Link to="/prediabetes-support" onClick={handleNavClick} className="block text-gray-600 hover:text-emerald-600">
                   Prediabetes Support
                 </Link>
-                <Link to="/insulin-resistance" onClick={handleNavClick} className="block text-gray-600 hover:text-emerald-600">
+                <Link to="/insulin-resistance-management" onClick={handleNavClick} className="block text-gray-600 hover:text-emerald-600">
                   Insulin Resistance
                 </Link>
-                <Link to="/blood-sugar" onClick={handleNavClick} className="block text-gray-600 hover:text-emerald-600">
+                <Link to="/natural-blood-sugar" onClick={handleNavClick} className="block text-gray-600 hover:text-emerald-600">
                   Natural Blood Sugar
                 </Link>
-                <Link to="/glucose-monitoring" onClick={handleNavClick} className="block text-gray-600 hover:text-emerald-600">
+                <Link to="/glucose-monitoring-tools" onClick={handleNavClick} className="block text-gray-600 hover:text-emerald-600">
                   Glucose Monitoring
                 </Link>
                 <Link to="/weight-wellness" onClick={handleNavClick} className="block text-gray-600 hover:text-emerald-600">
                   Weight & Wellness
                 </Link>
-                <Link to="/seniors" onClick={handleNavClick} className="block text-gray-600 hover:text-emerald-600">
+                <Link to="/seniors-glucose-monitoring" onClick={handleNavClick} className="block text-gray-600 hover:text-emerald-600">
                   Seniors' Guide
                 </Link>
               </div>

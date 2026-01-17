@@ -35,9 +35,9 @@ export const DownloadModal = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          service_id: 'service_j7wcpil',
-          template_id: 'template_iz3wekv',
-          user_id: 'jIg8H78CXxzH5v9ya',
+          service_id: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+          template_id: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+          user_id: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
           template_params: templateParams
         })
       });
