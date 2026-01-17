@@ -23,22 +23,21 @@ export const DownloadModal = ({
     setIsLoading(true);
 
     try {
-      // Send to Mailchimp via EmailJS
+      // Send to EmailJS
       const templateParams = {
         user_email: email,
         downloaded_resources: '7-Day Blood Sugar Reset Guide'
       };
 
-      // Replace with your EmailJS service ID, template ID, and public key
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          service_id: 'your_service_id', // Get from EmailJS
-          template_id: 'template_download', // Created template
-          user_id: 'your_public_key', // Get from EmailJS
+          service_id: 'service_j7wcpil',
+          template_id: 'template_iz3wekv',
+          user_id: 'jIg8H78CXxzH5v9ya',
           template_params: templateParams
         })
       });
