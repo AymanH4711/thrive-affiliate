@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { X, Download, Mail } from 'lucide-react';
-import emailjs from '@emailjs/browser';
 
 interface DownloadModalProps {
   isOpen: boolean;
@@ -9,34 +8,34 @@ interface DownloadModalProps {
 
 const downloadOptions = [
   {
-    id: 'reset',
-    title: '7-Day Blood Sugar Reset',
-    description: 'Complete daily action plan with meal suggestions',
-    file: '/downloads/7-day-blood-sugar-reset.pdf',
+    id: 'quickstart',
+    title: '7-Day Quick Start Guide',
+    description: 'Complete daily action plan to begin your journey',
+    file: '/downloads/7-day-quick-start.txt',
     icon: '📋',
     selected: true
   },
   {
     id: 'supplements',
     title: 'Supplement Buying Guide',
-    description: 'Which supplements actually work + dosages',
-    file: '/downloads/supplement-buying-guide.pdf',
+    description: 'Which supplements actually work + dosages & brands',
+    file: '/downloads/supplement-buying-guide.txt',
     icon: '💊',
     selected: false
   },
   {
     id: 'shopping',
     title: 'Blood Sugar Shopping List',
-    description: 'What to buy at the grocery store',
-    file: '/downloads/shopping-list.pdf',
+    description: 'Complete grocery list for blood sugar management',
+    file: '/downloads/shopping-list.txt',
     icon: '🛒',
     selected: false
   },
   {
     id: 'tracking',
     title: 'A1C Tracking Sheet',
-    description: 'Monitor your progress over 12 weeks',
-    file: '/downloads/a1c-tracking-sheet.pdf',
+    description: 'Monitor your progress over 12 weeks with daily tracking',
+    file: '/downloads/a1c-tracking-sheet.txt',
     icon: '📊',
     selected: false
   }
@@ -44,7 +43,7 @@ const downloadOptions = [
 
 export const DownloadModal = ({ isOpen, onClose }: DownloadModalProps) => {
   const [email, setEmail] = useState('');
-  const [selectedPdfs, setSelectedPdfs] = useState(['reset']);
+  const [selectedPdfs, setSelectedPdfs] = useState(['quickstart']);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -74,56 +73,63 @@ export const DownloadModal = ({ isOpen, onClose }: DownloadModalProps) => {
     setError('');
 
     try {
-      // Get the selected file names
-      const selectedFiles = downloadOptions
-        .filter(opt => selectedPdfs.includes(opt.id))
-        .map(opt => opt.title)
-        .join(', ');
+      // Step 1: Add email to Mailchimp
+      const mailchimpApiKey = import.meta.env.VITE_MAILCHIMP_API_KEY;
+      const mailchimpListId = import.meta.env.VITE_MAILCHIMP_LIST_ID;
+      const mailchimpServer = import.meta.env.VITE_MAILCHIMP_SERVER;
 
-      // Send email with EmailJS
-      const result = await emailjs.send(
-        'service_a5jkfzj',  // Your EmailJS service ID
-        'template_download', // We'll create a template for downloads
-        {
-          user_email: email,
-          downloaded_resources: selectedFiles,
-          message: `Download request for: ${selectedFiles}`
-        },
-        'jIg8H78CXxzH5v9ya'  // Your EmailJS public key
-      );
-
-      if (result.status === 200) {
-        // Download the selected PDFs
-        const selectedFilePaths = downloadOptions
-          .filter(opt => selectedPdfs.includes(opt.id))
-          .map(opt => opt.file);
-
-        selectedFilePaths.forEach(file => {
-          const link = document.createElement('a');
-          link.href = file;
-          link.download = file.split('/').pop() || 'download.pdf';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          
-          // Small delay between downloads
-          setTimeout(() => {}, 300);
-        });
-
-        // Show success message
-        setSubmitted(true);
-        setEmail('');
-        setSelectedPdfs(['reset']);
-
-        // Auto-close after 3 seconds
-        setTimeout(() => {
-          onClose();
-          setSubmitted(false);
-        }, 3000);
+      if (!mailchimpApiKey || !mailchimpListId || !mailchimpServer) {
+        setError('Email service not configured. Please try again later.');
+        setLoading(false);
+        return;
       }
 
+      const mailchimpResponse = await fetch(
+        `https://${mailchimpServer}.api.mailchimp.com/3.0/lists/${mailchimpListId}/members`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `apikey ${mailchimpApiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email_address: email,
+            status: 'subscribed',
+            merge_fields: {
+              FNAME: email.split('@')[0],
+              DOWNLOADS: selectedPdfs.join(', ')
+            }
+          })
+        }
+      );
+
+      // Step 2: Download selected PDFs
+      const selectedFiles = downloadOptions
+        .filter(opt => selectedPdfs.includes(opt.id))
+        .map(opt => opt.file);
+
+      selectedFiles.forEach(file => {
+        const link = document.createElement('a');
+        link.href = file;
+        link.download = file.split('/').pop() || 'download.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+
+      // Step 3: Show success message
+      setSubmitted(true);
+      setEmail('');
+      setSelectedPdfs(['quickstart']);
+
+      // Auto-close after 3 seconds
+      setTimeout(() => {
+        onClose();
+        setSubmitted(false);
+      }, 3000);
+
     } catch (err) {
-      setError('Error processing your download. Please try again.');
+      setError('Error saving your info. Please try again.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -157,7 +163,7 @@ export const DownloadModal = ({ isOpen, onClose }: DownloadModalProps) => {
               <div className="text-3xl">✅</div>
               <div>
                 <p className="font-bold text-emerald-900">Perfect!</p>
-                <p className="text-emerald-700 text-sm">Your resources are downloading. Check your email for a confirmation!</p>
+                <p className="text-emerald-700 text-sm">Your resources are downloading. Check your email for a welcome message!</p>
               </div>
             </div>
           </div>
@@ -208,7 +214,7 @@ export const DownloadModal = ({ isOpen, onClose }: DownloadModalProps) => {
                     required
                   />
                   <p className="text-xs text-gray-500 mt-2">
-                    We'll send you a confirmation email + occasional health tips
+                    We'll send you a welcome email with your downloads + weekly tips
                   </p>
                 </div>
 
@@ -222,7 +228,7 @@ export const DownloadModal = ({ isOpen, onClose }: DownloadModalProps) => {
                   className="w-full bg-emerald-600 text-white font-bold py-3 rounded-lg hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   <Download size={20} />
-                  {loading ? 'Processing...' : 'Download Now'}
+                  {loading ? 'Preparing downloads...' : 'Download Now'}
                 </button>
 
                 <p className="text-center text-xs text-gray-500">
