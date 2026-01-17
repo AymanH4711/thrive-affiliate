@@ -1,116 +1,238 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { X, Download, Mail } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
 interface DownloadModalProps {
   isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
+  onClose: () => void;
 }
 
-const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, setIsOpen }) => {
+const downloadOptions = [
+  {
+    id: 'reset',
+    title: '7-Day Blood Sugar Reset',
+    description: 'Complete daily action plan with meal suggestions',
+    file: '/downloads/7-day-blood-sugar-reset.pdf',
+    icon: '📋',
+    selected: true
+  },
+  {
+    id: 'supplements',
+    title: 'Supplement Buying Guide',
+    description: 'Which supplements actually work + dosages',
+    file: '/downloads/supplement-buying-guide.pdf',
+    icon: '💊',
+    selected: false
+  },
+  {
+    id: 'shopping',
+    title: 'Blood Sugar Shopping List',
+    description: 'What to buy at the grocery store',
+    file: '/downloads/shopping-list.pdf',
+    icon: '🛒',
+    selected: false
+  },
+  {
+    id: 'tracking',
+    title: 'A1C Tracking Sheet',
+    description: 'Monitor your progress over 12 weeks',
+    file: '/downloads/a1c-tracking-sheet.pdf',
+    icon: '📊',
+    selected: false
+  }
+];
+
+export const DownloadModal = ({ isOpen, onClose }: DownloadModalProps) => {
   const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedResources, setSelectedResources] = useState<string[]>([]);
+  const [selectedPdfs, setSelectedPdfs] = useState(['reset']);
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const resources = [
-    { id: 'blood-sugar-basics', label: 'Blood Sugar Basics Guide' },
-    { id: 'meal-plan', label: '7-Day Low Glycemic Meal Plan' },
-    { id: 'supplements', label: 'Top 5 Science-Backed Supplements' }
-  ];
-
-  const handleCheckboxChange = (id: string) => {
-    setSelectedResources(prev =>
-      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+  const togglePdf = (id: string) => {
+    setSelectedPdfs(prev => 
+      prev.includes(id) 
+        ? prev.filter(p => p !== id)
+        : [...prev, id]
     );
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    // FIX: e.preventDefault() stops the automatic redirect to the homepage 
+  const handleDownload = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (selectedResources.length === 0) {
-      alert("Please select at least one resource.");
+    if (!email) {
+      setError('Please enter your email address');
       return;
     }
 
-    setIsLoading(true);
+    if (selectedPdfs.length === 0) {
+      setError('Please select at least one resource');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
 
     try {
-      // Use your actual EmailJS credentials here
-      await emailjs.send(
-        'YOUR_SERVICE_ID', 
-        'template_download', 
+      // Get the selected file names
+      const selectedFiles = downloadOptions
+        .filter(opt => selectedPdfs.includes(opt.id))
+        .map(opt => opt.title)
+        .join(', ');
+
+      // Send email with EmailJS
+      const result = await emailjs.send(
+        'service_a5jkfzj',  // Your EmailJS service ID
+        'template_download', // We'll create a template for downloads
         {
-          email: email,
-          downloaded_resources: selectedResources.join(', '),
+          user_email: email,
+          downloaded_resources: selectedFiles,
+          message: `Download request for: ${selectedFiles}`
         },
-        'YOUR_PUBLIC_KEY'
+        'jIg8H78CXxzH5v9ya'  // Your EmailJS public key
       );
 
-      alert("Success! Check your inbox for the guides.");
-      setEmail('');
-      setSelectedResources([]);
-      setIsOpen(false); // Closes the modal on success
-    } catch (error) {
-      console.error("EmailJS Error:", error);
-      alert("Failed to send email. Please try again.");
+      if (result.status === 200) {
+        // Download the selected PDFs
+        const selectedFilePaths = downloadOptions
+          .filter(opt => selectedPdfs.includes(opt.id))
+          .map(opt => opt.file);
+
+        selectedFilePaths.forEach(file => {
+          const link = document.createElement('a');
+          link.href = file;
+          link.download = file.split('/').pop() || 'download.pdf';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          // Small delay between downloads
+          setTimeout(() => {}, 300);
+        });
+
+        // Show success message
+        setSubmitted(true);
+        setEmail('');
+        setSelectedPdfs(['reset']);
+
+        // Auto-close after 3 seconds
+        setTimeout(() => {
+          onClose();
+          setSubmitted(false);
+        }, 3000);
+      }
+
+    } catch (err) {
+      setError('Error processing your download. Please try again.');
+      console.error(err);
     } finally {
-      // FIX: Ensures loading stops even if the request fails 
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-      <div className="bg-white p-8 rounded-2xl max-w-md w-full relative shadow-2xl">
-        <button 
-          onClick={() => setIsOpen(false)}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-900 transition"
-        >
-          ✕
-        </button>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
         
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Download Free Guides</h2>
-        
-        <form onSubmit={handleSubmit}>
-          <div className="mb-6">
-            <p className="mb-3 font-semibold text-gray-700">Select your resources:</p>
-            {resources.map(res => (
-              <label key={res.id} className="flex items-center mb-3 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  className="w-5 h-5 mr-3 border-gray-300 rounded text-emerald-600 focus:ring-emerald-500"
-                  checked={selectedResources.includes(res.id)}
-                  onChange={() => handleCheckboxChange(res.id)}
-                />
-                <span className="text-gray-700 group-hover:text-emerald-700 transition">{res.label}</span>
-              </label>
-            ))}
+        {/* Header */}
+        <div className="sticky top-0 bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6 flex items-center justify-between border-b">
+          <div>
+            <h2 className="text-2xl font-bold">Get Your Free Resources</h2>
+            <p className="text-emerald-100 text-sm mt-1">Choose what you need to get started</p>
           </div>
-
-          <input
-            type="email"
-            required
-            placeholder="Your email address"
-            className="w-full p-3 border border-gray-200 rounded-xl mb-4 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`w-full py-4 rounded-xl text-white font-bold transition shadow-lg ${
-              isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-200'
-            }`}
+          <button 
+            onClick={onClose}
+            className="p-2 hover:bg-white/20 rounded-lg transition"
           >
-            {isLoading ? 'Sending...' : 'Access My Guides'}
+            <X size={24} />
           </button>
-        </form>
+        </div>
+
+        {/* Success Message */}
+        {submitted && (
+          <div className="bg-emerald-50 border-l-4 border-emerald-600 p-6 m-6">
+            <div className="flex items-center gap-3">
+              <div className="text-3xl">✅</div>
+              <div>
+                <p className="font-bold text-emerald-900">Perfect!</p>
+                <p className="text-emerald-700 text-sm">Your resources are downloading. Check your email for a confirmation!</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!submitted && (
+          <>
+            {/* PDF Selection Grid */}
+            <div className="p-6">
+              <p className="text-gray-600 font-semibold mb-4">Select the resources you want:</p>
+              
+              <div className="space-y-3 mb-6">
+                {downloadOptions.map(option => (
+                  <label 
+                    key={option.id}
+                    className="flex items-start p-4 border-2 border-gray-200 rounded-lg hover:border-emerald-400 hover:bg-emerald-50 cursor-pointer transition"
+                  >
+                    <input 
+                      type="checkbox"
+                      checked={selectedPdfs.includes(option.id)}
+                      onChange={() => togglePdf(option.id)}
+                      className="w-5 h-5 text-emerald-600 rounded mt-1 cursor-pointer accent-emerald-600"
+                    />
+                    <div className="ml-4 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">{option.icon}</span>
+                        <h3 className="font-bold text-gray-900">{option.title}</h3>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-1">{option.description}</p>
+                    </div>
+                  </label>
+                ))}
+              </div>
+
+              {/* Email Form */}
+              <form onSubmit={handleDownload} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <Mail className="w-4 h-4 inline mr-2" />
+                    Your Email Address
+                  </label>
+                  <input 
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-emerald-600 focus:outline-none"
+                    required
+                  />
+                  <p className="text-xs text-gray-500 mt-2">
+                    We'll send you a confirmation email + occasional health tips
+                  </p>
+                </div>
+
+                {error && (
+                  <div className="text-red-600 text-sm font-semibold">{error}</div>
+                )}
+
+                <button 
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-emerald-600 text-white font-bold py-3 rounded-lg hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  <Download size={20} />
+                  {loading ? 'Processing...' : 'Download Now'}
+                </button>
+
+                <p className="text-center text-xs text-gray-500">
+                  ✓ No spam • ✓ Unsubscribe anytime • ✓ Instant download
+                </p>
+              </form>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
 };
-
-export default DownloadModal;
