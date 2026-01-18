@@ -19,8 +19,8 @@ interface PDFOption {
 export const DownloadModal = ({
   isOpen,
   onClose,
-  title = "Get Your Free Blood Sugar Resources",
-  description = "Join thousands reversing prediabetes. Choose what you need and download instantly."
+  title = "Get Your Free Guide",
+  description = "Join thousands reversing prediabetes. Download your resource instantly."
 }: DownloadModalProps) => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -29,30 +29,9 @@ export const DownloadModal = ({
     {
       id: '1',
       name: '7-Day Blood Sugar Reset Guide',
-      description: 'Your complete 7-day action plan with daily protocols and supplement recommendations',
+      description: 'Your complete 7-day action plan with daily protocols and supplement recommendations (20 pages)',
       filename: '7-day-blood-sugar-reset.pdf',
       selected: true
-    },
-    {
-      id: '2',
-      name: 'A1C Tracking Sheet',
-      description: 'Monitor your progress over 12 weeks with this printable tracking sheet',
-      filename: 'a1c-tracking-sheet.pdf',
-      selected: false
-    },
-    {
-      id: '3',
-      name: 'Blood Sugar Friendly Shopping List',
-      description: 'Know exactly what to buy at the grocery store - foods that support stable blood sugar',
-      filename: 'shopping-list.pdf',
-      selected: false
-    },
-    {
-      id: '4',
-      name: 'Supplement Buying Guide',
-      description: 'Which supplements actually work, where to buy them, and how much to spend',
-      filename: 'supplement-buying-guide.pdf',
-      selected: false
     }
   ]);
 
@@ -62,39 +41,14 @@ export const DownloadModal = ({
     ));
   };
 
-  const downloadPDFs = () => {
-    selectedPDFs.forEach(pdf => {
-      if (pdf.selected) {
-        const link = document.createElement('a');
-        link.href = `/downloads/${pdf.filename}`;
-        link.download = pdf.filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    });
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (selectedPDFs.every(pdf => !pdf.selected)) {
-      alert('Please select at least one guide to download');
-      return;
-    }
-
     setIsLoading(true);
 
     try {
-      // Send to EmailJS
-      const selectedGuides = selectedPDFs
-        .filter(pdf => pdf.selected)
-        .map(pdf => pdf.name)
-        .join(', ');
-
       const templateParams = {
         user_email: email,
-        downloaded_resources: selectedGuides
+        downloaded_resources: '7-Day Blood Sugar Reset Guide'
       };
 
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
@@ -113,18 +67,19 @@ export const DownloadModal = ({
       if (response.ok) {
         setSubmitted(true);
         
-        // Download selected PDFs
-        downloadPDFs();
+        // Download the PDF
+        const link = document.createElement('a');
+        link.href = '/downloads/7-day-blood-sugar-reset.pdf';
+        link.download = '7-day-blood-sugar-reset.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
         // Close modal after 2 seconds
         setTimeout(() => {
           onClose();
           setEmail('');
           setSubmitted(false);
-          setSelectedPDFs(selectedPDFs.map(pdf => ({
-            ...pdf,
-            selected: pdf.id === '1' // Reset to default selection
-          })));
         }, 2000);
       }
     } catch (error) {
@@ -159,27 +114,15 @@ export const DownloadModal = ({
               <p className="text-gray-600 mb-6">{description}</p>
 
               <form onSubmit={handleSubmit} className="space-y-4">
-                {/* PDF Selection */}
-                <div className="space-y-3 mb-6">
-                  <h3 className="font-semibold text-gray-900">Select Your Resources:</h3>
-                  
-                  {selectedPDFs.map(pdf => (
-                    <label key={pdf.id} className="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                      <input
-                        type="checkbox"
-                        checked={pdf.selected}
-                        onChange={() => togglePDF(pdf.id)}
-                        className="w-5 h-5 text-emerald-600 rounded cursor-pointer mt-1"
-                      />
-                      <div className="flex-1">
-                        <div className="font-medium text-gray-900 flex items-center gap-2">
-                          <FileText size={16} className="text-emerald-600" />
-                          {pdf.name}
-                        </div>
-                        <p className="text-xs text-gray-600 mt-1">{pdf.description}</p>
-                      </div>
-                    </label>
-                  ))}
+                {/* PDF Info */}
+                <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                  <div className="flex items-start gap-3">
+                    <FileText size={20} className="text-emerald-600 flex-shrink-0 mt-1" />
+                    <div>
+                      <p className="font-semibold text-gray-900">7-Day Blood Sugar Reset Guide</p>
+                      <p className="text-sm text-gray-600 mt-1">Your complete 7-day action plan with daily protocols and supplement recommendations (20 pages)</p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Email Input */}
@@ -204,11 +147,11 @@ export const DownloadModal = ({
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  disabled={isLoading || selectedPDFs.every(pdf => !pdf.selected)}
+                  disabled={isLoading}
                   className="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Download size={18} />
-                  {isLoading ? 'Preparing...' : 'Download Selected Guides'}
+                  {isLoading ? 'Preparing...' : 'Download Guide'}
                 </button>
 
                 {/* Privacy Note */}
@@ -216,17 +159,6 @@ export const DownloadModal = ({
                   We'll send you the guides + occasional health tips. You can unsubscribe anytime.
                 </p>
               </form>
-
-              {/* Skip Option */}
-              <button
-                onClick={() => {
-                  downloadPDFs();
-                  onClose();
-                }}
-                className="mt-4 w-full text-center text-sm text-emerald-600 hover:text-emerald-700 transition"
-              >
-                Skip for now → Download without email
-              </button>
             </>
           ) : (
             /* Success Message */

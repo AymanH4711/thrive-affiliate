@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Heart, Activity, BarChart3, Pill, Moon, TrendingUp } from 'lucide-react';
+import { ChevronRight, TrendingUp } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { DownloadModal } from '../components/DownloadModal';
 
@@ -47,7 +47,7 @@ export const HomePage = () => {
                   onClick={() => setIsModalOpen(true)}
                   className="inline-flex items-center justify-center gap-2 border-2 border-emerald-600 text-emerald-600 px-8 py-4 rounded-lg hover:bg-emerald-50 transition font-semibold text-lg"
                 >
-                  Learn the Basics
+                  Get Your Free Guide
                 </button>
               </div>
             </div>
@@ -79,10 +79,10 @@ export const HomePage = () => {
       <section className="bg-emerald-50 py-12 px-4 sm:px-6 lg:px-8 rounded-lg mb-12 max-w-6xl mx-auto">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Get Your Free 7-Day Blood Sugar Reset Guide
+            Get Your Free Guide
           </h2>
           <p className="text-lg text-gray-600 mb-6">
-            Join thousands of people reversing prediabetes with our proven method.
+            Join thousands of people reversing prediabetes with our proven blueprint.
           </p>
           
           <button
@@ -90,11 +90,11 @@ export const HomePage = () => {
             className="inline-flex items-center justify-center gap-2 bg-emerald-600 text-white px-8 py-4 rounded-lg hover:bg-emerald-700 transition font-semibold text-lg"
           >
             <TrendingUp size={20} />
-            Download Free Guide (PDF)
+            Download Your Guide
           </button>
           
           <p className="text-sm text-gray-500 mt-4">
-            No credit card required • Immediate download • 12 pages
+            No credit card required • Immediate download • 20 pages
           </p>
         </div>
       </section>
@@ -109,7 +109,6 @@ export const HomePage = () => {
         </p>
 
         <div className="grid md:grid-cols-5 gap-6">
-          {/* Pillar 1: Nutrition */}
           <Link 
             to="/prediabetes-support"
             className="group bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition text-center"
@@ -119,12 +118,8 @@ export const HomePage = () => {
             <p className="text-sm text-gray-600">
               Blood sugar friendly foods that keep you full
             </p>
-            <p className="text-xs text-emerald-600 font-semibold mt-4 group-hover:translate-x-1 transition">
-              Learn more →
-            </p>
           </Link>
 
-          {/* Pillar 2: Movement */}
           <Link 
             to="/prediabetes-support"
             className="group bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition text-center"
@@ -134,12 +129,8 @@ export const HomePage = () => {
             <p className="text-sm text-gray-600">
               Simple activities to boost glucose and improve insulin sensitivity
             </p>
-            <p className="text-xs text-emerald-600 font-semibold mt-4 group-hover:translate-x-1 transition">
-              Learn more →
-            </p>
           </Link>
 
-          {/* Pillar 3: Monitoring */}
           <Link 
             to="/glucose-monitoring-tools"
             className="group bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition text-center"
@@ -149,12 +140,8 @@ export const HomePage = () => {
             <p className="text-sm text-gray-600">
               Track your progress in real time with the right tools
             </p>
-            <p className="text-xs text-emerald-600 font-semibold mt-4 group-hover:translate-x-1 transition">
-              Learn more →
-            </p>
           </Link>
 
-          {/* Pillar 4: Supplements */}
           <Link 
             to="/supplements"
             className="group bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition text-center"
@@ -164,12 +151,8 @@ export const HomePage = () => {
             <p className="text-sm text-gray-600">
               Strategic support supplements that help stabilize blood sugar
             </p>
-            <p className="text-xs text-emerald-600 font-semibold mt-4 group-hover:translate-x-1 transition">
-              Learn more →
-            </p>
           </Link>
 
-          {/* Pillar 5: Sleep & Stress */}
           <Link 
             to="/prediabetes-support"
             className="group bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition text-center"
@@ -178,9 +161,6 @@ export const HomePage = () => {
             <h3 className="font-bold text-lg text-gray-900 mb-2">Sleep & Stress</h3>
             <p className="text-sm text-gray-600">
               Recovery is key. Manage stress to control blood sugar
-            </p>
-            <p className="text-xs text-emerald-600 font-semibold mt-4 group-hover:translate-x-1 transition">
-              Learn more →
             </p>
           </Link>
         </div>
@@ -223,7 +203,7 @@ export const HomePage = () => {
               onClick={() => setIsModalOpen(true)}
               className="w-full bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition font-semibold"
             >
-              Start the 7-Day Guide
+              Get Your Free Guide
             </button>
           </div>
 
@@ -344,3 +324,5 @@ export const HomePage = () => {
     </>
   );
 };
+
+export default HomePage;
