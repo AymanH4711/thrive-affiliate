@@ -1,0 +1,39 @@
+{
+  "effective_from": "2025-05-21",
+  "review_required_by": "2025-12-31",
+  "ftc_affiliate_disclosure": {
+    "required_on": ["all product reviews", "comparison articles", "supplement hub", "tools/*"],
+    "placement": "above the fold, before first product mention",
+    "approved_text": "This article contains affiliate links. If you purchase through them, we may earn a commission at no extra cost to you.",
+    "forbidden_phrases": ["we recommend", "the best", "guaranteed to", "#1"]
+  },
+  "fda_health_claims": {
+    "forbidden": [
+      "cures diabetes",
+      "reverses insulin resistance",
+      "clinically proven to lower blood sugar",
+      "miracle cure"
+    ],
+    "allowed_with_qualifier": [
+      "may support healthy blood sugar levels",
+      "some studies suggest",
+      "preliminary evidence indicates",
+      "in one small study"
+    ],
+    "qualifier_required": true
+  },
+  "supplement_rules": {
+    "require_disclaimer": true,
+    "disclaimer_component": "SupplementDisclaimers.tsx",
+    "evidence_badge_required": true
+  },
+  "citation_rules": {
+    "minimum_citations_per_article": 3,
+    "accepted_sources": ["PubMed", "NIH", "ADA", "peer-reviewed journals"],
+    "forbidden_sources": ["Wikipedia", "manufacturer websites", "forums", "blogspot.com"]
+  },
+  "fear_agency_rule": {
+    "enabled": true,
+    "description": "Every paragraph mentioning a complication or long-term risk must be followed within 2 sentences by an actionable 'what you can do'."
+  }
+}

@@ -1,0 +1,37 @@
+// src/data/products.json
+// (Exported from product_selection_tool.html, manually converted)
+[
+  {
+    "id": 1,
+    "name": "Berberine Pro",
+    "price": "$$",
+    "rating": 4.8,
+    "pillar": "insulin-resistance",
+    "affiliateLink": "https://amazon.com/...",
+    "seoTitle": "Best Berberine for Blood Sugar Control",
+    "metaDescription": "Clinically-proven berberine supplement..."
+  }
+]
+
+// src/data/keywords.json
+// (Exported from diabetes-filter-integrated.html)
+[
+  {
+    "id": 1,
+    "keyword": "berberine vs metformin",
+    "difficulty": 28,
+    "volume": 3200,
+    "category": "monitoring",
+    "pillar": "insulin-resistance",
+    "contentType": "comparison"
+  }
+]
+
+// src/data/authorityPacks.ts
+// (New file you create based on Word doc packs)
+export const authorityPacks = {
+  "insulin-resistance": {
+    entities: ["AMPK activation", "HOMA-IR", ...],
+    citations: [{ title: "...", url: "..." }]
+  }
+}

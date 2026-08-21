@@ -1,18 +1,17 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown } from 'lucide-react';
+import Logo from '../Logo';  // ✅ ADD THIS
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const location = useLocation();
 
-  // Close mobile menu when route changes
   const handleNavClick = () => {
     setIsOpen(false);
   };
 
-  // Determine if Blood Sugar Support dropdown should be open
   const isBloodSugarActive = location.pathname.includes('/prediabetes') || 
                              location.pathname.includes('/insulin-resistance') ||
                              location.pathname.includes('/blood-sugar') ||
@@ -24,9 +23,8 @@ export const Header = () => {
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl text-emerald-600">
-          <span className="text-2xl">🌿</span>
-          ThriveHealth
+        <Link to="/" className="flex items-center">
+          <Logo variant="light" className="h-10" />
         </Link>
 
         {/* Desktop Menu */}
@@ -46,7 +44,6 @@ export const Header = () => {
               <ChevronDown size={18} />
             </button>
 
-            {/* Dropdown Menu */}
             <div className="absolute left-0 mt-0 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
               <Link to="/prediabetes-support" onClick={handleNavClick} className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">
                 Prediabetes Support
@@ -99,7 +96,6 @@ export const Header = () => {
             Home
           </Link>
 
-          {/* Mobile Dropdown */}
           <div>
             <button 
               onClick={() => setOpenDropdown(openDropdown === 'blood-sugar' ? null : 'blood-sugar')}

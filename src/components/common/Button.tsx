@@ -1,59 +1,80 @@
-import { ReactNode, ButtonHTMLAttributes } from 'react';
-import { Link } from 'react-router-dom';
+// src/components/common/Button.tsx
+import React from 'react';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-  children: ReactNode;
+interface ButtonProps {
+  children: React.ReactNode;
+  onClick?: () => void;
   href?: string;
-  external?: boolean;
+  target?: string;
+  rel?: string;
+  className?: string;
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
 }
 
-const Button = ({ 
-  variant = 'primary', 
-  size = 'md', 
-  children, 
-  href, 
-  external = false,
-  className = '',
-  ...props 
-}: ButtonProps) => {
-  const baseClasses = 'font-semibold rounded-lg transition-all duration-200 inline-flex items-center justify-center';
-  
-  const variantClasses = {
-    primary: 'bg-button-gradient text-white hover:scale-105 hover:shadow-lg active:scale-95',
-    secondary: 'bg-white border-2 border-primary-500 text-primary-600 hover:bg-primary-50 active:bg-primary-100',
-    ghost: 'bg-transparent text-primary-600 hover:text-primary-700 hover:underline',
-  };
+const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
+  (
+    {
+      children,
+      onClick,
+      href,
+      target,
+      rel,
+      className = '',
+      variant = 'primary',
+      size = 'md',
+      disabled = false,
+      type = 'button',
+    },
+    ref
+  ) => {
+    const baseStyles = 'font-semibold rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 cursor-pointer';
 
-  const sizeClasses = {
-    sm: 'px-4 py-2 text-sm',
-    md: 'px-8 py-3 text-base',
-    lg: 'px-10 py-4 text-lg',
-  };
+    const variants = {
+      primary: 'bg-emerald-600 text-white hover:bg-emerald-700 disabled:bg-gray-400',
+      secondary: 'bg-teal-600 text-white hover:bg-teal-700 disabled:bg-gray-400',
+      outline: 'border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 disabled:border-gray-400 disabled:text-gray-400',
+      ghost: 'text-emerald-600 hover:bg-emerald-50 disabled:text-gray-400',
+    };
 
-  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+    const sizes = {
+      sm: 'px-3 py-2 text-sm',
+      md: 'px-6 py-3 text-base',
+      lg: 'px-8 py-4 text-lg',
+    };
 
-  if (href) {
-    if (external) {
+    const combinedClassName = `${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`;
+
+    if (href) {
       return (
-        <a href={href} target="_blank" rel="noopener noreferrer" className={classes}>
+        <a
+          ref={ref as React.ForwardedRef<HTMLAnchorElement>}
+          href={href}
+          target={target}
+          rel={rel}
+          className={combinedClassName}
+        >
           {children}
         </a>
       );
     }
+
     return (
-      <Link to={href} className={classes}>
+      <button
+        ref={ref as React.ForwardedRef<HTMLButtonElement>}
+        onClick={onClick}
+        type={type}
+        disabled={disabled}
+        className={combinedClassName}
+      >
         {children}
-      </Link>
+      </button>
     );
   }
+);
 
-  return (
-    <button className={classes} {...props}>
-      {children}
-    </button>
-  );
-};
+Button.displayName = 'Button';
 
 export default Button;

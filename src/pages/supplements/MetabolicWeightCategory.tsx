@@ -1,9 +1,8 @@
 // MetabolicWeightCategory.tsx - With Updated Affiliate Disclosure
 
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle, Pill, Heart, Zap, ShieldCheck, Activity } from 'lucide-react';
-import { SupplementsMedicalDisclaimerCompactSales, SupplementsAffiliateDisclaimerProductCompact } from '@/components/disclaimers/SupplementDisclaimers';
-import { SEO } from '@/components/SEO';
+import { ArrowRight, CheckCircle, AlertCircle, Pill, Heart, Zap, ShieldCheck, Activity } from 'lucide-react';
+import { SEO } from "@/components/seo/SEO";
 
 export default function MetabolicWeightCategory() {
   const categoryNav = [
@@ -17,7 +16,7 @@ export default function MetabolicWeightCategory() {
     id: 'metabolic-weight',
     name: 'Metabolic & Weight Support Supplements',
     shortName: 'Metabolic & Weight',
-    description: 'Scientifically-formulated supplements to boost metabolism, support sustainable weight loss, and enhance energy levels.',
+    description: 'Evidence-based supplements studied for their potential to support metabolic health, healthy weight management, and sustained energy levels.',
     colorClass: 'blue',
     icon: Zap,
     pillarLink: '/weight-wellness',
@@ -27,7 +26,7 @@ export default function MetabolicWeightCategory() {
         name: "Green Tea Extract",
         tagline: "Metabolism & Antioxidant Boost",
         description: "Rich in EGCG (epigallocatechin gallate), green tea activates thermogenesis—your body's natural fat-burning process.",
-        benefits: ["Boosts metabolism by 3-5%", "Increases fat oxidation", "Provides sustained energy"],
+        benefits: ["May modestly support resting metabolism (evidence varies by individual)", "Increases fat oxidation", "Provides an energy boost"],
         recommendedBrand: "Suntheanine Green Tea Extract",
         affiliateLink: "https://amzn.to/placeholder_greentea",
         rating: 4.7,
@@ -109,7 +108,21 @@ export default function MetabolicWeightCategory() {
         </section>
 
         {/* MEDICAL DISCLAIMER */}
-       <SupplementsMedicalDisclaimerCompactSales />
+        <section className="py-4 bg-amber-50 border-b-2 border-amber-200">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-bold text-sm text-amber-900 mb-1">⚠️ Medical Disclaimer</h3>
+                  <p className="text-xs text-amber-800 leading-relaxed font-semibold">
+                    The information on this page is for <strong>educational purposes only</strong> and does not constitute medical advice. These statements have not been evaluated by the U.S. Food and Drug Administration (FDA). No supplement listed here is intended to diagnose, treat, cure, or prevent any disease. These products are not a substitute for a balanced diet, regular exercise, or prescribed medications. <strong>Always consult a qualified healthcare provider before starting any supplement</strong>, especially if you have diabetes, prediabetes, cardiovascular disease, or any other health condition, or are taking medications for blood sugar, blood pressure, or weight management. Individual results vary and are not guaranteed.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* CATEGORY NAVIGATION */}
         <div className="sticky top-0 z-30 bg-white shadow-sm border-b border-gray-100 overflow-x-auto">
@@ -229,7 +242,7 @@ export default function MetabolicWeightCategory() {
           </div>
         </section>
 
-        {/* AFFILIATE DISCLAIMER - UPDATED */}
+        {/* AFFILIATE DISCLOSURE */}
         <section className="py-4 bg-blue-50 border-t-2 border-blue-200">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
@@ -238,7 +251,7 @@ export default function MetabolicWeightCategory() {
                 <div>
                   <h3 className="font-bold text-sm text-blue-900 mb-1">💰 Affiliate Disclosure</h3>
                   <p className="text-xs text-blue-800 leading-relaxed font-semibold">
-                    Thrive Health may earn commissions from affiliate partnerships and supplement links. This does not affect product pricing. We only recommend products we believe in based on research and quality standards.
+                    <strong>Transparency notice:</strong> This page contains affiliate links to supplement products, including the brands listed above. ThriveHealth360 may earn a commission if you purchase through these links, at <strong>no additional cost to you</strong>. Affiliate relationships do not influence our product descriptions, benefit claims, or the scientific information presented on this page. We only recommend products that meet our research and quality standards. This disclosure is provided in accordance with the FTC&apos;s guidelines on endorsements and testimonials.
                   </p>
                 </div>
               </div>

@@ -6,36 +6,44 @@ import { AlertCircle, ShieldAlert, Zap } from 'lucide-react';
 /**
  * SUPPLEMENT DISCLAIMER COMPONENTS
  * Reusable across all supplement-related pages
- * 
+ *
  * Usage:
- * import { 
+ * import {
  *   SupplementsMedicalDisclaimer,
  *   SupplementsMedicalDisclaimerCompact,
- *   SupplementsAffiliateDisclaimerHub, 
- *   SupplementsAffiliateDisclaimerProduct, 
- *   SupplementsForceMultiplier 
+ *   SupplementsAffiliateDisclaimerHub,
+ *   SupplementsAffiliateDisclaimerProduct,
+ *   SupplementsForceMultiplier
  * } from '@/components/disclaimers/SupplementDisclaimers';
  */
 
 // ============================================================================
 // COMPONENT 1: FULL MEDICAL DISCLAIMER (For Hub Pages)
 // ============================================================================
+// COLOR UPDATE: changed red -> amber. Confirmed live against a real published
+// article (Intermittent Fasting & Blood Sugar) that renders its Medical
+// Disclaimer in amber/yellow, not red — direct evidence overriding the
+// earlier "red is the established convention" read, which was based only on
+// the four disclaimer *source files* agreeing with each other, not on what's
+// actually live. Applied to both the full and compact variants below.
 
 export function SupplementsMedicalDisclaimer() {
   return (
-    <section className="bg-red-50 border-t-4 border-b-4 border-red-600 py-6">
+    <section className="bg-amber-50 border-t-4 border-b-4 border-amber-500 py-6">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="flex gap-4">
-          <ShieldAlert className="w-8 h-8 text-red-600 flex-shrink-0 mt-1" />
+          <ShieldAlert className="w-8 h-8 text-amber-600 flex-shrink-0 mt-1" />
           <div>
-            <h3 className="font-bold text-red-900 text-lg mb-2">⚠️ IMPORTANT MEDICAL DISCLAIMER</h3>
-            <p className="text-red-800 mb-3">
-              We recommend supplements based on clinical evidence and quality standards. 
-              <strong> This is NOT medical advice.</strong> Always consult your healthcare provider 
-              before starting any supplement, especially if you have existing conditions or take medications.
+            <h3 className="font-bold text-amber-900 text-lg mb-2">⚠️ IMPORTANT MEDICAL DISCLAIMER</h3>
+            <p className="text-amber-800 mb-3">
+              The supplements discussed on this page have not been evaluated by the FDA, MHRA, TGA,
+              or Health Canada. <strong>This is NOT medical advice.</strong> Always consult your
+              healthcare provider before starting any supplement, especially if you have existing
+              conditions or take medications.
             </p>
-            <p className="text-red-800 font-semibold">
+            <p className="text-amber-800 font-semibold">
               Supplements are not intended to diagnose, treat, cure, or prevent any disease.
+              Individual results may vary.
             </p>
           </div>
         </div>
@@ -50,14 +58,14 @@ export function SupplementsMedicalDisclaimer() {
 
 export function SupplementsMedicalDisclaimerCompact() {
   return (
-    <section className="bg-red-50 border-t border-b border-red-200 py-3">
+    <section className="bg-amber-50 border-t border-b border-amber-300 py-3">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="flex gap-3 items-start">
-          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-red-800">
-            <strong>Medical Disclaimer:</strong> This is for educational purposes only. 
-            Consult your healthcare provider before starting any supplement, especially if you have conditions or take medications. 
-            Supplements do not diagnose, treat, cure, or prevent disease.
+          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-amber-800">
+            <strong>Medical Disclaimer:</strong> For educational purposes only. Not evaluated by the FDA, MHRA, TGA, or Health Canada.
+            Consult your healthcare provider before starting any supplement, especially if you have conditions or take medications.
+            Supplements do not diagnose, treat, cure, or prevent disease. Individual results may vary.
           </p>
         </div>
       </div>
@@ -71,14 +79,14 @@ export function SupplementsMedicalDisclaimerCompact() {
 
 export function SupplementsMedicalDisclaimerCompactSales() {
   return (
-    <section className="bg-red-50 border-t border-b border-red-200 py-3">
+    <section className="bg-amber-50 border-t border-b border-amber-300 py-3">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="flex gap-3 items-start">
-          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-red-800">
-            <strong>Medical Disclaimer:</strong> We select and recommend these products based on clinical research and third-party testing. 
-            Always consult your healthcare provider before use, especially with existing conditions or medications. 
-            These are not intended to treat or cure disease.
+          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-amber-800">
+            <strong>Medical Disclaimer:</strong> For educational purposes only. Not evaluated by the FDA, MHRA, TGA, or Health Canada.
+            Always consult your healthcare provider before use, especially with existing conditions or medications.
+            Not intended to diagnose, treat, cure, or prevent any disease. Individual results may vary.
           </p>
         </div>
       </div>
@@ -89,6 +97,7 @@ export function SupplementsMedicalDisclaimerCompactSales() {
 // ============================================================================
 // COMPONENT 2: AFFILIATE DISCLOSURE - HUB PAGE (Bottom of page) - FULL
 // ============================================================================
+// Unchanged — blue, not part of this color update.
 
 export function SupplementsAffiliateDisclaimerHub() {
   return (
@@ -99,9 +108,9 @@ export function SupplementsAffiliateDisclaimerHub() {
           <div>
             <h3 className="font-bold text-blue-900 text-lg mb-2">💰 AFFILIATE DISCLOSURE</h3>
             <p className="text-blue-800">
-              We may earn a commission from purchases made through links on this page. 
-              This helps us continue providing free, evidence-based content. We only recommend 
-              products we've thoroughly researched and believe may benefit our readers. 
+              We may earn a commission from purchases made through links on this page.
+              This helps us continue providing free, evidence-based content. We only recommend
+              products we've thoroughly researched and believe may benefit our readers.
               <strong> Your purchase price remains the same.</strong>
             </p>
           </div>
@@ -114,6 +123,7 @@ export function SupplementsAffiliateDisclaimerHub() {
 // ============================================================================
 // COMPONENT 2B: AFFILIATE DISCLOSURE - PRODUCT PAGES - COMPACT
 // ============================================================================
+// Unchanged — blue, not part of this color update.
 
 export function SupplementsAffiliateDisclaimerProductCompact() {
   return (
@@ -122,7 +132,7 @@ export function SupplementsAffiliateDisclaimerProductCompact() {
         <div className="flex gap-3 items-start">
           <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-blue-800">
-            <strong>Affiliate Disclosure:</strong> We select products based on ingredient quality and third-party testing. 
+            <strong>Affiliate Disclosure:</strong> We select products based on ingredient quality and third-party testing.
             Thrive may earn a small commission if you purchase through these links, <strong>at no extra cost to you.</strong>
           </p>
         </div>
@@ -177,19 +187,19 @@ export function SupplementsComprehensiveDisclaimer() {
 
 /**
  * USAGE GUIDE:
- * 
+ *
  * FOR HUB PAGE (/supplements):
  * - At TOP: <SupplementsMedicalDisclaimer />
  * - At BOTTOM: <SupplementsAffiliateDisclaimerHub />
- * 
+ *
  * FOR PRODUCT CATEGORY PAGES (individual supplement pages) - RECOMMENDED:
  * - At TOP: <SupplementsMedicalDisclaimerCompactSales />
  * - At BOTTOM: <SupplementsAffiliateDisclaimerProductCompact />
- * 
+ *
  * FOR PRODUCT CATEGORY PAGES (individual supplement pages) - ALTERNATIVE:
  * - At TOP: <SupplementsMedicalDisclaimerCompact /> (educational version)
  * - At BOTTOM: <SupplementsAffiliateDisclaimerProductCompact />
- * 
+ *
  * FOR HEALTH INTERVENTION PAGES (Diet, Exercise, Sleep, etc.):
  * - At TOP: <SupplementsMedicalDisclaimer />
  * - In MIDDLE: <SupplementsForceMultiplier /> (optional but recommended)

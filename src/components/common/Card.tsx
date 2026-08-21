@@ -1,27 +1,35 @@
-import { ReactNode } from 'react';
+// src/components/common/Card.tsx
+import React from 'react';
 
 interface CardProps {
-  children: ReactNode;
-  variant?: 'standard' | 'gradient';
+  children: React.ReactNode;
   className?: string;
-  hover?: boolean;
+  variant?: 'default' | 'gradient' | 'outlined';
+  onClick?: () => void;
 }
 
-const Card = ({ children, variant = 'standard', className = '', hover = true }: CardProps) => {
-  const baseClasses = 'rounded-xl p-6 transition-all duration-300';
-  
-  const variantClasses = {
-    standard: 'bg-white shadow-md',
-    gradient: 'bg-card-gradient border border-primary-200',
-  };
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ children, className = '', variant = 'default', onClick }, ref) => {
+    const baseStyles = 'rounded-lg';
+    
+    const variants = {
+      default: 'bg-white border border-gray-200 shadow-sm',
+      gradient: 'bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200',
+      outlined: 'bg-white border-2 border-emerald-500',
+    };
 
-  const hoverClasses = hover ? 'hover:shadow-xl hover:-translate-y-1' : '';
+    return (
+      <div
+        ref={ref}
+        onClick={onClick}
+        className={`${baseStyles} ${variants[variant]} ${className}`}
+      >
+        {children}
+      </div>
+    );
+  }
+);
 
-  return (
-    <div className={`${baseClasses} ${variantClasses[variant]} ${hoverClasses} ${className}`}>
-      {children}
-    </div>
-  );
-};
+Card.displayName = 'Card';
 
 export default Card;

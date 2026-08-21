@@ -1,0 +1,152 @@
+{
+  "brand": {
+    "name": "ThriveHealth360",
+    "tagline": "The plain-English roadmap your doctor didn't have time to give you.",
+    "mission": "Give newly diagnosed prediabetics and insulin-resistant adults actionable, evidence-backed guidance to take control of their blood sugar.",
+    "niche": "prediabetes",
+    "audience": {
+      "age_range": [40, 65],
+      "gender_skew": "female_60pct",
+      "diagnosis_stage": ["prediabetic", "insulin_resistant", "borderline_diabetic"],
+      "a1c_range": { "min": 5.7, "max": 6.4 },
+      "primary_fear": "medication_dependency_or_inevitable_type2",
+      "failed_approaches": [
+        "unsustainable carb cutting",
+        "random Amazon supplements",
+        "generic eat-less-move-more advice"
+      ]
+    }
+  },
+
+  "voice": {
+    "core_tone": "calm, precise, quietly urgent",
+    "persona": "smart friend who actually read the studies",
+    "sentence_rhythm": "short_for_claims__long_for_explanations",
+    "exclamation_marks": "encouragements_only",
+    "dark_humor": "allowed_if_empathetic",
+    "forbidden_words": [
+      "synergistic",
+      "holistic",
+      "optimize your wellness journey",
+      "superfoods",
+      "detox",
+      "cleanse",
+      "biohack"
+    ],
+    "forbidden_phrases": [
+      "it is important to",
+      "consult your healthcare provider regarding",
+      "a holistic approach to wellness optimization",
+      "reverses insulin resistance permanently",
+      "clinically proven to lower A1C",
+      "the #1 supplement doctors recommend"
+    ],
+    "tone_formula_scary_topics": "acknowledge → pivot → action"
+  },
+
+  "design_tokens": {
+    "colors": {
+      "primary": "#1A6B4A",
+      "primary_light": "#2D9E72",
+      "primary_dark": "#0F4D34",
+      "accent": "#F59E0B",
+      "accent_light": "#FCD34D",
+      "neutral_900": "#111827",
+      "neutral_700": "#374151",
+      "neutral_500": "#6B7280",
+      "neutral_200": "#E5E7EB",
+      "neutral_50": "#F9FAFB",
+      "background": "#FFFFFF",
+      "surface": "#F3F4F6",
+      "danger": "#DC2626",
+      "warning": "#D97706",
+      "success": "#059669",
+      "evidence_strong": "#1D4ED8",
+      "evidence_moderate": "#7C3AED",
+      "evidence_weak": "#9CA3AF"
+    },
+    "typography": {
+      "font_family_body": "'Inter', system-ui, sans-serif",
+      "font_family_heading": "'Inter', system-ui, sans-serif",
+      "font_size_base": "16px",
+      "line_height_body": 1.7,
+      "line_height_heading": 1.25,
+      "font_weight_normal": 400,
+      "font_weight_medium": 500,
+      "font_weight_bold": 700
+    },
+    "spacing": {
+      "unit": "4px",
+      "section_gap": "64px",
+      "component_gap": "24px",
+      "inline_gap": "8px"
+    },
+    "border_radius": {
+      "sm": "4px",
+      "md": "8px",
+      "lg": "16px",
+      "pill": "9999px"
+    },
+    "shadow": {
+      "card": "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04)",
+      "elevated": "0 4px 12px rgba(0,0,0,0.10)"
+    }
+  },
+
+  "evidence_badges": {
+    "strong": {
+      "label": "Strong Evidence",
+      "color_token": "evidence_strong",
+      "criteria": "Multiple RCTs or systematic reviews from PubMed/NIH/ADA"
+    },
+    "moderate": {
+      "label": "Moderate Evidence",
+      "color_token": "evidence_moderate",
+      "criteria": "At least one RCT or several consistent observational studies"
+    },
+    "weak": {
+      "label": "Preliminary Evidence",
+      "color_token": "evidence_weak",
+      "criteria": "Single small study, animal data, or expert opinion only"
+    }
+  },
+
+  "content_rules": {
+    "min_word_count": 1200,
+    "min_citations": 3,
+    "citations_min_quality": ["PubMed", "NIH", "ADA"],
+    "evidence_badge_required": true,
+    "fear_agency_rule": true,
+    "affiliate_disclosure_placement": "above_fold_before_first_product_mention",
+    "meal_plan_minimum_calories": 1200,
+    "forbidden_content": [
+      "stopping or reducing prescribed medication without doctor supervision",
+      "supplement cures diabetes",
+      "supplement reverses insulin resistance definitively",
+      "detox or cleanse products for blood sugar",
+      "MLM supplement lines",
+      "proprietary blends without individual ingredient disclosure"
+    ]
+  },
+
+  "affiliate": {
+    "promote": [
+      "verified_third_party_supplements_with_lab_testing",
+      "glucose_monitors_cgm_fingerstick",
+      "evidence_based_books_and_programs"
+    ],
+    "refuse_regardless_of_commission": [
+      "unregulated_proprietary_blends",
+      "detox_cleanse_blood_sugar_products",
+      "mlm_supplement_lines"
+    ]
+  },
+
+  "meta": {
+    "schema_version": "2.0",
+    "created": "2025-05-21",
+    "last_updated": "2025-05-21",
+    "owned_by": "ThriveHealth360 Editorial Team",
+    "consumed_by": ["Canvas", "Cascade", "tailwind.config.js", "tokens.css", "compliance-rules.json"]
+  }
+}

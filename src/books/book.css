@@ -1,0 +1,115 @@
+/* Book Styling */
+
+.book-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: Georgia, 'Times New Roman', serif;
+  line-height: 1.8;
+  color: #333;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.book-header {
+  text-align: center;
+  margin-bottom: 60px;
+  padding-bottom: 40px;
+  border-bottom: 3px solid #059669;
+}
+
+.book-header h1 {
+  font-size: 3em;
+  color: #1f2937;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.book-header .subtitle {
+  font-size: 1.3em;
+  color: #059669;
+  font-style: italic;
+}
+
+.book-content {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chapter {
+  margin-bottom: 60px;
+  page-break-inside: avoid;
+}
+
+.chapter h2 {
+  font-size: 2em;
+  color: #059669;
+  margin-bottom: 20px;
+  border-left: 4px solid #059669;
+  padding-left: 15px;
+}
+
+.chapter p {
+  font-size: 1.1em;
+  margin-bottom: 15px;
+  text-align: justify;
+}
+
+.chapter ul {
+  margin: 20px 0;
+  padding-left: 30px;
+}
+
+.chapter li {
+  font-size: 1.1em;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.chapter strong {
+  color: #059669;
+  font-weight: bold;
+}
+
+.book-footer {
+  text-align: center;
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 2px solid #e5e7eb;
+  color: #6b7280;
+  font-size: 0.9em;
+}
+
+/* Print Styles */
+@media print {
+  .book-container {
+    background-color: white;
+    padding: 0;
+  }
+
+  .book-content {
+    box-shadow: none;
+    background-color: white;
+  }
+
+  .chapter {
+    page-break-inside: avoid;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .book-header h1 {
+    font-size: 2em;
+  }
+
+  .book-content {
+    padding: 20px;
+  }
+
+  .chapter h2 {
+    font-size: 1.5em;
+  }
+}

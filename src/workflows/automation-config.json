@@ -1,0 +1,74 @@
+{
+  "$schema": "./automation-config.schema.json",
+  "version": "1.0.0",
+  "effective_from": "2025-05-21",
+  "description": "Phase 6 automation configuration for /loop, /schedule, TAVILY MCP, and compliance stale-rule checks",
+
+  "_notes": {
+    "overlap_clarity": "weekly_citation_audit checks for missing/forbidden citations; stale_rule_check ensures compliance-rules.json itself hasn't expired; monthly_content_freshness checks article age + performance metrics. They are complementary, not redundant."
+  },
+
+  "loops": {
+    "weekly_citation_audit": {
+      "enabled": true,
+      "schedule": "0 9 * * 1",
+      "command": "/cite-audit --scope=all --output=report",
+      "notification": "slack#compliance"
+    },
+    "monthly_content_freshness": {
+      "enabled": true,
+      "schedule": "0 10 1 * *",
+      "command": "/content-update --check-stale --older-than=180d",
+      "notification": "slack#editorial"
+    }
+  },
+
+  "schedules": {
+    "publishing_gate": {
+      "enabled": true,
+      "trigger": "on-push-to-main",
+      "run": [".github/workflows/compliance-check.yml", "npm run cite-audit"]
+    },
+    "stale_rule_check": {
+      "enabled": true,
+      "interval_days": 7,
+      "check": "compliance-rules.json review_required_by",
+      "action": "log-warning && notify #compliance"
+    }
+  },
+
+  "tavily_mcp": {
+    "enabled": true,
+    "purpose": "auto-fetch missing citations from PubMed/NIH/ADA",
+    "fallback_human_review": true,
+    "rate_limit": 10,
+    "source_priority": ["pubmed.ncbi.nlm.nih.gov", "nih.gov", "diabetes.org"]
+  },
+
+  "performance_triggers": {
+    "analytics_hook": "src/utils/helpers/analytics.ts",
+    "conditions": [
+      {
+        "metric": "time_on_page",
+        "threshold_seconds": 120,
+        "below_action": "trigger content-update --add-engagement-hooks"
+      },
+      {
+        "metric": "bounce_rate",
+        "threshold_percent": 70,
+        "above_action": "trigger voice-audit --check-echo-md-compliance"
+      }
+    ]
+  },
+
+  "compliance_stale_rule_warning": {
+    "enabled": true,
+    "grace_period_days": 30,
+    "channel": "#compliance-alerts"
+  },
+
+  "logging": {
+    "level": "info",
+    "output": "logs/automation.json"
+  }
+}

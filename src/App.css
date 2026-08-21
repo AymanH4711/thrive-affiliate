@@ -40,3 +40,70 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Print Styles */
+@media print {
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+  
+  /* Hide navigation and interactive elements */
+  .print\\:hidden {
+    display: none !important;
+  }
+  
+  /* Ensure content is readable */
+  article {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Improve heading hierarchy */
+  h1 {
+    page-break-after: avoid;
+    font-size: 24pt;
+    margin-bottom: 16pt;
+  }
+  
+  h2 {
+    page-break-after: avoid;
+    font-size: 18pt;
+    margin-top: 20pt;
+    margin-bottom: 12pt;
+  }
+  
+  h3 {
+    font-size: 14pt;
+    margin-top: 16pt;
+    margin-bottom: 8pt;
+  }
+  
+  /* Better spacing for readability */
+  p, li {
+    orphans: 3;
+    widows: 3;
+  }
+  
+  /* Ensure links are visible */
+  a {
+    text-decoration: underline;
+    color: black;
+  }
+  
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+  }
+  
+  /* Hide interactive elements */
+  button, input, select, textarea {
+    display: none;
+  }
+  
+  /* Make sure FAQ answers are visible when printed */
+  .space-y-4 > div > div:last-child {
+    display: block !important;
+  }
+}

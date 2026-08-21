@@ -1,17 +1,33 @@
-// src/pages/weight-wellness.tsx
+// src/pages/weight-wellness/WeightWellness.tsx
 import { Link } from 'react-router-dom';
 import { Scale, Activity, Apple, Heart, Flame, TrendingDown, ArrowRight, CheckCircle, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { SEO } from '../../components/SEO';
+import { SEO } from "@/components/seo/SEO";
 
 export default function WeightWellness() {
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    "headline": "Weight & Metabolic Wellness for Blood Sugar Control",
+    "description": "Complete guide to sustainable weight management and metabolic health for better blood sugar control. 12-week reset plan, nutrition strategy, and exercise guide.",
+    "url": "https://www.thrivehealth360.com/weight-wellness",
+    "image": "https://www.thrivehealth360.com/images/weight-wellness-hero-og.webp",
+    "dateModified": "2026-01-01",
+    "author": {
+      "@type": "Organization",
+      "name": "ThriveHealth360"
+    }
+  };
+
   return (
     <>
       <SEO
         title="Weight & Metabolic Wellness for Blood Sugar Control"
         description="Complete guide to sustainable weight management and metabolic health for better blood sugar control. 12-week reset plan, nutrition strategy, and exercise guide."
         keywords="weight loss and blood sugar, metabolic health, sustainable weight loss, metabolism, weight management"
-        image="/images/weight-wellness-og.png"
+        image="/images/weight-wellness-hero-og.webp"
         url="/weight-wellness"
+        schema={schema}
       />
       <main className="min-h-screen bg-white">
         {/* Hero Section */}
@@ -22,7 +38,7 @@ export default function WeightWellness() {
               {/* Left - Text */}
               <div className="order-2 md:order-1">
                 <div className="inline-block bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full text-sm font-semibold mb-4">
-                  Complete Wellness Guide 2025
+                  Complete Wellness Guide 2026
                 </div>
                 <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
                   Weight & Metabolic Wellness
@@ -39,11 +55,14 @@ export default function WeightWellness() {
               <div className="order-1 md:order-2">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl max-w-xl mx-auto">
                   <img 
-                    src="/images/weight-wellness-hero.webp" 
+                    src="/images/weight-wellness-hero-thumb-og.webp" 
                     alt="Weight management and metabolic wellness"
-                    className="w-full h-[350px] md:h-[450px] object-cover"
+                    className="w-full h-[350px] md:h-[450px] object-contain bg-emerald-950"
                     onError={(e) => {
-                      e.currentTarget.src = 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&h=450&fit=crop ';
+                      const img = e.currentTarget;
+                      if (!img.src.includes('natural-blood-sugar-hero.webp')) {
+                        img.src = '/images/natural-blood-sugar-hero.webp';
+                      }
                     }}
                   />
                 </div>
@@ -58,11 +77,11 @@ export default function WeightWellness() {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
                 <div>
-                  <h3 className="font-bold text-sm text-amber-900 mb-1">⚠️ Medical Disclaimer</h3>
-                  <p className="text-xs text-amber-800 leading-relaxed font-semibold">
-                    These statements have not been evaluated by the FDA. This content is for educational purposes only and is not intended to diagnose, treat, cure, or prevent any disease. Always consult with a qualified healthcare provider before starting supplements or making health changes.
+                  <p className="font-bold text-sm text-amber-900 mb-1">Medical Disclaimer</p>
+                  <p className="text-sm text-amber-800 leading-relaxed">
+                    The information on this page is for <strong>educational purposes only</strong> and does not constitute medical advice. These statements have not been evaluated by the U.S. Food and Drug Administration (FDA). No content here is intended to diagnose, treat, cure, or prevent any disease. Weight management and metabolic health are complex, individual topics — always consult a qualified healthcare provider before starting a new diet, exercise program, or supplement regimen, especially if you have diabetes, prediabetes, cardiovascular disease, or any other medical condition. Individual results may vary and reversal is not guaranteed.
                   </p>
                 </div>
               </div>
@@ -71,7 +90,7 @@ export default function WeightWellness() {
         </section>
 
         {/* Table of Contents */}
-        <section className="py-12 bg-white border-b">
+        <nav aria-label="Table of contents" className="py-12 bg-white border-b">
           <div className="container mx-auto px-4 max-w-4xl">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Table of Contents</h2>
             <div className="grid md:grid-cols-2 gap-4">
@@ -91,7 +110,7 @@ export default function WeightWellness() {
               ))}
             </div>
           </div>
-        </section>
+        </nav>
 
         {/* Main Content */}
         <article className="py-16">
@@ -107,21 +126,21 @@ export default function WeightWellness() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">The Vicious Cycle:</h3>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <TrendingDown className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-1" />
+                    <TrendingDown className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-1" aria-hidden="true" />
                     <div>
                       <p className="font-bold text-gray-900">1. Excess Weight → Insulin Resistance</p>
                       <p className="text-gray-700 text-sm">Fat cells release inflammatory compounds that interfere with insulin signaling</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <TrendingDown className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-1" />
+                    <TrendingDown className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-1" aria-hidden="true" />
                     <div>
                       <p className="font-bold text-gray-900">2. Insulin Resistance → High Blood Sugar</p>
                       <p className="text-gray-700 text-sm">Cells can't take up glucose effectively, leading to elevated levels</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <TrendingDown className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-1" />
+                    <TrendingDown className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-1" aria-hidden="true" />
                     <div>
                       <p className="font-bold text-gray-900">3. High Blood Sugar → More Fat Storage</p>
                       <p className="text-gray-700 text-sm">Excess glucose gets converted to fat, especially around the belly</p>
@@ -131,7 +150,7 @@ export default function WeightWellness() {
               </div>
               <div className="bg-blue-50 border-l-4 border-blue-600 rounded-r-xl p-6">
                 <p className="text-lg font-semibold text-gray-900">
-                  Good News: Breaking this cycle at ANY point creates positive momentum. Losing just 5-10% of body weight can significantly improve blood sugar control.
+                  Good News: Breaking this cycle at ANY point creates positive momentum. Per the ADA 2026 Standards of Care, losing just 5–7% of body weight can meaningfully improve blood sugar, blood pressure, and lipid levels — and greater weight loss produces additional metabolic benefits.
                 </p>
               </div>
             </section>
@@ -140,7 +159,7 @@ export default function WeightWellness() {
             <section id="why-diets-fail" className="mb-16">
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Why Traditional Diets Fail</h2>
               <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                95% of people who lose weight on restrictive diets gain it back within 1-5 years. Here's why:
+                Weight regain after restrictive dieting is extremely common — research shows most people regain a significant portion of lost weight within 1–5 years, and only about 1 in 4 successfully maintain long-term weight loss without continued support. Here's why:
               </p>
               
               <div className="grid md:grid-cols-2 gap-6">
@@ -163,7 +182,7 @@ export default function WeightWellness() {
                   },
                 ].map((item, i) => (
                   <div key={i} className="bg-red-50 border border-red-200 rounded-xl p-6">
-                    <h3 className="font-bold text-lg text-gray-900 mb-2">❌ {item.problem}</h3>
+                    <h3 className="font-bold text-lg text-gray-900 mb-2">{item.problem}</h3>
                     <p className="text-gray-700 text-sm">{item.why}</p>
                   </div>
                 ))}
@@ -207,14 +226,14 @@ export default function WeightWellness() {
             <section id="nutrition" className="mb-16">
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Nutrition Strategy for Metabolic Health</h2>
               <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-                Forget counting calories. Focus on food quality, meal timing, and supporting your metabolism.
+                While a calorie deficit is still needed for weight loss, obsessing over calorie counting often backfires. Focus on food quality, meal timing, and supporting your metabolism — when you eat right, the numbers tend to take care of themselves.
               </p>
               
               <div className="space-y-8">
                 {/* Principle 1 */}
                 <div className="bg-white border-2 border-emerald-200 rounded-xl p-6">
                   <div className="flex items-start gap-4">
-                    <Apple className="w-8 h-8 text-emerald-600 flex-shrink-0" />
+                    <Apple className="w-8 h-8 text-emerald-600 flex-shrink-0" aria-hidden="true" />
                     <div>
                       <h3 className="text-xl font-bold text-gray-900 mb-3">1. Prioritize Protein (30g per meal)</h3>
                       <p className="text-gray-700 mb-3">Protein preserves muscle during weight loss, increases satiety, and has the highest thermic effect (burns calories during digestion).</p>
@@ -234,7 +253,7 @@ export default function WeightWellness() {
                 {/* Principle 2 */}
                 <div className="bg-white border-2 border-emerald-200 rounded-xl p-6">
                   <div className="flex items-start gap-4">
-                    <Flame className="w-8 h-8 text-emerald-600 flex-shrink-0" />
+                    <Flame className="w-8 h-8 text-emerald-600 flex-shrink-0" aria-hidden="true" />
                     <div>
                       <h3 className="text-xl font-bold text-gray-900 mb-3">2. Reduce Ultra-Processed Foods</h3>
                       <p className="text-gray-700 mb-3">These are designed to override satiety signals, leading to overeating and insulin spikes.</p>
@@ -265,7 +284,7 @@ export default function WeightWellness() {
                 {/* Principle 3 */}
                 <div className="bg-white border-2 border-emerald-200 rounded-xl p-6">
                   <div className="flex items-start gap-4">
-                    <Heart className="w-8 h-8 text-emerald-600 flex-shrink-0" />
+                    <Heart className="w-8 h-8 text-emerald-600 flex-shrink-0" aria-hidden="true" />
                     <div>
                       <h3 className="text-xl font-bold text-gray-900 mb-3">3. Time-Restricted Eating (Optional)</h3>
                       <p className="text-gray-700 mb-3">Eating within an 8-12 hour window can improve insulin sensitivity and fat burning—without calorie counting.</p>
@@ -287,9 +306,9 @@ export default function WeightWellness() {
               </p>
               
               <div className="bg-blue-50 border-l-4 border-blue-600 rounded-r-xl p-6 mb-8">
-                <p className="text-lg font-semibold text-gray-900">
-                  💡 Key Difference: Exercise + Weight Loss
-                </p>
+                <h4 className="text-lg font-semibold text-gray-900">
+                  Key Difference: Exercise + Weight Loss
+                </h4>
                 <p className="text-gray-700 mt-2">
                   Diet controls weight, but exercise controls where weight comes from. Without strength training, you lose muscle along with fat. With it, you preserve lean tissue and reshape your body.
                 </p>
@@ -297,7 +316,7 @@ export default function WeightWellness() {
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-6 border-2 border-blue-200">
-                  <Activity className="w-10 h-10 text-blue-600 mb-4" />
+                  <Activity className="w-10 h-10 text-blue-600 mb-4" aria-hidden="true" />
                   <h3 className="text-xl font-bold text-gray-900 mb-3">Strength Training (3x/week)</h3>
                   <p className="text-gray-700 mb-4">Preserves muscle during weight loss, increases resting metabolic rate, and creates a toned appearance.</p>
                   <div className="bg-white rounded-lg p-4">
@@ -315,13 +334,13 @@ export default function WeightWellness() {
                 </div>
 
                 <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-200">
-                  <Scale className="w-10 h-10 text-green-600 mb-4" />
+                  <Scale className="w-10 h-10 text-green-600 mb-4" aria-hidden="true" />
                   <h3 className="text-xl font-bold text-gray-900 mb-3">Daily Walking (7,000+ steps)</h3>
                   <p className="text-gray-700 mb-4">Low-impact movement that burns calories, improves cardiovascular health, and can be done daily without recovery time.</p>
                   <div className="bg-white rounded-lg p-4">
                     <p className="font-semibold text-gray-900 mb-2">Weight Loss Benefits:</p>
                     <ul className="text-sm text-gray-700 space-y-1">
-                      <li>• Burns 200-300 calories per hour</li>
+                      <li>• Burns roughly 150–300 calories per hour (varies by body weight and pace)</li>
                       <li>• No cortisol spike (unlike intense exercise)</li>
                       <li>• Can be done every single day</li>
                       <li>• Supports fat loss without muscle loss</li>
@@ -353,26 +372,26 @@ export default function WeightWellness() {
             <section id="sleep-hormones" className="mb-16">
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Sleep & Hormones</h2>
               <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                Poor sleep wrecks your metabolism faster than anything else. Just one night of bad sleep increases insulin resistance by 30%.
+                Poor sleep wrecks your metabolism faster than anything else. Just one night of severely restricted sleep (around 4 hours) has been shown to reduce insulin sensitivity by up to 25%, according to controlled clinical studies.
               </p>
               
               <div className="bg-indigo-50 border-l-4 border-indigo-600 rounded-r-xl p-6 mb-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Sleep's Impact on Weight:</h3>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
                     <span>Increases hunger hormones (ghrelin)</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
                     <span>Decreases fullness hormones (leptin)</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
                     <span>Raises cortisol (stress hormone)</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
                     <span>Reduces willpower and decision-making</span>
                   </li>
                 </ul>
@@ -407,10 +426,10 @@ export default function WeightWellness() {
               
               <div className="grid md:grid-cols-2 gap-6">
                 {[
-                  { name: 'Berberine', benefit: 'Improves insulin sensitivity, may reduce body fat', dose: '500mg, 3x daily' },
-                  { name: 'Green Tea Extract (EGCG)', benefit: 'Boosts metabolism, aids fat burning', dose: '400-500mg daily' },
-                  { name: 'Fiber Supplements', benefit: 'Increases fullness, stabilizes blood sugar', dose: '5-10g with meals' },
-                  { name: 'Omega-3 Fish Oil', benefit: 'Reduces inflammation, supports fat loss', dose: '2000mg EPA/DHA daily' },
+                  { name: 'Berberine', benefit: 'May support insulin sensitivity; some studies suggest modest effects on body composition', dose: '500mg, 3x daily' },
+                  { name: 'Green Tea Extract (EGCG)', benefit: 'May support metabolic rate and fat oxidation in some studies — effects are modest', dose: '400-500mg daily' },
+                  { name: 'Fiber Supplements', benefit: 'Supports fullness and may help stabilize blood sugar after meals', dose: '5-10g with meals' },
+                  { name: 'Omega-3 Fish Oil', benefit: 'Supports reduction of inflammation markers; some evidence for modest metabolic benefits', dose: '2000mg EPA/DHA daily' },
                 ].map((supp, i) => (
                   <div key={i} className="bg-white border-2 border-emerald-200 rounded-xl p-6">
                     <h3 className="font-bold text-lg text-gray-900 mb-2">{supp.name}</h3>
@@ -419,6 +438,9 @@ export default function WeightWellness() {
                   </div>
                 ))}
               </div>
+              <p className="mt-4 text-sm text-gray-500 italic">
+                Dose ranges above are drawn from published research. Always discuss specific supplements and dosing with your healthcare provider before starting, especially if you take medications.
+              </p>
 
               <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-8 mt-8 text-center">
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">Combine Supplements with Healthy Habits</h3>
@@ -474,7 +496,7 @@ export default function WeightWellness() {
                 </p>
                 <Link to="/reverse-prediabetes" className="inline-flex items-center gap-2 bg-white text-emerald-600 font-bold px-8 py-3 rounded-lg hover:bg-emerald-50 transition text-lg">
                   Start Your Journey
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-5 h-5" aria-hidden="true" />
                 </Link>
               </div>
             </section>
@@ -484,29 +506,29 @@ export default function WeightWellness() {
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Related Resources</h2>
               <div className="grid md:grid-cols-3 gap-6">
                 <Link to="/prediabetes-support" className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border border-emerald-200 hover:shadow-lg transition">
-                  <Apple className="w-10 h-10 text-emerald-600 mb-3" />
+                  <Apple className="w-10 h-10 text-emerald-600 mb-3" aria-hidden="true" />
                   <h3 className="font-bold text-lg mb-2">Prediabetes Support</h3>
                   <p className="text-gray-600 text-sm mb-4">Complete guide to reversing prediabetes naturally</p>
                   <span className="text-emerald-600 font-semibold text-sm inline-flex items-center gap-1">
-                    Learn More <ArrowRight className="w-4 h-4" />
+                    Learn More <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </span>
                 </Link>
 
                 <Link to="/glucose-monitoring-tools" className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border border-emerald-200 hover:shadow-lg transition">
-                  <Activity className="w-10 h-10 text-emerald-600 mb-3" />
+                  <Activity className="w-10 h-10 text-emerald-600 mb-3" aria-hidden="true" />
                   <h3 className="font-bold text-lg mb-2">Glucose Monitoring</h3>
                   <p className="text-gray-600 text-sm mb-4">Track your metabolic progress</p>
                   <span className="text-emerald-600 font-semibold text-sm inline-flex items-center gap-1">
-                    View Tools <ArrowRight className="w-4 h-4" />
+                    View Tools <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </span>
                 </Link>
 
                 <Link to="/natural-blood-sugar" className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border border-emerald-200 hover:shadow-lg transition">
-                  <Heart className="w-10 h-10 text-emerald-600 mb-3" />
+                  <Heart className="w-10 h-10 text-emerald-600 mb-3" aria-hidden="true" />
                   <h3 className="font-bold text-lg mb-2">Natural Remedies</h3>
-                  <p className="text-gray-600 text-sm mb-4">Science-backed natural approaches</p>
+                  <p className="text-gray-600 text-sm mb-4">Evidence-reviewed natural approaches</p>
                   <span className="text-emerald-600 font-semibold text-sm inline-flex items-center gap-1">
-                    Read Guide <ArrowRight className="w-4 h-4" />
+                    Read Guide <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </span>
                 </Link>
               </div>
@@ -516,19 +538,22 @@ export default function WeightWellness() {
             <section className="py-16 bg-blue-50 border-t border-blue-200 rounded-xl mb-16">
               <div className="container mx-auto px-4 max-w-4xl text-center">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  Accelerate Your Results
+                  Support Your Metabolic Goals
                 </h2>
                 <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-                  Lifestyle changes form the foundation. Optimize with supplements 
-                  designed for metabolic health and sustainable weight management.
+                  Lifestyle changes form the foundation. Explore supplements studied for metabolic health and blood sugar support — intended to complement, not replace, a balanced diet and active lifestyle. Always consult your healthcare provider before starting.
                 </p>
-                <Link 
+                <Link
                   to="/supplements/metabolic-weight"
                   className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white font-bold px-10 py-4 rounded-xl hover:bg-blue-700 transition shadow-lg"
                 >
                   Shop Metabolic & Weight Support
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-5 h-5" aria-hidden="true" />
                 </Link>
+                <p className="mt-4 text-xs text-gray-500 italic">
+                  * Some product links are affiliate links. We may earn a commission at no extra cost to you.{' '}
+                  <a href="#affiliate-disclosure" className="underline hover:text-gray-700">See full disclosure below.</a>
+                </p>
               </div>
             </section>
 
@@ -536,15 +561,15 @@ export default function WeightWellness() {
         </article>
 
         {/* AFFILIATE DISCLOSURE - COMPACT */}
-        <section className="py-4 bg-blue-50 border-t-2 border-blue-200">
+        <section id="affiliate-disclosure" className="py-4 bg-blue-50 border-t-2 border-blue-200">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
                 <div>
-                  <h3 className="font-bold text-sm text-blue-900 mb-1">💰 Affiliate Disclosure</h3>
-                  <p className="text-xs text-blue-800 leading-relaxed font-semibold">
-                    Thrive Health may earn commissions from affiliate partnerships and supplement links. This does not affect product pricing. We only recommend products we believe in based on research and quality standards.
+                  <p className="font-bold text-sm text-blue-900 mb-1">Affiliate Disclosure</p>
+                  <p className="text-sm text-blue-800 leading-relaxed">
+                    <strong>Transparency notice:</strong> This page contains affiliate links to supplement and wellness products. ThriveHealth360 may earn a commission if you purchase through these links, at <strong>no additional cost to you</strong>. This financial relationship may influence which products we feature and how they are presented. We apply editorial and quality standards to all recommendations; however, you should conduct your own research and consult a qualified healthcare professional before purchasing any supplement. This disclosure is provided in accordance with the FTC&apos;s guidelines on endorsements and testimonials (16 CFR §255).
                   </p>
                 </div>
               </div>

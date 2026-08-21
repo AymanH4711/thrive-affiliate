@@ -1,9 +1,24 @@
 // src/pages/seniors/SeniorsGlucoseMonitoring.tsx
 import { Link } from 'react-router-dom';
 import { Heart, Activity, Shield, Smartphone, Users, AlertCircle, ArrowRight, CheckCircle } from 'lucide-react';
-import { SEO } from '../../components/SEO';
+import { SEO } from "@/components/seo/SEO";
 
 export default function SeniorsGlucoseMonitoring() {
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    "headline": "Glucose Monitoring for Seniors: Complete Guide",
+    "description": "Senior-friendly guide to blood sugar monitoring: target ranges for 60+, device comparisons, 7-day action plan, medication safety, and caregiver tips.",
+    "url": "https://thrive-health.com/seniors-glucose-monitoring",
+    "image": "https://thrive-health.com/images/seniors-glucose-og.png",
+    "dateModified": "2026-01-01",
+    "author": {
+      "@type": "Organization",
+      "name": "ThriveHealth360"
+    }
+  };
+
   const actionItems = [
     { day: 'Day 1', task: 'Get a glucose meter (ask your doctor for a prescription)' },
     { day: 'Day 2', task: 'Learn how to use it (ask pharmacist for demonstration)' },
@@ -22,6 +37,7 @@ export default function SeniorsGlucoseMonitoring() {
         keywords="diabetes in seniors, glucose monitoring seniors, diabetes management older adults, senior health"
         image="/images/seniors-glucose-og.png"
         url="/seniors-glucose-monitoring"
+        schema={schema}
       />
       <main className="min-h-screen bg-white">
         {/* Hero Section */}
@@ -32,7 +48,7 @@ export default function SeniorsGlucoseMonitoring() {
               {/* Left - Text */}
               <div className="order-2 md:order-1">
                 <div className="inline-block bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full text-sm font-semibold mb-4">
-                  Complete Senior Health Guide 2025
+                  Complete Senior Health Guide 2026
                 </div>
                 <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
                   Blood Sugar Monitoring for Seniors
@@ -46,10 +62,10 @@ export default function SeniorsGlucoseMonitoring() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a href="#getting-started" className="inline-flex items-center justify-center gap-2 bg-emerald-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-emerald-700 transition">
                     Get Started
-                    <ArrowRight className="w-5 h-5" />
+                    <ArrowRight className="w-5 h-5" aria-hidden="true" />
                   </a>
                   <Link to="/supplements/blood-sugar-support" className="inline-flex items-center justify-center gap-2 border-2 border-emerald-600 text-emerald-600 font-semibold px-6 py-3 rounded-lg hover:bg-emerald-50 transition">
-                    Browse Resources
+                    Browse Supplements
                   </Link>
                 </div>
               </div>
@@ -58,7 +74,7 @@ export default function SeniorsGlucoseMonitoring() {
               <div className="order-1 md:order-2">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl max-w-xl mx-auto">
                   <img 
-                    src="/images/seniors-glucose-hero.webp" 
+                    src="/images/seniors-monitoring-hero-thumb-og.webp" 
                     alt="Senior adult managing blood sugar with confidence"
                     className="w-full h-[350px] md:h-[450px] object-cover"
                     onError={(e) => {
@@ -71,15 +87,25 @@ export default function SeniorsGlucoseMonitoring() {
             </div>
           </div>
         </section>
-        <div className="container mx-auto px-4 mt-4 mb-4">
-          <div className="bg-yellow-50 rounded-lg p-4 text-sm text-yellow-800 flex items-start gap-2">
-            <span>⚠️</span>
-            <p>Medical Disclaimer: These statements have not been evaluated by the FDA. This content is for educational purposes only and is not intended to diagnose, treat, cure, or prevent any disease. Always consult with qualified healthcare providers before starting supplements or making health changes.</p>
+        {/* MEDICAL DISCLAIMER */}
+        <section className="py-4 bg-amber-50 border-b-2 border-amber-200">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <div>
+                  <p className="font-bold text-sm text-amber-900 mb-1">Medical Disclaimer</p>
+                  <p className="text-sm text-amber-800 leading-relaxed">
+                    The information on this page is for <strong>educational purposes only</strong> and does not constitute medical advice. These statements have not been evaluated by the U.S. Food and Drug Administration (FDA). No content here is intended to diagnose, treat, cure, or prevent any disease. Blood sugar management in older adults is highly individualized — always consult your doctor, endocrinologist, or certified diabetes care specialist before adjusting glucose targets, starting supplements, or changing your monitoring routine. Seniors with multiple health conditions, kidney disease, or who take insulin require especially careful, personalized medical supervision.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
 
         {/* Table of Contents */}
-        <section className="py-12 bg-white border-b">
+        <nav aria-label="Table of contents" className="py-12 bg-white border-b">
           <div className="container mx-auto px-4 max-w-4xl">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Table of Contents</h2>
             <div className="grid md:grid-cols-2 gap-4">
@@ -99,7 +125,7 @@ export default function SeniorsGlucoseMonitoring() {
               ))}
             </div>
           </div>
-        </section>
+        </nav>
 
         {/* Main Content */}
         <article className="py-16">
@@ -122,7 +148,7 @@ export default function SeniorsGlucoseMonitoring() {
                     { title: 'Slower Symptom Recognition', desc: 'High blood sugar symptoms may be mistaken for aging' },
                   ].map((item, i) => (
                     <div key={i} className="flex items-start gap-3">
-                      <AlertCircle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                      <AlertCircle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" aria-hidden="true" />
                       <div>
                         <p className="font-bold text-gray-900">{item.title}</p>
                         <p className="text-gray-700 text-sm">{item.desc}</p>
@@ -153,7 +179,7 @@ export default function SeniorsGlucoseMonitoring() {
                     { test: 'Fasting Glucose', healthy: '80–130 mg/dL', concern: 'Above 130 mg/dL' },
                     { test: 'After Meals (2 hours)', healthy: 'Below 180 mg/dL', concern: 'Above 180 mg/dL' },
                     { test: 'A1C (3-month average)', healthy: '7.0–7.5%', concern: 'Above 8.0%' },
-                    { test: 'Bedtime', healthy: '100–140 mg/dL', concern: 'Below 80 or above 180 mg/dL' },
+                    { test: 'Bedtime', healthy: '100–140 mg/dL*', concern: 'Below 90 or above 180 mg/dL' },
                   ].map((range, i) => (
                     <div key={i} className="flex flex-col md:flex-row md:items-center justify-between bg-gray-50 rounded-lg p-4">
                       <span className="font-semibold text-gray-900 mb-2 md:mb-0">{range.test}</span>
@@ -167,10 +193,13 @@ export default function SeniorsGlucoseMonitoring() {
               </div>
 
               <div className="bg-yellow-50 border-l-4 border-yellow-500 rounded-r-xl p-6">
-                <p className="font-semibold text-gray-900 mb-2">⚠️ Important Note:</p>
-                <p className="text-gray-700">
-                  For seniors with multiple health conditions, slightly higher targets (A1C 7.5–8.0%) may be safer to avoid dangerous low blood sugar. Always follow your doctor's personalized recommendations.
-                </p>
+                <h4 className="font-semibold text-gray-900 mb-2">Important Notes on Senior Targets:</h4>
+                <ul className="text-gray-700 space-y-2">
+                  <li>• These ranges are general guidance based on <strong>ADA 2026 Standards of Care</strong> for older adults with few stable conditions and intact cognitive function.</li>
+                  <li>• Seniors with multiple health conditions may safely target a higher A1C (7.5–8.0%) to reduce dangerous low blood sugar episodes.</li>
+                  <li>• <strong>*Bedtime targets are individualized</strong> — your doctor may adjust based on your overnight hypoglycemia risk and medication regimen.</li>
+                  <li>• Always follow your doctor's personalized recommendations — targets should be tailored to your specific health status and quality-of-life goals.</li>
+                </ul>
               </div>
             </section>
 
@@ -186,7 +215,7 @@ export default function SeniorsGlucoseMonitoring() {
                 <div className="bg-white border-2 border-emerald-200 rounded-xl p-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-emerald-100 p-3 rounded-lg">
-                      <Heart className="w-8 h-8 text-emerald-600" />
+                      <Heart className="w-8 h-8 text-emerald-600" aria-hidden="true" />
                     </div>
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-gray-900 mb-2">Traditional Blood Glucose Meters</h3>
@@ -208,7 +237,7 @@ export default function SeniorsGlucoseMonitoring() {
                 <div className="bg-white border-2 border-blue-200 rounded-xl p-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-blue-100 p-3 rounded-lg">
-                      <Activity className="w-8 h-8 text-blue-600" />
+                      <Activity className="w-8 h-8 text-blue-600" aria-hidden="true" />
                     </div>
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-gray-900 mb-2">Large Display Meters</h3>
@@ -221,7 +250,7 @@ export default function SeniorsGlucoseMonitoring() {
                           <li>• Easy-to-read displays</li>
                         </ul>
                       </div>
-                      <p className="text-sm text-blue-600 font-semibold">Examples: Prodigy Voice, OneTouch Ultra 2</p>
+                      <p className="text-sm text-blue-600 font-semibold">Examples: Prodigy Voice, Contour Next EZ (large display)</p>
                     </div>
                   </div>
                 </div>
@@ -230,7 +259,7 @@ export default function SeniorsGlucoseMonitoring() {
                 <div className="bg-white border-2 border-purple-200 rounded-xl p-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-purple-100 p-3 rounded-lg">
-                      <Smartphone className="w-8 h-8 text-purple-600" />
+                      <Smartphone className="w-8 h-8 text-purple-600" aria-hidden="true" />
                     </div>
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-gray-900 mb-2">Continuous Glucose Monitors (CGM)</h3>
@@ -238,9 +267,9 @@ export default function SeniorsGlucoseMonitoring() {
                       <div className="bg-purple-50 rounded-lg p-4 mb-3">
                         <p className="font-semibold text-gray-900 mb-2">Best For:</p>
                         <ul className="text-sm text-gray-700 space-y-1">
-                          <li>• Seniors taking insulin</li>
+                          <li>• Seniors taking insulin or medications that can cause hypoglycemia</li>
                           <li>• Those with unpredictable blood sugar</li>
-                          <li>• Active seniors who want convenience</li>
+                          <li>• Active seniors who want convenience (ADA 2026 guidelines increasingly support CGM use for people with diabetes who may benefit — ask your doctor if it's right for you)</li>
                         </ul>
                       </div>
                       <p className="text-sm text-purple-600 font-semibold">Examples: FreeStyle Libre, Dexcom G7</p>
@@ -256,7 +285,7 @@ export default function SeniorsGlucoseMonitoring() {
                 </p>
                 <Link to="/glucose-monitoring-tools" className="inline-flex items-center gap-2 bg-white text-emerald-600 font-semibold px-8 py-3 rounded-lg hover:bg-emerald-50 transition">
                   View Device Reviews
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-5 h-5" aria-hidden="true" />
                 </Link>
               </div>
             </section>
@@ -290,7 +319,7 @@ export default function SeniorsGlucoseMonitoring() {
               </div>
 
               <div className="bg-blue-50 border-l-4 border-blue-600 rounded-r-xl p-6 mt-6">
-                <p className="font-semibold text-gray-900 mb-2">💡 Pro Tips:</p>
+                <h4 className="font-semibold text-gray-900 mb-2">Pro Tips:</h4>
                 <ul className="text-gray-700 space-y-1">
                   <li>• Test at the same times each day for consistency</li>
                   <li>• Keep supplies in one place so you don't forget</li>
@@ -309,7 +338,7 @@ export default function SeniorsGlucoseMonitoring() {
               
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="bg-white border-2 border-emerald-200 rounded-xl p-6">
-                  <Shield className="w-10 h-10 text-emerald-600 mb-4" />
+                  <Shield className="w-10 h-10 text-emerald-600 mb-4" aria-hidden="true" />
                   <h3 className="text-xl font-bold text-gray-900 mb-3">Medication Safety Checklist</h3>
                   <ul className="space-y-2 text-gray-700">
                     {[
@@ -320,7 +349,7 @@ export default function SeniorsGlucoseMonitoring() {
                       'Know signs of low blood sugar',
                     ].map((tip, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
                         <span>{tip}</span>
                       </li>
                     ))}
@@ -328,7 +357,7 @@ export default function SeniorsGlucoseMonitoring() {
                 </div>
 
                 <div className="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-6">
-                  <AlertCircle className="w-10 h-10 text-yellow-600 mb-4" />
+                  <AlertCircle className="w-10 h-10 text-yellow-600 mb-4" aria-hidden="true" />
                   <h3 className="text-xl font-bold text-gray-900 mb-3">Watch for Low Blood Sugar (Hypoglycemia)</h3>
                   <p className="text-gray-700 mb-3">Common symptoms:</p>
                   <ul className="space-y-1 text-gray-700 text-sm">
@@ -338,8 +367,8 @@ export default function SeniorsGlucoseMonitoring() {
                     <li>• Dizziness or weakness</li>
                   </ul>
                   <div className="bg-red-100 border border-red-300 rounded-lg p-3 mt-4">
-                    <p className="font-bold text-red-800 text-sm">Emergency Treatment:</p>
-                    <p className="text-red-700 text-sm">15g fast-acting carbs (juice, glucose tablets), recheck in 15 minutes</p>
+                    <p className="font-bold text-red-800 text-sm">Emergency Treatment — The 15-15 Rule (ADA-recommended):</p>
+                    <p className="text-red-700 text-sm">Consume 15g of fast-acting carbs (4 glucose tablets, ½ cup juice, or regular soda). Wait 15 minutes, then recheck. If still below 70 mg/dL, repeat. If the person is unconscious or unable to swallow, call 911 immediately — do not give food or drink.</p>
                   </div>
                 </div>
               </div>
@@ -419,7 +448,7 @@ export default function SeniorsGlucoseMonitoring() {
                   {
                     activity: 'Walking',
                     recommendation: '20–30 minutes daily or after meals',
-                    benefits: 'Lowers blood sugar immediately, improves cardiovascular health',
+                    benefits: 'May help lower blood sugar after activity; also supports cardiovascular health over time',
                     safety: 'Use supportive shoes, walk with a partner if balance is a concern'
                   },
                   {
@@ -437,7 +466,7 @@ export default function SeniorsGlucoseMonitoring() {
                 ].map((ex, i) => (
                   <div key={i} className="bg-white border-2 border-emerald-200 rounded-xl p-6">
                     <div className="flex items-start gap-4">
-                      <Activity className="w-8 h-8 text-emerald-600 flex-shrink-0 mt-1" />
+                      <Activity className="w-8 h-8 text-emerald-600 flex-shrink-0 mt-1" aria-hidden="true" />
                       <div className="flex-1">
                         <h3 className="text-xl font-bold text-gray-900 mb-2">{ex.activity}</h3>
                         <div className="space-y-2 text-sm">
@@ -452,7 +481,7 @@ export default function SeniorsGlucoseMonitoring() {
               </div>
 
               <div className="bg-yellow-50 border-l-4 border-yellow-500 rounded-r-xl p-6 mt-6">
-                <p className="font-semibold text-gray-900 mb-2">⚠️ Exercise Safety:</p>
+                <h4 className="font-semibold text-gray-900 mb-2">Exercise Safety:</h4>
                 <ul className="text-gray-700 space-y-1 text-sm">
                   <li>• Check blood sugar before and after exercise</li>
                   <li>• Carry glucose tablets or juice in case of low blood sugar</li>
@@ -481,7 +510,7 @@ export default function SeniorsGlucoseMonitoring() {
                     'Insurance and pharmacy information',
                   ].map((item, i) => (
                     <div key={i} className="flex items-start gap-3 bg-white rounded-lg p-4">
-                      <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
                       <span className="text-gray-800">{item}</span>
                     </div>
                   ))}
@@ -528,15 +557,19 @@ export default function SeniorsGlucoseMonitoring() {
                   Senior-Friendly Supplement Support
                 </h2>
                 <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-                  Combine easy monitoring with gentle, researched supplements designed for healthy aging and stable blood sugar. These products are specifically chosen to be safe, effective, and easy to take.
+                  Combine easy monitoring with supplements studied for healthy aging and blood sugar support. Always discuss any supplement with your doctor before starting, especially if you take other medications.
                 </p>
                 <Link 
                   to="/supplements/blood-sugar-support"
                   className="inline-flex items-center justify-center gap-2 bg-teal-600 text-white font-bold px-10 py-4 rounded-xl hover:bg-teal-700 transition shadow-lg"
                 >
                   Shop Senior-Friendly Supplements
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-5 h-5" aria-hidden="true" />
                 </Link>
+                <p className="mt-4 text-xs text-gray-500 italic">
+                  * Some product links are affiliate links. We may earn a commission at no extra cost to you.{' '}
+                  <a href="#affiliate-disclosure" className="underline hover:text-gray-700">See full disclosure below.</a>
+                </p>
               </div>
             </section>
 
@@ -550,11 +583,11 @@ export default function SeniorsGlucoseMonitoring() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link to="/prediabetes-support" className="inline-flex items-center gap-2 bg-white text-emerald-600 font-semibold px-8 py-3 rounded-lg hover:bg-emerald-50 transition">
                     Prediabetes Guide
-                    <ArrowRight className="w-5 h-5" />
+                    <ArrowRight className="w-5 h-5" aria-hidden="true" />
                   </Link>
                   <Link to="/glucose-monitoring-tools" className="inline-flex items-center gap-2 bg-emerald-700 text-white font-semibold px-8 py-3 rounded-lg hover:bg-emerald-800 transition border-2 border-white">
                     View Monitoring Tools
-                    <ArrowRight className="w-5 h-5" />
+                    <ArrowRight className="w-5 h-5" aria-hidden="true" />
                   </Link>
                 </div>
               </div>
@@ -565,42 +598,53 @@ export default function SeniorsGlucoseMonitoring() {
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Related Resources</h2>
               <div className="grid md:grid-cols-3 gap-6">
                 <Link to="/glucose-monitoring-tools" className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border border-emerald-200 hover:shadow-lg transition">
-                  <Smartphone className="w-10 h-10 text-emerald-600 mb-3" />
+                  <Smartphone className="w-10 h-10 text-emerald-600 mb-3" aria-hidden="true" />
                   <h3 className="font-bold text-lg mb-2">Monitoring Devices</h3>
                   <p className="text-gray-600 text-sm mb-4">Compare the best glucose meters and CGMs</p>
                   <span className="text-emerald-600 font-semibold text-sm inline-flex items-center gap-1">
-                    View Devices <ArrowRight className="w-4 h-4" />
+                    View Devices <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </span>
                 </Link>
 
                 <Link to="/natural-blood-sugar" className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border border-emerald-200 hover:shadow-lg transition">
-                  <Heart className="w-10 h-10 text-emerald-600 mb-3" />
+                  <Heart className="w-10 h-10 text-emerald-600 mb-3" aria-hidden="true" />
                   <h3 className="font-bold text-lg mb-2">Natural Support</h3>
                   <p className="text-gray-600 text-sm mb-4">Herbs and foods for blood sugar</p>
                   <span className="text-emerald-600 font-semibold text-sm inline-flex items-center gap-1">
-                    Learn More <ArrowRight className="w-4 h-4" />
+                    Learn More <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </span>
                 </Link>
 
                 <Link to="/weight-wellness" className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border border-emerald-200 hover:shadow-lg transition">
-                  <Users className="w-10 h-10 text-emerald-600 mb-3" />
+                  <Users className="w-10 h-10 text-emerald-600 mb-3" aria-hidden="true" />
                   <h3 className="font-bold text-lg mb-2">Metabolic Wellness</h3>
                   <p className="text-gray-600 text-sm mb-4">Weight and metabolism guide</p>
                   <span className="text-emerald-600 font-semibold text-sm inline-flex items-center gap-1">
-                    Read Guide <ArrowRight className="w-4 h-4" />
+                    Read Guide <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </span>
                 </Link>
               </div>
             </section>
 
           </div>
-          <div className="container mx-auto px-4 mb-8">
-            <div className="bg-blue-50 rounded-lg p-4 text-sm text-blue-800 flex items-start gap-2">
-              <span>💰</span>
-              <p>Affiliate Disclosure: Thrive Health may earn commissions from affiliate partnerships and supplement links. This does not affect product pricing. We only recommend products we believe in based on research and quality standards.</p>
+        </article>
+
+        {/* AFFILIATE DISCLOSURE */}
+        <section id="affiliate-disclosure" className="py-4 bg-blue-50 border-t-2 border-blue-200">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <div>
+                  <p className="font-bold text-sm text-blue-900 mb-1">Affiliate Disclosure</p>
+                  <p className="text-sm text-blue-800 leading-relaxed">
+                    <strong>Transparency notice:</strong> This page contains affiliate links to glucose monitoring devices, supplements, and wellness products. ThriveHealth360 may earn a commission if you purchase through these links, at <strong>no additional cost to you</strong>. This financial relationship may influence which products we feature and how they are presented. We apply editorial and quality standards to all recommendations; however, you should verify suitability with your doctor or pharmacist before purchasing any supplement or monitoring device. This disclosure is provided in accordance with the FTC&apos;s guidelines on endorsements and testimonials (16 CFR §255).
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-        </article>
+        </section>
       </main>
     </>
   );
