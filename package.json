@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "build:prod": "BUILD_MODE=prod vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -50,7 +50,6 @@
     "embla-carousel-react": "^8.5.2",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.364.0",
-    "next": "^9.3.3",
     "next-themes": "^0.4.4",
     "puppeteer": "^24.42.0",
     "react": "^18.3.1",
@@ -90,6 +89,5 @@
     "vite": "^6.0.1",
     "vite-plugin-source-identifier": "1.1.2",
     "vitest": "^4.1.2"
-  },
-  "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184"
+  }
 }
