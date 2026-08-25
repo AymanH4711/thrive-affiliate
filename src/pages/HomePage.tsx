@@ -9,28 +9,65 @@ import {
 
 import { SEO } from '@/components/seo/SEO';
 
+import { subscribeToNewsletter } from '@/api/subscribe';
+
 // ── Lead Magnet ───────────────────────────────────────────────────────────────
 const LeadMagnet: React.FC = () => {
   const [email, setEmail]           = useState('');
   const [name, setName]             = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSending, setIsSending]   = useState(false);
 
-  const handleDownload = (e: React.FormEvent) => {
+  const handleDownload = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO(Ayman): this only triggers a local file download — name/email are
-    // captured into state but never sent anywhere (no fetch/API call to a
-    // CRM or email service). Wire this up to your actual lead-capture
-    // backend (Mailchimp/ConvertKit/custom endpoint/etc.) before relying on
-    // this as a real signup flow. Until then, no leads are actually captured.
-    setIsSubscribed(true);
-    const link = document.createElement('a');
-    link.href = '/downloads/MetabolicReset_FullBook.pdf';
-    link.download = 'MetabolicReset_FullBook.pdf';
-    // Appended to the DOM before triggering click() — some browsers
-    // (notably Firefox) can silently no-op .click() on a detached element.
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    setIsSending(true);
+
+    try {
+      // Same EmailJS service/template already proven working for the 7-Day
+      // guide in DownloadModal.tsx — reused here so both lead magnets send
+      // through the same verified, working configuration.
+      const templateParams = {
+        user_email: email,
+        downloaded_resources: 'The Complete 12-Week Metabolic Reset Protocol',
+      };
+
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          service_id: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+          template_id: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+          user_id: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+          template_params: templateParams,
+        }),
+      });
+
+      if (response.ok) {
+        setIsSubscribed(true);
+
+        const link = document.createElement('a');
+        link.href = '/downloads/MetabolicReset_FullBook.pdf';
+        link.download = 'MetabolicReset_FullBook.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Fire-and-forget — download/email already succeeded above; a
+        // failed list-add here shouldn't block the user's download.
+        subscribeToNewsletter(email, '12-week-protocol').then((result) => {
+          if (!result.success) {
+            console.warn('Newsletter subscribe failed (download still succeeded):', result.message);
+          }
+        });
+      } else {
+        alert('There was an error sending your guide. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+      alert('There was an error. Please try again.');
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -84,9 +121,9 @@ const LeadMagnet: React.FC = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-emerald-50 focus:border-emerald-600 outline-none transition text-sm" />
               </div>
-              <button type="submit"
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2">
-                <Download className="w-5 h-5" /> Send My Free Guide
+              <button type="submit" disabled={isSending}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                <Download className="w-5 h-5" /> {isSending ? 'Sending...' : 'Send My Free Guide'}
               </button>
               <div className="flex items-center justify-center gap-2 text-[10px] text-gray-400 uppercase tracking-widest font-medium">
                 <Lock className="w-3 h-3" /> Secure & Spam-Free

@@ -1,45 +1,37 @@
 import { useState } from 'react';
 import { X, Download, Mail, FileText } from 'lucide-react';
+import { subscribeToNewsletter } from '@/api/subscribe';
 
 interface DownloadModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   description?: string;
-}
-
-interface PDFOption {
-  id: string;
-  name: string;
-  description: string;
-  filename: string;
-  selected: boolean;
+  /** Display name shown in the PDF info card and used in the email's
+      "downloaded_resources" field. Defaults preserve the original
+      7-Day Blood Sugar Reset Guide behavior for existing call sites. */
+  resourceName?: string;
+  resourceDescription?: string;
+  /** Filename under /downloads/ — must match an actual file in public/downloads/. */
+  resourceFilename?: string;
+  /** Used as the Brevo "SOURCE" attribute — helps distinguish which
+      lead magnet drove a given signup in your contact list. */
+  subscribeSource?: string;
 }
 
 export const DownloadModal = ({
   isOpen,
   onClose,
   title = "Get Your Free Guide",
-  description = "Join thousands reversing prediabetes. Download your resource instantly."
+  description = "Join thousands reversing prediabetes. Download your resource instantly.",
+  resourceName = '7-Day Blood Sugar Reset Guide',
+  resourceDescription = 'Your complete 7-day action plan with daily protocols and supplement recommendations (20 pages)',
+  resourceFilename = '7-day-blood-sugar-reset.pdf',
+  subscribeSource = 'download-modal',
 }: DownloadModalProps) => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [selectedPDFs, setSelectedPDFs] = useState<PDFOption[]>([
-    {
-      id: '1',
-      name: '7-Day Blood Sugar Reset Guide',
-      description: 'Your complete 7-day action plan with daily protocols and supplement recommendations (20 pages)',
-      filename: '7-day-blood-sugar-reset.pdf',
-      selected: true
-    }
-  ]);
-
-  const togglePDF = (id: string) => {
-    setSelectedPDFs(selectedPDFs.map(pdf =>
-      pdf.id === id ? { ...pdf, selected: !pdf.selected } : pdf
-    ));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +40,7 @@ export const DownloadModal = ({
     try {
       const templateParams = {
         user_email: email,
-        downloaded_resources: '7-Day Blood Sugar Reset Guide'
+        downloaded_resources: resourceName,
       };
 
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
@@ -60,20 +52,28 @@ export const DownloadModal = ({
           service_id: import.meta.env.VITE_EMAILJS_SERVICE_ID,
           template_id: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
           user_id: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
-          template_params: templateParams
-        })
+          template_params: templateParams,
+        }),
       });
 
       if (response.ok) {
         setSubmitted(true);
-        
+
         // Download the PDF
         const link = document.createElement('a');
-        link.href = '/downloads/7-day-blood-sugar-reset.pdf';
-        link.download = '7-day-blood-sugar-reset.pdf';
+        link.href = `/downloads/${resourceFilename}`;
+        link.download = resourceFilename;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+
+        // Add to the mailing list — runs after the download/email succeed;
+        // a failed list-add here doesn't block the user's download.
+        subscribeToNewsletter(email, subscribeSource).then((result) => {
+          if (!result.success) {
+            console.warn('Newsletter subscribe failed (download still succeeded):', result.message);
+          }
+        });
 
         // Close modal after 2 seconds
         setTimeout(() => {
@@ -93,12 +93,12 @@ export const DownloadModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="download-modal-heading">
       <div className="bg-white rounded-lg max-w-md w-full shadow-xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-4 flex items-center justify-between sticky top-0">
-          <h2 className="text-xl font-bold">{title}</h2>
-          <button 
+          <h2 id="download-modal-heading" className="text-xl font-bold">{title}</h2>
+          <button
             onClick={onClose}
             className="hover:opacity-80 transition"
             aria-label="Close modal"
@@ -119,8 +119,8 @@ export const DownloadModal = ({
                   <div className="flex items-start gap-3">
                     <FileText size={20} className="text-emerald-600 flex-shrink-0 mt-1" />
                     <div>
-                      <p className="font-semibold text-gray-900">7-Day Blood Sugar Reset Guide</p>
-                      <p className="text-sm text-gray-600 mt-1">Your complete 7-day action plan with daily protocols and supplement recommendations (20 pages)</p>
+                      <p className="font-semibold text-gray-900">{resourceName}</p>
+                      <p className="text-sm text-gray-600 mt-1">{resourceDescription}</p>
                     </div>
                   </div>
                 </div>
