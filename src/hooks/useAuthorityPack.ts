@@ -1,7 +1,7 @@
 // src/hooks/useAuthorityPack.ts
 // Hook to access authority pack data for any pillar
 
-import { useAuthorityPack } from "@/hooks/useAuthorityPack";
+import { authorityPacks } from '../data/authorityPacks';
 
 /**
  * Get the authority pack for a specific pillar

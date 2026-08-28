@@ -14,6 +14,7 @@
     "jsxImportSource": "react",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     /* Tailwind stuff */
     "baseUrl": ".",
     "paths": {

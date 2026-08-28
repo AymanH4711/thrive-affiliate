@@ -31,6 +31,7 @@ const articles: Record<string, any> = {
     title: 'The Best Foods for Blood Sugar Control: Complete Guide',
     description: 'Complete prediabetes diet guide. Learn which foods stabilize blood sugar, meal timing strategies, and a 7-day meal plan to reverse prediabetes naturally.',
     category: 'Diet & Blood Sugar',
+    pillarId: 'natural-blood-sugar',
     readTime: '10 min read',
     image: '/images/prediabetes-diet-og.png',
     hasAffiliateLinks: false,
@@ -96,6 +97,7 @@ const articles: Record<string, any> = {
     title: 'Post-Meal Walks: The Most Powerful Blood Sugar Tool',
     description: 'Why 10 minutes after eating is the perfect time to walk. Science-backed timing and protocol for maximum glucose reduction.',
     category: 'Exercise & Movement',
+    pillarId: 'weight-wellness',
     readTime: '7 min read',
     image: '/images/prediabetes-exercise-og.png',
     hasAffiliateLinks: false,
@@ -147,6 +149,7 @@ const articles: Record<string, any> = {
     title: 'CGM vs Blood Glucose Meter: Which Should You Use in 2025?',
     description: 'Complete guide to glucose monitoring devices. Compare CGM systems (Dexcom, Freestyle Libre) vs traditional meters. Reviews, buying guide, and app recommendations.',
     category: 'Glucose Monitoring',
+    pillarId: 'glucose-monitoring',
     readTime: '9 min read',
     image: '/images/glucose-monitors-og.png',
     hasAffiliateLinks: true,
@@ -202,6 +205,7 @@ const articles: Record<string, any> = {
     title: 'Berberine for Blood Sugar: Evidence-Based Review (2026)',
     description: 'How berberine works, dosing research, and what clinical studies show about its effects on blood sugar. Not a replacement for medical treatment — always consult your doctor.',
     category: 'Supplements & Natural Health',
+    pillarId: 'insulin-resistance',
     readTime: '8 min read',
     hasAffiliateLinks: true,
     lastReviewed: 'April 2026',
@@ -258,6 +262,7 @@ const articles: Record<string, any> = {
     title: 'Sleep & Blood Sugar: The 7-9 Hour Science',
     description: 'How poor sleep raises fasting glucose and what to do about it. Sleep optimization protocol for glucose control.',
     category: 'Sleep & Stress',
+    pillarId: 'natural-blood-sugar', // TODO: placeholder — no dedicated sleep/stress authority pack exists yet
     readTime: '8 min read',
     image: '/images/sleep-stress-og.png',
     hasAffiliateLinks: true,
@@ -317,6 +322,7 @@ const articles: Record<string, any> = {
     title: 'Why Use Ceylon Cinnamon for Diabetes? Complete 2026 Clinical Guide',
     description: 'Clinical evidence, optimal dosage (1,500mg), and where to buy certified brands for blood sugar management.',
     category: 'Supplements & Natural Health',
+    pillarId: 'insulin-resistance',
     readTime: '12 min read',
     image: '/images/blog/ceylon-cinnamon-diabetes.webp',
     hasAffiliateLinks: true,
@@ -400,10 +406,9 @@ const BlogArticlePage = () => {
   const { articleId } = useParams();
   const location = useLocation();
   const { ctaConfig } = useAffiliateCTA(location.pathname);
-  const { authorityPack } = useAuthorityPack('default');
-  const { products } = useProducts('supplements');
-
   const article = articles[articleId as string];
+  const authorityPack = useAuthorityPack(article?.pillarId);
+  const products = useProducts(article?.pillarId);
 
   // 🛡 Defensive check prevents the crash when the slug is invalid
   if (!article) {
@@ -568,13 +573,39 @@ const BlogArticlePage = () => {
                   <Award className="w-5 h-5 text-amber-400" aria-hidden="true" />
                   Why Trust Our Recommendations
                 </h3>
+                {authorityPack.entities?.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {authorityPack.entities.map((entity: string, index: number) => (
+                      <span
+                        key={index}
+                        className="text-xs font-medium bg-white/10 text-gray-200 px-3 py-1 rounded-full"
+                      >
+                        {entity}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {authorityPack.items?.map((item: any, index: number) => (
+                  {authorityPack.citations?.map((citation: any, index: number) => (
                     <div key={index} className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
                       <div>
-                        <div className="font-medium text-white">{item.title}</div>
-                        <div className="text-sm text-gray-300">{item.description}</div>
+                        <div className="font-medium text-white">
+                          {citation.authors} ({citation.year})
+                        </div>
+                        <div className="text-sm text-gray-300">
+                          {citation.title} — <span className="italic">{citation.journal}</span>
+                        </div>
+                        {citation.url && (
+                          <a
+                            href={citation.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-emerald-400 hover:text-emerald-300 underline inline-flex items-center gap-1 mt-1"
+                          >
+                            View source <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                          </a>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -586,7 +617,7 @@ const BlogArticlePage = () => {
             <Card className="mb-8 bg-white p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Related Articles</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {articleSilomap
+                {articleSiloMap
                   .filter((item: any) => item.category === article.category && item.url !== article.url)
                   .slice(0, 2)
                   .map((relatedItem: any, index: number) => (
