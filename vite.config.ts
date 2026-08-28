@@ -23,14 +23,23 @@ export default defineConfig({
     // Don't ship sourcemaps in production — smaller output, no source exposure
     sourcemap: !isProd,
 
-    // Split vendor code from app code so browsers can cache React/Router
-    // separately from your frequently-changing article/page code
+    // Split vendor code (node_modules) from app code so browsers can cache
+    // them separately from your frequently-changing article/page code.
+    //
+    // IMPORTANT: everything from node_modules goes into ONE "vendor" chunk
+    // here — do NOT split React into its own chunk apart from libraries
+    // like lucide-react that call React.forwardRef at module-load time.
+    // An earlier version of this file split "vendor-react" out separately,
+    // which caused a real production outage: Rollup doesn't guarantee that
+    // chunk finishes executing before other vendor code runs, so
+    // lucide-react intermittently ran before React existed yet, throwing
+    // "Cannot read properties of undefined (reading 'forwardRef')" and
+    // blanking every page. Keep this simple single-vendor-chunk approach
+    // unless you have a specific, tested reason to split further.
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
-            if (id.includes("react-router")) return "vendor-router"
-            if (id.includes("react-dom") || id.includes("/react/")) return "vendor-react"
             return "vendor"
           }
         },
