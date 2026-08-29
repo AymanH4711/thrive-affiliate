@@ -304,6 +304,9 @@ const FiveWarningSignsPrediabetes = () => {
               src={heroImage}
               alt="5 warning signs of prediabetes infographic showing fatigue, thirst, vision changes, slow healing, and skin patches"
               className="w-full rounded-xl shadow-lg"
+              width={1200}
+              height={675}
+              loading="eager"
               onError={handleImageError}
             />
             <figcaption className="text-center text-sm text-gray-600 mt-4">

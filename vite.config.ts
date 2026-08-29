@@ -3,9 +3,23 @@ import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
 import sourceIdentifierPlugin from 'vite-plugin-source-identifier'
 
-const isProd = process.env.BUILD_MODE === 'prod'
+// PREVIOUSLY: const isProd = process.env.BUILD_MODE === 'prod'
+//
+// That relied on a custom env var that was never actually set in Cloudflare
+// Pages' build configuration (build command was just
+// "npm install --legacy-peer-deps && npm run build", no BUILD_MODE anywhere
+// in Variables/Secrets either). Result: every production deploy silently
+// built in DEV mode — unminified JS, sourcemaps shipped, and the dev-only
+// sourceIdentifierPlugin (adds a data-matrix attribute to every element)
+// running live on the real site.
+//
+// Fixed by using Vite's own command detection instead of a custom env var:
+// `vite build` (what `npm run build` runs) always passes command === 'build'
+// here, with no configuration needed on Cloudflare's end at all.
+export default defineConfig(({ command }) => {
+  const isProd = command === 'build'
 
-export default defineConfig({
+  return {
   plugins: [
     react(),
     sourceIdentifierPlugin({
@@ -67,4 +81,5 @@ export default defineConfig({
   optimizeDeps: {
     include: ["react", "react-dom", "react-router-dom"],
   },
+  }
 })
