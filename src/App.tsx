@@ -28,15 +28,41 @@ const ComingSoon = ({ title }: { title?: string }) => (
 );
 
 // ── Main Pages ────────────────────────────────────────────────────────────────
-// HomePage stays eager — it's the most common landing page, so we want it
-// in the same request as the app shell rather than adding a second
-// network round-trip before the first paint.
+// HomePage AND all individual blog articles stay eager (static imports), not
+// lazy. Reasoning: lazy-loading only pays off for pages a visitor reaches by
+// navigating WITHIN the app first (so the small loading flash happens after
+// they've already seen a full page render). Blog articles are the opposite —
+// nearly every real visit is a direct landing from Google/social/a shared
+// link, straight into an empty Suspense fallback. That produces a large,
+// completely avoidable layout shift (placeholder → full article) on exactly
+// the pages that matter most for this site. Confirmed via PageSpeed Insights:
+// CLS was 0.655 on /blog/5-warning-signs-of-prediabetes even with all image
+// dimensions fixed — the shift was structural, not image-related.
+//
+// Utility/tool/pillar pages below stay lazy since those genuinely are
+// reached via in-app navigation, where the tradeoff favors bundle size.
 import HomePage from "./pages/HomePage";
 
-const AboutPage       = lazy(() => import("./pages/AboutPage"));
-const BlogPage         = lazy(() => import("./pages/BlogPage"));
-const BlogArticlePage  = lazy(() => import("./pages/BlogArticlePage"));
-const ResourcesPage    = lazy(() => import("./pages/ResourcesPage"));
+import PrediabetesVsType2Diabetes from "./pages/blog/Prediabetes-Support/PrediabetesVsType2Diabetes";
+import InsulinSensitivityFAQ2026 from "./pages/blog/Prediabetes-Support/InsulinSensitivityFAQ2026";
+import ReversePrediabetes2026 from "./pages/blog/Prediabetes-Support/ReversePrediabetes2026";
+import IntermittentFastingBloodSugar from "./pages/blog/Diet&BloodSugar-Control/IntermittentFastingBloodSugar";
+import BestFoodsBloodSugar from "./pages/blog/Diet&BloodSugar-Control/BestFoodsBloodSugar";
+import LowCarbDietForDiabetesBloodSugarControlEvidenceBasArticle from "./pages/blog/Diet&BloodSugar-Control/low-carb-diet-for-diabetes-blood-sugar-c-article";
+import PostMealWalks from "./pages/blog/Exercise&Movement/PostMealWalks";
+import CGMvsBloodGlucoseMeter from "./pages/blog/Glucose-Monitoring/CGMvsBloodGlucoseMeter";
+import BerberineVsMetformin from "./pages/blog/Supplements&Natural-Health/BerberineVsMetformin";
+import GlucoTrustDiabetesScienceBackedBenefitArticle from "./pages/blog/Supplements&Natural-Health/glucotrust-diabetes-science-backed-benef-article";
+import GlucoCareNaturalDiabetesSupplementScienceBackedBenArticle from "./pages/blog/Supplements&Natural-Health/gluco-care-natural-diabetes-supplement-s-article";
+import DiabetesBloodSugarManagementScienceBackedBenefitsHArticle from "./pages/blog/Supplements&Natural-Health/diabetes-blood-sugar-management-science--article";
+import FiveWarningSignsPrediabetes from "./pages/blog/Featured-Article/5WarningSignsPrediabetes";
+// BlogArticlePage is the fallback for any article not given its own route
+// above (/blog/:articleId) — also a direct-landing page, so also eager.
+import BlogArticlePage from "./pages/BlogArticlePage";
+
+const AboutPage        = lazy(() => import("./pages/AboutPage"));
+const BlogPage          = lazy(() => import("./pages/BlogPage"));
+const ResourcesPage     = lazy(() => import("./pages/ResourcesPage"));
 
 // ── Utility / Legal Pages ─────────────────────────────────────────────────────
 const ContactPage             = lazy(() => import("./pages/utility/ContactPage"));
@@ -45,37 +71,9 @@ const MedicalDisclaimerPage   = lazy(() => import("./pages/MedicalDisclaimerPage
 const AffiliateDisclosurePage = lazy(() => import("./pages/AffiliateDisclosurePage"));
 const PrivacyPage             = lazy(() => import("./pages/utility/PrivacyPolicy"));
 
-// ── Blog: Prediabetes Support ──────────────────────────────────────────────
-const PrediabetesVsType2Diabetes = lazy(() => import("./pages/blog/Prediabetes-Support/PrediabetesVsType2Diabetes"));
-const InsulinSensitivityFAQ2026  = lazy(() => import("./pages/blog/Prediabetes-Support/InsulinSensitivityFAQ2026"));
-const ReversePrediabetes2026     = lazy(() => import("./pages/blog/Prediabetes-Support/ReversePrediabetes2026"));
-
-// ── Blog: Diet & Blood Sugar Control ─────────────────────────────────────────
-const IntermittentFastingBloodSugar = lazy(() => import("./pages/blog/Diet&BloodSugar-Control/IntermittentFastingBloodSugar"));
-const BestFoodsBloodSugar           = lazy(() => import("./pages/blog/Diet&BloodSugar-Control/BestFoodsBloodSugar"));
-const LowCarbDietForDiabetesBloodSugarControlEvidenceBasArticle = lazy(() => import("./pages/blog/Diet&BloodSugar-Control/low-carb-diet-for-diabetes-blood-sugar-c-article"));
-
-// ── Blog: Exercise & Movement ─────────────────────────────────────────────
-const PostMealWalks = lazy(() => import("./pages/blog/Exercise&Movement/PostMealWalks"));
-
-// ── Blog: Glucose Monitoring ──────────────────────────────────────────────
-const CGMvsBloodGlucoseMeter = lazy(() => import("./pages/blog/Glucose-Monitoring/CGMvsBloodGlucoseMeter"));
-
-// ── Blog: Supplements & Natural Health ────────────────────────────────────
-const BerberineVsMetformin    = lazy(() => import("./pages/blog/Supplements&Natural-Health/BerberineVsMetformin"));
-const GlucoTrustDiabetesScienceBackedBenefitArticle = lazy(() => import("./pages/blog/Supplements&Natural-Health/glucotrust-diabetes-science-backed-benef-article"));
-const GlucoCareNaturalDiabetesSupplementScienceBackedBenArticle = lazy(() => import("./pages/blog/Supplements&Natural-Health/gluco-care-natural-diabetes-supplement-s-article"));
-
-// ═══ NEW IMPORT: Diabetes Blood Sugar Management ═══
-const DiabetesBloodSugarManagementScienceBackedBenefitsHArticle = lazy(() => import("./pages/blog/Supplements&Natural-Health/diabetes-blood-sugar-management-science--article"));
-// ═══════════════════════════════════
-
 // ── Blog: Sleep & Stress Management ───────────────────────────────────────
 // (commented out; missing file)
 // const SleepBloodSugar = lazy(() => import("./pages/blog/Sleep&Stress-Management/SleepBloodSugar"));
-
-// ── Blog: Featured Article ────────────────────────────────────────────────
-const FiveWarningSignsPrediabetes = lazy(() => import("./pages/blog/Featured-Article/5WarningSignsPrediabetes"));
 
 // ── Book ──────────────────────────────────────────────────────────────────────
 const BloodSugarResetBook = lazy(() => import("./books/BloodSugarResetBook"));
