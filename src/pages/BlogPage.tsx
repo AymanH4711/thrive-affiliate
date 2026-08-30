@@ -98,7 +98,6 @@ const COMING_SOON: Record<BlogCategoryKey, Article[]> = {
   ],
   diet: [
     { title: 'Coming Soon: Meal Prep for Blood Sugar Success', excerpt: 'Easy meal prep strategies to stay consistent with your diet plan.', readTime: 'Coming soon', path: '#', image: '/images/placeholder-emerald.png', isPublished: false },
-    { title: 'Coming Soon: Restaurant Dining & Social Eating', excerpt: 'How to make healthy choices when eating out.', readTime: 'Coming soon', path: '#', image: '/images/placeholder-emerald.png', isPublished: false },
   ],
   exercise: [
     // PostMealWalks.tsx is a real placeholder file discovered dynamically

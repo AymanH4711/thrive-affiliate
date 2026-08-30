@@ -49,6 +49,12 @@ import ReversePrediabetes2026 from "./pages/blog/Prediabetes-Support/ReversePred
 import IntermittentFastingBloodSugar from "./pages/blog/Diet&BloodSugar-Control/IntermittentFastingBloodSugar";
 import BestFoodsBloodSugar from "./pages/blog/Diet&BloodSugar-Control/BestFoodsBloodSugar";
 import LowCarbDietForDiabetesBloodSugarControlEvidenceBasArticle from "./pages/blog/Diet&BloodSugar-Control/low-carb-diet-for-diabetes-blood-sugar-c-article";
+// NOTE: this article's own generated header comment suggested saving it to
+// "./pages/blog/diet/..." — that's the pSEO tool's generic default, not
+// this project's actual folder convention. Saved under the same
+// "Diet&BloodSugar-Control" folder as the other diet articles instead, to
+// match everything else in this category.
+import LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle from "./pages/blog/Diet&BloodSugar-Control/low-carb-restaurant-dining-for-diabetes-evidence-based-diet-article";
 import PostMealWalks from "./pages/blog/Exercise&Movement/PostMealWalks";
 import CGMvsBloodGlucoseMeter from "./pages/blog/Glucose-Monitoring/CGMvsBloodGlucoseMeter";
 import BerberineVsMetformin from "./pages/blog/Supplements&Natural-Health/BerberineVsMetformin";
@@ -151,6 +157,7 @@ function App() {
               <Route path="/blog/intermittent-fasting-blood-sugar" element={<IntermittentFastingBloodSugar />} />
               <Route path="/blog/best-foods-blood-sugar"  element={<BestFoodsBloodSugar />} />
               <Route path="/blog/low-carb-diet-for-diabetes-blood-sugar-control-evidence-base" element={<LowCarbDietForDiabetesBloodSugarControlEvidenceBasArticle />} />
+              <Route path="/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta" element={<LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle />} />
 
               {/* ── Blog: Exercise & Movement ───────────────────────────────── */}
               <Route path="/blog/post-meal-walks"                  element={<PostMealWalks />} />
