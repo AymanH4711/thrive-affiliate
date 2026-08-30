@@ -59,9 +59,14 @@ import FiveWarningSignsPrediabetes from "./pages/blog/Featured-Article/5WarningS
 // BlogArticlePage is the fallback for any article not given its own route
 // above (/blog/:articleId) — also a direct-landing page, so also eager.
 import BlogArticlePage from "./pages/BlogArticlePage";
+// BlogPage (the /blog listing itself) — added here 2026-08-30 after
+// PageSpeed showed CLS 0.656 on /blog, matching the exact same
+// lazy-Suspense-swap pattern found and fixed on the individual articles.
+// It's a common direct landing page too (search, nav, shared links), so
+// it gets the same treatment.
+import BlogPage from "./pages/BlogPage";
 
 const AboutPage        = lazy(() => import("./pages/AboutPage"));
-const BlogPage          = lazy(() => import("./pages/BlogPage"));
 const ResourcesPage     = lazy(() => import("./pages/ResourcesPage"));
 
 // ── Utility / Legal Pages ─────────────────────────────────────────────────────

@@ -23,6 +23,7 @@ interface Article {
   readTime: string;
   path: string;
   image: string;
+  thumbnail?: string;
   isPublished: boolean;
 }
 
@@ -159,6 +160,7 @@ const healthTopics = (Object.keys(CATEGORY_CONFIG) as BlogCategoryKey[]).map((ke
       readTime: a.readTime,
       path: a.path,
       image: a.image,
+      thumbnail: a.thumbnail,
       isPublished: a.isPublished ?? true,
     }));
   return {
@@ -288,9 +290,11 @@ const BlogPage = (): JSX.Element => {
               <Card className="md:flex gap-6 border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50">
                 <div className="md:w-1/3 h-64 bg-emerald-100 rounded-lg mb-4 md:mb-0 overflow-hidden flex-shrink-0">
                   <img
-                    src={featuredMeta.image}
+                    src={featuredMeta.thumbnail ?? featuredMeta.image}
                     alt={featuredMeta.title}
                     className="w-full h-full object-cover"
+                    width={600}
+                    height={480}
                     onError={(e) => handleImageError(e, '0 0 600 480')}
                   />
                 </div>
@@ -370,9 +374,12 @@ const BlogPage = (): JSX.Element => {
                         className={`h-48 rounded-lg mb-4 overflow-hidden flex-shrink-0 ${bgColorMap[category.color]} relative`}
                       >
                         <img
-                          src={article.image}
+                          src={article.thumbnail ?? article.image}
                           alt={article.title}
                           className="w-full h-full object-cover"
+                          width={400}
+                          height={192}
+                          loading="lazy"
                           onError={(e) => handleImageError(e)}
                         />
                         {!article.isPublished && (
