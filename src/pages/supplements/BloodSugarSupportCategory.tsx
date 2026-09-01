@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle, AlertCircle, Pill, Heart, Zap, ShieldCheck, Activity, Leaf } from 'lucide-react';
+import { ArrowRight, CheckCircle, AlertCircle, Pill, Heart, Zap, ShieldCheck, Activity } from 'lucide-react';
 import { SEO } from "@/components/seo/SEO";
 
 export default function BloodSugarSupportCategory() {
@@ -22,35 +22,36 @@ export default function BloodSugarSupportCategory() {
       {
         id: "berberine",
         name: "Berberine",
+        type: "supplement" as const,
         tagline: "The Metabolic Master Switch",
         description: "Often called 'nature's Metformin', Berberine activates AMPK, the enzyme that regulates metabolism.",
         benefits: ["Lowers fasting blood sugar", "Reduces A1C levels", "Improves cholesterol profile"],
+        // TODO: still a placeholder — replace with the real Digistore24
+        // product link once provided.
         recommendedBrand: "Thorne Berberine-500",
-        affiliateLink: "https://amzn.to/placeholder_berberine",
+        affiliateLink: "https://discover.insulinherb.com/berberine-v2/?aff=Ayman_Hathoot",
         rating: 4.9,
         icon: Pill
       },
       {
-        id: "cinnamon",
-        name: "Ceylon Cinnamon",
-        tagline: "Natural Glucose Stabilizer",
-        description: "Contains bioactive compounds that mimic insulin and improve cellular glucose uptake.",
-        benefits: ["Increases insulin sensitivity", "Slows carbohydrate digestion", "Rich in antioxidants"],
-        recommendedBrand: "Nutricost Ceylon Cinnamon",
-        affiliateLink: "https://amzn.to/placeholder_cinnamon",
-        rating: 4.7,
-        icon: Leaf
-      },
-      {
-        id: "chromium",
-        name: "Chromium Picolinate",
-        tagline: "Insulin Co-Factor",
-        description: "An essential trace mineral that potentiates insulin receptor signalling, helping cells respond to insulin more effectively.",
-        benefits: ["Supports insulin receptor activity", "Improves glucose tolerance", "Supports macronutrient metabolism"],
-        recommendedBrand: "NOW Foods Chromium",
-        affiliateLink: "https://amzn.to/placeholder_chromium",
-        rating: 4.6,
-        icon: Zap
+        id: "diabetes-solution-kit",
+        name: "Diabetes Solution Kit E-books",
+        // Not a rated supplement — a digital guide, so no genuine star rating
+        // and no "recommended brand" (it has a creator/publisher instead).
+        // Links internally to our own review/CTA page rather than straight
+        // to the affiliate link, matching how GeneralWellnessCategory.tsx
+        // already treats its one guide entry.
+        type: "guide" as const,
+        tagline: "100+ Page Digital Guide by Barton Publishing",
+        description: "A digital guide bundle covering a 3-phase approach to blood sugar management, medically fronted by Scott Saunders, MD. Includes the Low Blood Sugar Cookbook, a Carb-Counting Cheatsheet, and a Type 2 Grocery List.",
+        benefits: [
+          "3-phase plan framework, explained in plain language",
+          "Includes a cookbook, carb-counting cheatsheet, and grocery list",
+          "365-day money-back guarantee from the publisher"
+        ],
+        creator: "Barton Publishing / Scott Saunders, MD",
+        internalLink: "/guides/diabetes-solution-kit",
+        icon: ShieldCheck
       }
     ]
   };
@@ -167,7 +168,7 @@ export default function BloodSugarSupportCategory() {
 
         {/* 3. PRODUCTS GRID */}
         <div className="container mx-auto px-4 py-16">
-          <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {categoryData.products.map((product) => (
                <div 
                  key={product.id} 
@@ -180,9 +181,15 @@ export default function BloodSugarSupportCategory() {
                      <div className={`p-2 ${colors.iconBg} rounded-lg shadow-sm border ${colors.lightBorder}`}>
                        <product.icon className="w-6 h-6" />
                      </div>
-                     <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded text-xs font-bold text-yellow-700 border border-yellow-100">
-                       ★ {product.rating}
-                     </div>
+                     {product.type === 'guide' ? (
+                       <div className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded text-xs font-bold text-gray-600 border border-gray-200">
+                         Digital Guide
+                       </div>
+                     ) : (
+                       <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded text-xs font-bold text-yellow-700 border border-yellow-100">
+                         ★ {product.rating}
+                       </div>
+                     )}
                    </div>
                    <h3 className="text-xl font-bold text-gray-900 mb-1">{product.name}</h3>
                    <p className={`text-sm font-medium ${colors.linkColor}`}>{product.tagline}</p>
@@ -210,20 +217,30 @@ export default function BloodSugarSupportCategory() {
 
                    {/* CTA */}
                    <div className="mt-auto pt-6 border-t border-gray-100">
-                     <div className="text-xs text-gray-500 mb-1">Recommended Brand:</div>
+                     <div className="text-xs text-gray-500 mb-1">{product.type === 'guide' ? 'Created By:' : 'Recommended Brand:'}</div>
                      <div className="font-semibold text-gray-900 mb-4 flex items-center gap-1">
                        <ShieldCheck className={`w-4 h-4 ${colors.icon}`} />
-                       {product.recommendedBrand}
+                       {product.type === 'guide' ? product.creator : product.recommendedBrand}
                      </div>
-                     <a 
-                       href={product.affiliateLink}
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       className={`flex items-center justify-center gap-2 w-full bg-gray-900 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-gray-200 ${colors.button}`}
-                     >
-                       Check Price
-                       <ArrowRight className="w-4 h-4" />
-                     </a>
+                     {product.type === 'guide' ? (
+                       <Link
+                         to={product.internalLink}
+                         className={`flex items-center justify-center gap-2 w-full bg-gray-900 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-gray-200 ${colors.button}`}
+                       >
+                         See What's Inside
+                         <ArrowRight className="w-4 h-4" />
+                       </Link>
+                     ) : (
+                       <a
+                         href={product.affiliateLink}
+                         target="_blank"
+                         rel="noopener noreferrer"
+                         className={`flex items-center justify-center gap-2 w-full bg-gray-900 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-gray-200 ${colors.button}`}
+                       >
+                         Check Price
+                         <ArrowRight className="w-4 h-4" />
+                       </a>
+                     )}
                    </div>
                  </div>
                </div>

@@ -23,11 +23,11 @@ export default function SupplementsPage() {
     {
       id: 'blood-sugar-support',
       name: 'Blood Sugar Support',
-      description: 'Lower glucose levels and stabilize blood sugar spikes',
+      description: 'Everyday herbal and mineral options studied for their role in glucose control and post-meal stability',
       icon: Heart,
       color: 'emerald',
-      productCount: 3,
-      products: ['Berberine', 'Cinnamon Extract', 'Chromium Picolinate'],
+      productCount: 2,
+      products: ['Berberine', 'Diabetes Solution Kit E-books'],
       pillarLink: '/prediabetes-support',
       pillarName: 'Prediabetes Support',
       bestFor: 'Prediabetes, high A1C (5.7%+), blood sugar spikes'
@@ -35,7 +35,7 @@ export default function SupplementsPage() {
     {
       id: 'metabolic-weight',
       name: 'Metabolic & Weight',
-      description: 'Boost metabolism, energy, and healthy weight loss',
+      description: 'Natural compounds explored for their effects on metabolism, energy levels, and healthy weight management',
       icon: Zap,
       color: 'blue',
       productCount: 2,
@@ -47,7 +47,7 @@ export default function SupplementsPage() {
     {
       id: 'insulin-sensitivity',
       name: 'Insulin Sensitivity',
-      description: 'Improve how your cells respond to insulin',
+      description: 'Nutrient-based options researched for their potential to support how your cells respond to insulin',
       icon: Activity,
       color: 'purple',
       productCount: 1,
@@ -59,11 +59,11 @@ export default function SupplementsPage() {
     {
       id: 'general-wellness',
       name: 'General Wellness',
-      description: 'Educational guides and resources for self-directed blood sugar management',
+      description: 'Structured, self-directed guides and tools to support your blood sugar management alongside your care team',
       icon: ShieldCheck,
       color: 'teal',
-      productCount: 2,
-      products: ['Fix Blood Sugar', 'Diabetes Self-Tracking Personal Operating System'],
+      productCount: 1,
+      products: ['Diabetes Self-Tracking Personal Operating System'],
       pillarLink: '/natural-blood-sugar',
       pillarName: 'Natural Blood Sugar Control',
       bestFor: 'A structured starting point to bring to your own care team'

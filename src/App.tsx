@@ -110,8 +110,12 @@ const SeniorsGlucoseMonitoring = lazy(() => import("./pages/seniors/SeniorsGluco
 // ── Supplements / Shop ────────────────────────────────────────────────────────
 const SupplementsPage           = lazy(() => import("./pages/SupplementsPage"));
 const SupplementsHub            = lazy(() => import("./pages/products/SupplementsHub"));
-const BloodSugarSupportCategory = lazy(() => import("./pages/products/BloodSugarSupportCategory"));
-const InsulinSensitivityCategory = lazy(() => import("./pages/products/InsulinSensitivityCategory"));
+const BloodSugarSupportCategory = lazy(() => import("./pages/supplements/BloodSugarSupportCategory"));
+const InsulinSensitivityCategory = lazy(() => import("./pages/supplements/InsulinSensitivityCategory"));
+// Guide/CTA pages are reached from category cards (in-app navigation), same
+// reasoning as pillar/tool pages — lazy is the right call here, unlike the
+// blog articles which are direct-landing pages.
+const DiabetesSolutionKitGuide = lazy(() => import("./pages/supplements/DiabetesSolutionKitGuide"));
 const GeneralWellnessCategory   = lazy(() => import("./pages/supplements/GeneralWellnessCategory"));
 const MetabolicWeightCategory   = lazy(() => import("./pages/supplements/MetabolicWeightCategory"));
 
@@ -237,6 +241,7 @@ function App() {
               <Route path="/supplements"                    element={<SupplementsPage />} />
               <Route path="/supplements/hub"                element={<SupplementsHub />} />
               <Route path="/supplements/blood-sugar-support" element={<BloodSugarSupportCategory />} />
+              <Route path="/guides/diabetes-solution-kit"    element={<DiabetesSolutionKitGuide />} />
               <Route path="/supplements/insulin-sensitivity"  element={<InsulinSensitivityCategory />} />
               <Route path="/supplements/general-wellness"    element={<GeneralWellnessCategory />} />
               <Route path="/supplements/metabolic-weight"    element={<MetabolicWeightCategory />} />
