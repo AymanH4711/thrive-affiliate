@@ -5,9 +5,6 @@ import { Header } from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 
 // ── Lightweight placeholder for articles temporarily pulled from the site ──
-// Used instead of a 404/redirect so anyone landing on an old link (bookmark,
-// search result, external backlink) sees a clear status message rather than
-// a dead end or a jarring silent redirect to the homepage.
 const ComingSoon = ({ title }: { title?: string }) => (
   <div className="max-w-2xl mx-auto px-6 py-24 text-center">
     <h1 className="text-3xl font-bold text-gray-900 mb-4">
@@ -28,19 +25,7 @@ const ComingSoon = ({ title }: { title?: string }) => (
 );
 
 // ── Main Pages ────────────────────────────────────────────────────────────────
-// HomePage AND all individual blog articles stay eager (static imports), not
-// lazy. Reasoning: lazy-loading only pays off for pages a visitor reaches by
-// navigating WITHIN the app first (so the small loading flash happens after
-// they've already seen a full page render). Blog articles are the opposite —
-// nearly every real visit is a direct landing from Google/social/a shared
-// link, straight into an empty Suspense fallback. That produces a large,
-// completely avoidable layout shift (placeholder → full article) on exactly
-// the pages that matter most for this site. Confirmed via PageSpeed Insights:
-// CLS was 0.655 on /blog/5-warning-signs-of-prediabetes even with all image
-// dimensions fixed — the shift was structural, not image-related.
-//
-// Utility/tool/pillar pages below stay lazy since those genuinely are
-// reached via in-app navigation, where the tradeoff favors bundle size.
+// HomePage AND all individual blog articles stay eager (static imports), not lazy.
 import HomePage from "./pages/HomePage";
 
 import PrediabetesVsType2Diabetes from "./pages/blog/Prediabetes-Support/PrediabetesVsType2Diabetes";
@@ -49,11 +34,6 @@ import ReversePrediabetes2026 from "./pages/blog/Prediabetes-Support/ReversePred
 import IntermittentFastingBloodSugar from "./pages/blog/Diet&BloodSugar-Control/IntermittentFastingBloodSugar";
 import BestFoodsBloodSugar from "./pages/blog/Diet&BloodSugar-Control/BestFoodsBloodSugar";
 import LowCarbDietForDiabetesBloodSugarControlEvidenceBasArticle from "./pages/blog/Diet&BloodSugar-Control/low-carb-diet-for-diabetes-blood-sugar-c-article";
-// NOTE: this article's own generated header comment suggested saving it to
-// "./pages/blog/diet/..." — that's the pSEO tool's generic default, not
-// this project's actual folder convention. Saved under the same
-// "Diet&BloodSugar-Control" folder as the other diet articles instead, to
-// match everything else in this category.
 import LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle from "./pages/blog/Diet&BloodSugar-Control/low-carb-restaurant-dining-for-diabetes-evidence-based-diet-article";
 import PostMealWalks from "./pages/blog/Exercise&Movement/PostMealWalks";
 import CGMvsBloodGlucoseMeter from "./pages/blog/Glucose-Monitoring/CGMvsBloodGlucoseMeter";
@@ -62,14 +42,13 @@ import GlucoTrustDiabetesScienceBackedBenefitArticle from "./pages/blog/Suppleme
 import GlucoCareNaturalDiabetesSupplementScienceBackedBenArticle from "./pages/blog/Supplements&Natural-Health/gluco-care-natural-diabetes-supplement-s-article";
 import DiabetesBloodSugarManagementScienceBackedBenefitsHArticle from "./pages/blog/Supplements&Natural-Health/diabetes-blood-sugar-management-science--article";
 import FiveWarningSignsPrediabetes from "./pages/blog/Featured-Article/5WarningSignsPrediabetes";
+
+// ── NEW articles ──────────────────────────────────────────────────────────────
+import BestSupplementStackingForType2DiabetesScienceBackeArticle from "./pages/blog/Supplements&Natural-Health/best-supplement-stacking-for-type-2-diab-article";
+import GlucoShieldProDietPlanEvidenceBasedGuideForBloodSuArticle from "./pages/blog/Diet&BloodSugar-Control/gluco-shield-pro-diet-plan-evidence-base-article";
+
 // BlogArticlePage is the fallback for any article not given its own route
-// above (/blog/:articleId) — also a direct-landing page, so also eager.
 import BlogArticlePage from "./pages/BlogArticlePage";
-// BlogPage (the /blog listing itself) — added here 2026-08-30 after
-// PageSpeed showed CLS 0.656 on /blog, matching the exact same
-// lazy-Suspense-swap pattern found and fixed on the individual articles.
-// It's a common direct landing page too (search, nav, shared links), so
-// it gets the same treatment.
 import BlogPage from "./pages/BlogPage";
 
 const AboutPage        = lazy(() => import("./pages/AboutPage"));
@@ -112,9 +91,6 @@ const SupplementsPage           = lazy(() => import("./pages/SupplementsPage"));
 const SupplementsHub            = lazy(() => import("./pages/products/SupplementsHub"));
 const BloodSugarSupportCategory = lazy(() => import("./pages/supplements/BloodSugarSupportCategory"));
 const InsulinSensitivityCategory = lazy(() => import("./pages/supplements/InsulinSensitivityCategory"));
-// Guide/CTA pages are reached from category cards (in-app navigation), same
-// reasoning as pillar/tool pages — lazy is the right call here, unlike the
-// blog articles which are direct-landing pages.
 const DiabetesSolutionKitGuide = lazy(() => import("./pages/supplements/DiabetesSolutionKitGuide"));
 const GeneralWellnessCategory   = lazy(() => import("./pages/supplements/GeneralWellnessCategory"));
 const MetabolicWeightCategory   = lazy(() => import("./pages/supplements/MetabolicWeightCategory"));
@@ -125,9 +101,6 @@ const SupplementComparison = lazy(() => import("./pages/tools/SupplementComparis
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-// Minimal, dependency-free loading state shown while a lazy route chunk
-// downloads. Kept intentionally plain — swap in a branded spinner/skeleton
-// if you have one, but avoid anything heavy here since it blocks paint.
 function RouteFallback() {
   return (
     <div className="flex justify-center items-center py-24" aria-busy="true" aria-live="polite">
@@ -162,6 +135,8 @@ function App() {
               <Route path="/blog/best-foods-blood-sugar"  element={<BestFoodsBloodSugar />} />
               <Route path="/blog/low-carb-diet-for-diabetes-blood-sugar-control-evidence-base" element={<LowCarbDietForDiabetesBloodSugarControlEvidenceBasArticle />} />
               <Route path="/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta" element={<LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle />} />
+              {/* ── NEW: Gluco Shield Pro Diet Plan ── */}
+              <Route path="/blog/gluco-shield-pro-diet-plan-evidence-based-guide-for-blood-su" element={<GlucoShieldProDietPlanEvidenceBasedGuideForBloodSuArticle />} />
 
               {/* ── Blog: Exercise & Movement ───────────────────────────────── */}
               <Route path="/blog/post-meal-walks"                  element={<PostMealWalks />} />
@@ -198,12 +173,17 @@ function App() {
                 element={<Navigate to="/blog/gluco-care-natural-diabetes-supplement-science-backed-benefi" replace />}
               />
 
-              {/* ═══ Diabetes Blood Sugar Management ═══ */}
+              {/* Diabetes Blood Sugar Management */}
               <Route
                 path="/blog/diabetes-blood-sugar-management-science-backed-benefits-how-"
                 element={<DiabetesBloodSugarManagementScienceBackedBenefitsHArticle />}
               />
-              {/* ═══════════════════════════════════ */}
+
+              {/* ── NEW: Best Supplement Stacking for Type 2 Diabetes ── */}
+              <Route
+                path="/blog/best-supplement-stacking-for-type-2-diabetes-science-backed-"
+                element={<BestSupplementStackingForType2DiabetesScienceBackeArticle />}
+              />
 
               {/* ── Blog: Sleep & Stress Management ─────────────────────────── */}
               {/* <Route path="/blog/sleep-blood-sugar" element={<SleepBloodSugar />} /> */}
