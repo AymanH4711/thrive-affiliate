@@ -189,7 +189,7 @@ const LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle: React.FC = () =
   return (
     <ArticleLayout
       seo={{
-        title: "Low-carb Restaurant Dining for Diabetes: Evidence-Based Dietary Guide",
+        title: "Restaurant Dining for Diabetes: Evidence-Based Low-carb Dietary Guide",
         description: "Low-carb restaurant dining for diabetes helps manage blood sugar, improve HbA1c, and support metabolic health with evidence-based strategies.",
         keywords: "low-carb restaurant dining for diabetes, insulin sensitivity, glucose metabolism, prediabetes, type 2 diabetes, HbA1c, blood glucose, metabolic health",
         image: "/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/hero.webp",
@@ -197,7 +197,7 @@ const LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle: React.FC = () =
         articleType: "educational",
       }}
       category="diet"
-      title="Low-carb Restaurant Dining for Diabetes: Evidence-Based Dietary Guide"
+      title="Restaurant Dining for Diabetes: Evidence-Based Low-carb Dietary Guide"
     >
       <figure style={{ marginBottom: "2rem", borderRadius: "0.75rem", overflow: "hidden", boxShadow: "0 4px 14px rgba(0,0,0,.08)" }}>
         <img src={"/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/hero.webp"} alt={"Illustration related to carb, glucose, insulin for blood sugar and metabolic health"} width={800} height={480} loading="eager" style={{ width: "100%", height: "auto", display: "block", aspectRatio: "5/3", objectFit: "cover" }} />
@@ -299,7 +299,7 @@ const LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle: React.FC = () =
 export default LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle;
 
 export const blogMeta: BlogArticleMeta = {
-  title: "Low-carb Restaurant Dining for Diabetes: Evidence-Based Dietary Guide",
+  title: "Restaurant Dining for Diabetes: Evidence-Based Low-carb Dietary Guide",
   excerpt: "Low-carb restaurant dining for diabetes helps manage blood sugar, improve HbA1c, and support metabolic health with evidence-based strategies.",
   readTime: "12 min read",
   image: "/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/hero.webp",
