@@ -109,7 +109,7 @@ export function SEO({
   image,
   url,
   type = 'website',
-  author = 'Thrive Health',
+  author = 'ThriveHealth360',
   schema,
   twitterHandle = '@ThriveHealth',
   // NEW parameters
@@ -131,7 +131,7 @@ export function SEO({
   const authorityPack = useAuthorityPack(pillarId);
 
   // Base site configuration
-  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://thrive-health.com';
+  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://thrivehealth360.org';
   const defaultOgImage = '/images/og-default.png';
 
   // Build full URLs
@@ -164,7 +164,7 @@ export function SEO({
       },
       publisher: {
         "@type": "Organization",
-        name: "Thrive Health",
+        name: "ThriveHealth360",
         url: siteUrl
       }
     };
@@ -281,7 +281,7 @@ export function SEO({
       { property: 'og:image:width', content: '1200' },
       { property: 'og:image:height', content: '630' },
       { property: 'og:url', content: fullUrl },
-      { property: 'og:site_name', content: 'Thrive Health' },
+      { property: 'og:site_name', content: 'ThriveHealth360' },
       { property: 'og:locale', content: 'en_US' }
     ];
 
