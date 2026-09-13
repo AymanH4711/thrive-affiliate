@@ -43,7 +43,7 @@ import { DietMedicalDisclaimerCompact, DietAffiliateDisclaimerProductCompact } f
 
 const seoConfig = {
   title: "Best Foods for Blood Sugar Control: The Science-Backed Prediabetes Diet Plan",
-  metaDescription: "Discover the 12 best foods for blood sugar control backed by research. Proven dietary strategies that help reverse prediabetes without deprivation.",
+  metaDescription: "Discover the 12 best foods for blood sugar control backed by research. Practical dietary strategies to support healthy blood sugar without deprivation.",
   keywords: ["best foods blood sugar control", "low glycemic index foods", "prediabetes diet", "blood sugar friendly foods"],
   image: '/images/blog/best-foods-blood-sugar-cover.webp',
   slug: '/blog/best-foods-blood-sugar-control'
@@ -51,8 +51,8 @@ const seoConfig = {
 
 const tldrSummary = [
   "✅ Best Food Categories: Leafy greens, legumes, non-starchy vegetables, whole grains, berries, nuts/seeds",
-  "✅ Key Science: Soluble fiber + resistant starch + polyphenols regulate blood sugar and GLUT4 sensitivity",
-  "✅ Impact: Studies show these foods reduce postprandial glucose spikes by 20-35% in prediabetics",
+  "✅ Key Science: Soluble fiber + resistant starch + polyphenols help regulate blood sugar and support insulin sensitivity via GLUT4 transporter activity",
+  "✅ Impact: Some studies suggest these foods may help reduce postprandial glucose spikes in people with prediabetes",
   "✅ Quick Win: Start by replacing 1 refined carb with 1 legume-based meal per day",
   "✅ Timeline: Most people see A1C improvements within 8-12 weeks"
 ];
@@ -120,7 +120,7 @@ const bestFoods: Food[] = [
     gl: "3-5 per cup",
     badge: "Antioxidant Rich",
     benefit: "Anthocyanins improve insulin sensitivity; high fiber, low sugar",
-    mechanism: "Anthocyanins upregulate GLUT4 transporters, improving insulin sensitivity; each daily serving associated with 18% lower T2D risk [3, 4]",
+    mechanism: "Anthocyanins upregulate GLUT4 transporters, improving insulin sensitivity in insulin-resistant adults [3]",
     serving: "1 cup fresh daily",
     tips: "Pair with nuts or Greek yogurt for added protein",
     icon: Zap
@@ -148,7 +148,7 @@ const bestFoods: Food[] = [
     gl: 0,
     badge: "Low Inflammation",
     benefit: "Omega-3s reduce inflammation and improve insulin receptor sensitivity",
-    mechanism: "Omega-3s reduce inflammatory cytokines (TNF-α, IL-6) that impair glucose uptake; independently associated with lower HbA1c [9]",
+    mechanism: "Omega-3s reduce inflammatory cytokines (TNF-α, IL-6) that impair glucose uptake, a plausible mechanism for improved insulin sensitivity",
     serving: "3-4 oz, 2-3× per week",
     tips: "Baked or grilled; avoid breaded/fried versions",
     icon: Fish
@@ -162,7 +162,7 @@ const bestFoods: Food[] = [
     gl: "1-2 per ounce",
     badge: "Metabolism Boost",
     benefit: "Protein + healthy fats slow digestion; polyphenols boost insulin sensitivity",
-    mechanism: "Almonds reduce HbA1c by −0.13% within 12 weeks; walnuts and omega-3 nuts reduce inflammatory insulin resistance markers [6, 9]",
+    mechanism: "Almonds significantly reduced HbA1c within 12 weeks in a randomized trial [6]; walnuts add anti-inflammatory and antioxidant benefits relevant to metabolic health broadly, though direct glycemic evidence for walnuts specifically is more limited [9]",
     serving: "1 oz (handful) as snack, or 2 tbsp nut butter with meal",
     tips: "Raw, unsalted preferred; add to salads, oatmeal, or eat as afternoon snack",
     icon: Droplets
@@ -176,7 +176,7 @@ const bestFoods: Food[] = [
     gl: "1-2 per cup",
     badge: "AMPK Activator",
     benefit: "Nearly zero blood sugar impact; sulforaphane (in broccoli) activates AMPK",
-    mechanism: "Cruciferous vegetables show strongest diabetes-protective evidence of all vegetable categories; sulforaphane shows AMPK activation in human trials [4]",
+    mechanism: "Cruciferous vegetables carry stronger cardiovascular-protective associations than other vegetable categories [4]; sulforaphane has shown AMPK-activating effects in early-stage research, though evidence specific to blood sugar is still developing",
     serving: "2-3 cups per day, variety of colors",
     tips: "Roast with olive oil for satiety; include at every meal",
     icon: Utensils
@@ -270,7 +270,7 @@ const citations = [
     url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC10707766/',
     covers: ['Leafy Greens', 'Legumes', 'General Diet'],
     finding: "This review identifies a Mediterranean-style, low-glycemic dietary pattern built around leafy greens, legumes, and whole grains as one of the most effective non-pharmacological strategies for reversing prediabetes to normoglycemia.",
-    actionable: "Consume 2–3 cups leafy greens and 1 serving of legumes daily as a foundation for prediabetes reversal."
+    actionable: "Consume 2–3 cups leafy greens and 1 serving of legumes daily as a foundation for supporting healthy blood sugar."
   },
   {
     id: 'ref-2',
@@ -525,10 +525,6 @@ const internalLinks = {
   deepDive: {
     text: "How Insulin Resistance Develops & How to Fix It",
     url: '/blog/prediabetes-insulin-resistance-explained'
-  },
-  crossSilo: {
-    text: "Best Diabetes Supplements of 2026: Ranked & Compared",
-    url: '/blog/best-diabetes-supplements'
   }
 };
 
@@ -723,8 +719,8 @@ const BestFoodsBloodSugar = () => {
             <h2 className="text-3xl font-bold mb-4">🎯 Diet is Step One. Here's Your Complete System.</h2>
             <p className="text-lg mb-6">
               These 12 foods work best as part of a complete plan. The{' '}
-              <strong>"7-Day Blood Sugar Reset Guide"</strong> combines them into proven meal
-              combinations that lower post-meal glucose spikes by up to 35% — written specifically
+              <strong>"7-Day Blood Sugar Reset Guide"</strong> combines them into meal
+              combinations designed to help lower post-meal glucose spikes — written specifically
               for adults 40+ with prediabetes.
             </p>
             <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg mb-6">
@@ -736,9 +732,6 @@ const BestFoodsBloodSugar = () => {
                 <li>✅ Bonus: Spice pairings that boost insulin sensitivity</li>
               </ul>
             </div>
-            <p className="text-sm mb-6 opacity-90">
-              Join 47,000+ seniors who've already reversed their prediabetes with this system.
-            </p>
             <button
               onClick={() => setIsDownloadModalOpen(true)}
               className="bg-white text-emerald-600 font-bold px-8 py-3 rounded-lg hover:bg-gray-100 transition text-lg"
@@ -870,42 +863,10 @@ const BestFoodsBloodSugar = () => {
           {/* FINAL CTA & INTERNAL LINKS */}
           <section className="mb-12 bg-emerald-50 border-l-4 border-emerald-600 p-8 rounded-r-lg">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">✅ You Now Know the 12 Best Foods for Blood Sugar Control</h2>
-            <p className="text-lg text-gray-700 mb-4">The science is clear: food choices matter profoundly. Every meal is an opportunity to activate GLUT4 sensitivity, feed beneficial gut bacteria, and lower your A1C.</p>
+            <p className="text-lg text-gray-700 mb-4">The science is clear: food choices matter profoundly. Every meal is an opportunity to support GLUT4 transporter activity, feed beneficial gut bacteria, and support a healthier A1C.</p>
             <p className="text-lg text-gray-700 mb-6">But knowing is not the same as doing. The step that changes everything? <strong>Commit to ONE food swap this week.</strong> Replace one refined carb meal with one legume-based meal. That's it.</p>
             <div className="mt-8 pt-8 border-t-2 border-emerald-200">
-              <Link to={internalLinks.pillar.url} className="inline-block bg-emerald-600 text-white hover:bg-emerald-700 px-8 py-4 rounded-xl font-bold text-lg transition shadow-lg">Start Your Personal Prediabetes Reversal Plan →</Link>
-            </div>
-          </section>
-
-          {/* ── CTA #2 — END OF ARTICLE — Supplements Cross-Link ── */}
-          <section className="mb-12">
-            <div className="bg-purple-50 border-2 border-purple-300 rounded-2xl p-8">
-              <div className="flex items-start gap-4">
-                <span className="text-4xl flex-shrink-0">💊</span>
-                <div className="flex-1">
-                  <p className="text-xs font-bold uppercase tracking-widest text-purple-700 mb-1">
-                    Supplements &amp; Natural Health
-                  </p>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                    Want to Go Further? Certain Supplements Can Amplify a Blood-Sugar-Friendly Diet
-                  </h3>
-                  <p className="text-gray-700 mb-4 leading-relaxed">
-                    Diet is the foundation — but clinically studied supplements like berberine, Ceylon
-                    cinnamon, and chromium picolinate target the exact same AMPK and GLUT4 pathways
-                    these 12 foods activate. Combined, the effect is significantly stronger than either alone.
-                    We ranked the top 5 options using 2024–2026 peer-reviewed clinical data.
-                  </p>
-                  <Link
-                    to={internalLinks.crossSilo.url}
-                    className="inline-flex items-center gap-2 bg-purple-700 hover:bg-purple-800 text-white font-bold px-6 py-3 rounded-xl transition shadow-md"
-                  >
-                    Read: {internalLinks.crossSilo.text} →
-                  </Link>
-                  <p className="text-xs text-gray-500 mt-3">
-                    Evidence-based · GMP-certified picks only · 2024–2026 clinical data
-                  </p>
-                </div>
-              </div>
+              <Link to={internalLinks.pillar.url} className="inline-block bg-emerald-600 text-white hover:bg-emerald-700 px-8 py-4 rounded-xl font-bold text-lg transition shadow-lg">Start Your Personal Blood Sugar Plan →</Link>
             </div>
           </section>
 
@@ -916,7 +877,7 @@ const BestFoodsBloodSugar = () => {
               <Link to={internalLinks.deepDive.url} className="text-blue-600 hover:text-blue-800 font-semibold underline">{internalLinks.deepDive.text} →</Link>
             </div>
             <div className="bg-emerald-50 border-l-4 border-emerald-600 p-6 rounded-r-lg">
-              <h3 className="font-bold text-emerald-900 mb-3">🥗 Start Your Reversal Plan</h3>
+              <h3 className="font-bold text-emerald-900 mb-3">🥗 Start Your Blood Sugar Plan</h3>
               <p className="text-emerald-800 mb-4">Ready to combine diet, supplements, movement, and sleep into one complete system?</p>
               <Link to={internalLinks.pillar.url} className="text-emerald-600 hover:text-emerald-800 font-semibold underline">{internalLinks.pillar.text} →</Link>
             </div>

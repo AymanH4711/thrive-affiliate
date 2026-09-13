@@ -239,7 +239,10 @@ export function ArticleLayout({
         articleType={seo.articleType || 'educational'}
         pillarId={seo.pillarId}
         lastUpdated={seo.lastUpdated}
-        medicallyReviewed
+        // No medicallyReviewed here: there's no real named reviewer yet, and
+        // SEO.tsx now requires reviewedByName + lastUpdated to emit that
+        // schema at all. Pass medicallyReviewed + reviewedByName explicitly
+        // once a real reviewer (RD/CDCES) is in place.
       />
 
       <main className="min-h-screen bg-white">
@@ -265,29 +268,40 @@ export function ArticleLayout({
             >
               {title}
             </h1>
-            {(readTime || publishedDate || referencesCount) && (
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-600 mb-4">
-                <span className="font-semibold text-gray-900">ThriveHealth360 Editorial Team</span>
-                {readTime && (
-                  <>
-                    <span className="text-gray-300">•</span>
-                    <span>{readTime}</span>
-                  </>
-                )}
-                {typeof referencesCount === 'number' && referencesCount > 0 && (
-                  <>
-                    <span className="text-gray-300">•</span>
-                    <span>{referencesCount} verified references</span>
-                  </>
-                )}
-                {publishedDate && (
-                  <>
-                    <span className="text-gray-300">•</span>
-                    <span>Updated {publishedDate}</span>
-                  </>
-                )}
-              </div>
-            )}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-600 mb-2">
+              <span>
+                <span className="font-semibold text-gray-900">Written by</span> Ayman Hathoot
+              </span>
+              <span className="text-gray-300">•</span>
+              <Link to="/about/author" className="text-emerald-700 hover:underline font-semibold">
+                About the author
+              </Link>
+              {readTime && (
+                <>
+                  <span className="text-gray-300">•</span>
+                  <span>{readTime}</span>
+                </>
+              )}
+              {typeof referencesCount === 'number' && referencesCount > 0 && (
+                <>
+                  <span className="text-gray-300">•</span>
+                  <span>{referencesCount} verified references</span>
+                </>
+              )}
+              {publishedDate && (
+                <>
+                  <span className="text-gray-300">•</span>
+                  <span>Updated {publishedDate}</span>
+                </>
+              )}
+            </div>
+
+            <div className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded px-3 py-2 mb-4">
+              <strong>Disclosure:</strong> Some links in this article are affiliate links. If you
+              buy through them, we may earn a commission at no extra cost to you. This doesn't
+              affect our editorial content.{' '}
+              <Link to="/affiliate-disclosure" className="underline">Learn more</Link>.
+            </div>
             {typeof referencesCount === 'number' && referencesCount > 0 && (
               <div className="flex flex-wrap gap-2 mb-2">
                 <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">

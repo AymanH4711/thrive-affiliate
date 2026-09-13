@@ -1,18 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Shield, Award, BookOpen, Stethoscope, Globe, CheckCircle, ShieldCheck } from 'lucide-react';
-
-/**
- * Internal SEO component
- * Ensures the page is SEO-ready without requiring external file resolution in this environment.
- */
-const SEO: React.FC<{ 
-  title?: string; 
-  description?: string; 
-  keywords?: string; 
-  image?: string; 
-  url?: string 
-}> = () => null;
+import { SEO } from '@/components/seo/SEO';
 
 /**
  * Internal Card component
@@ -51,9 +40,11 @@ const AboutPage: React.FC = () => {
   return (
     <>
       <SEO
-        title="About ThriveHealth360 | Our Mission to Reverse Prediabetes"
-        description="Learn about the mission, values, and evidence-based editorial process behind ThriveHealth360. Dedicated to helping you master your blood sugar."
+        title="About ThriveHealth360 | Our Mission & Editorial Team"
+        description="Learn about the mission, values, and evidence-based editorial process behind ThriveHealth360 — helping you understand and manage your blood sugar."
         url="/about"
+        image="/images/about/ayman-hathoot-founder.webp"
+        schemaType="AboutPage"
       />
 
       <div className="bg-white">
@@ -64,7 +55,7 @@ const AboutPage: React.FC = () => {
               Our Mission: Your Metabolic Freedom
             </h1>
             <p className="text-xl text-emerald-50 max-w-2xl mx-auto leading-relaxed font-light">
-              ThriveHealth360 was founded to bridge the gap between complex clinical research and the millions of people looking to reverse prediabetes naturally.
+              ThriveHealth360 was founded to bridge the gap between complex clinical research and the millions of people working to understand and manage their blood sugar naturally.
             </p>
           </div>
         </section>
@@ -74,27 +65,42 @@ const AboutPage: React.FC = () => {
           <div className="container mx-auto px-6 max-w-5xl">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-emerald-50 aspect-square group bg-gray-50">
-                {/* 🚀 Using your local image path: public/images/about/thrive-team.webp */}
                 <img 
-                  src="/images/about/thrive-team.webp" 
-                  alt="ThriveHealth360 clinical research and editorial team reviewing metabolic data."
+                  src="/images/about/ayman-hathoot-founder.webp" 
+                  alt="Ayman Hathoot, founder of ThriveHealth360."
                   className="w-full h-full object-cover transform group-hover:scale-105 transition duration-700"
                   onError={(e) => {
-                    // Fallback to high-quality medical stock photo if local image is missing
-                    const target = e.target as HTMLImageElement;
-                    target.src = "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800";
+                    // If the real photo fails to load, hide it rather than
+                    // substitute a stock photo of an unrelated person — a
+                    // fake "founder" photo is worse than no photo.
+                    (e.target as HTMLImageElement).style.display = 'none';
                   }}
                 />
               </div>
               <div>
                 <span className="text-emerald-600 font-bold uppercase tracking-widest text-sm">Editorial Leadership</span>
-                <h2 className="text-3xl font-bold text-gray-900 mt-2 mb-4">Ayman, Lead Health Strategist</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mt-2 mb-4">Ayman Hathoot, Founder</h2>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  With a focus on metabolic data and clinical research, Ayman founded ThriveHealth360 to provide a global perspective on chronic disease prevention. 
-                  Our team analyzes emerging studies from around the world to ensure our readers receive the most up-to-date, safe, and effective protocols.
+                  I started ThriveHealth360 after my own wake-up call. Shortly after retiring, a persistent
+                  tooth infection that wouldn't clear up led my dentist to ask if I had blood sugar problems.
+                  I didn't think so — but at his insistence, I had an HbA1c test done. The result came back
+                  at 11.9%. Working closely with my doctor over the following months — medication, dietary
+                  changes, and regular follow-up testing — I brought that number down to around 6% within
+                  about three months.
+                </p>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  That experience is why this site exists. I spent months reading everything I could find
+                  about blood sugar and metabolic health, and I wanted to build a resource — backed by the
+                  same peer-reviewed research I leaned on myself — that could help other people going
+                  through the same thing. Our small team reviews recent studies from PubMed and CrossRef to
+                  keep the content current as new research comes out.
                 </p>
                 <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-4 text-sm text-amber-800 leading-relaxed">
-                  <strong>Editorial Note:</strong> Ayman and the ThriveHealth360 team are health researchers and strategists, not licensed medical professionals (MD, RD, or equivalent). All content is for informational purposes only. Please consult a qualified healthcare provider for personal medical advice.
+                  <strong>Editorial Note:</strong> Ayman and the ThriveHealth360 team are not licensed medical
+                  professionals (MD, RD, or equivalent). Ayman's story reflects his personal experience, not
+                  medical advice — individual results vary, and no outcome is guaranteed. All content is for
+                  informational purposes only. Please consult a qualified healthcare provider for personal
+                  medical advice.
                 </div>
                 <div className="flex items-center gap-3 text-gray-600 mb-6">
                   <Globe className="w-5 h-5 text-emerald-500" />

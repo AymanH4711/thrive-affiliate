@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Core pages -->
+  <url><loc>https://thrivehealth360.org/</loc></url>
+  <url><loc>https://thrivehealth360.org/about</loc></url>
+  <url><loc>https://thrivehealth360.org/blog</loc></url>
+  <url><loc>https://thrivehealth360.org/supplements</loc></url>
+  <url><loc>https://thrivehealth360.org/resources</loc></url>
+  <url><loc>https://thrivehealth360.org/contact</loc></url>
+
+  <!-- Legal / policy -->
+  <url><loc>https://thrivehealth360.org/privacy</loc></url>
+  <url><loc>https://thrivehealth360.org/affiliate-disclosure</loc></url>
+  <url><loc>https://thrivehealth360.org/medical-disclaimer</loc></url>
+
+  <!-- Guide / CTA pages -->
+  <url><loc>https://thrivehealth360.org/guides/diabetes-solution-kit</loc></url>
+
+  <!-- Blog articles (verify each slug against live site) -->
+  <url><loc>https://thrivehealth360.org/blog/5-warning-signs-of-prediabetes</loc></url>
+  <url><loc>https://thrivehealth360.org/blog/prediabetes-vs-type-2-diabetes</loc></url>
+  <url><loc>https://thrivehealth360.org/blog/insulin-sensitivity-faq-2026</loc></url>
+  <url><loc>https://thrivehealth360.org/blog/reverse-prediabetes-2026</loc></url>
+  <url><loc>https://thrivehealth360.org/blog/intermittent-fasting-blood-sugar</loc></url>
+  <url><loc>https://thrivehealth360.org/blog/best-foods-blood-sugar</loc></url>
+  <url><loc>https://thrivehealth360.org/blog/low-carb-diet-for-diabetes-blood-sugar</loc></url>
+  <url><loc>https://thrivehealth360.org/blog/low-carb-restaurant-dining-for-diabetes</loc></url>
+  <url><loc>https://thrivehealth360.org/blog/berberine-vs-metformin</loc></url>
+  <url><loc>https://thrivehealth360.org/blog/best-diabetes-supplements</loc></url>
+  <url><loc>https://thrivehealth360.org/blog/glucobliss-review</loc></url>
+  <url><loc>https://thrivehealth360.org/blog/ceylon-cinnamon-diabetes</loc></url>
+  <url><loc>https://thrivehealth360.org/blog/metabosana-diabetes-supplement-natural-i</loc></url>
+
+</urlset>

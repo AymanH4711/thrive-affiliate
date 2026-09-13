@@ -17,7 +17,37 @@ interface SEOProps {
   pillarId?: string;
   articleType?: 'educational' | 'product-review' | 'comparison' | 'how-to';
   lastUpdated?: string;
+  /** Only set true when a real, named reviewer exists — see reviewedByName.
+      Defaults to false: no page claims medical review unless one actually happened. */
   medicallyReviewed?: boolean;
+  /** Required to actually emit a reviewedBy claim — the real name of the person
+      or organization that reviewed the content. There is no fallback value;
+      if this is missing, no reviewedBy field is emitted even if
+      medicallyReviewed is true, because a claim with no named reviewer behind
+      it is the fabricated-credential problem this is meant to prevent. */
+  reviewedByName?: string;
+  /** A DISTINCT, weaker claim from medicallyReviewed: editorial fact-checking
+      against sources (PubMed, CrossRef, etc.), not clinical review by a
+      medical professional. Set true only alongside factCheckedBy and
+      factCheckedDate — same no-fallback rule as medicallyReviewed applies. */
+  factChecked?: boolean;
+  /** Real name of the person/team who fact-checked the content, e.g.
+      "ThriveHealth360 Team". No default — an unnamed fact-checker isn't
+      emitted. */
+  factCheckedBy?: string;
+  /** Real date the fact-check happened. No fallback to today's date. */
+  factCheckedDate?: string;
+  /** Names of reference databases/sources actually used, e.g.
+      ["PubMed", "CrossRef"]. Purely descriptive — not a schema.org-standard
+      property, emitted as additionalProperty so it costs nothing if a
+      consumer ignores it. */
+  sourcesVerified?: string[];
+  /** Overrides the schema.org @type of the generated JSON-LD. Defaults to
+      'MedicalWebPage' to match every existing call site. Non-article pages
+      (About, Contact, Home) should pass 'AboutPage' / 'WebPage' / etc. —
+      claiming MedicalWebPage on a page with no medical content is itself a
+      small accuracy problem, separate from the reviewedBy issue. */
+  schemaType?: string;
 }
 
 // FAQ Schema Types
@@ -61,7 +91,15 @@ export const getFAQSchema = (faqs: FAQItem[]) => {
  *   url="/blog/berberine-vs-metformin"
  *   pillarId="insulin-resistance"
  *   articleType="comparison"
+ *   // Only set when a real clinician actually reviewed this page:
  *   medicallyReviewed={true}
+ *   reviewedByName="Jane Doe, RD"
+ *   // Independent, weaker claim — editorial fact-checking against sources,
+ *   // not clinical review. Use this instead when there's no clinician:
+ *   factChecked={true}
+ *   factCheckedBy="ThriveHealth360 Team"
+ *   factCheckedDate="2026-09-13"
+ *   sourcesVerified={["PubMed", "CrossRef"]}
  * />
  */
 export function SEO({
@@ -78,11 +116,19 @@ export function SEO({
   pillarId,
   articleType = 'educational',
   lastUpdated,
-  medicallyReviewed = true
+  medicallyReviewed = false,
+  reviewedByName,
+  factChecked = false,
+  factCheckedBy,
+  factCheckedDate,
+  sourcesVerified,
+  schemaType = 'MedicalWebPage'
 }: SEOProps) {
 
-  // Get authority pack data if pillarId provided
-  const authorityPack = pillarId ? useAuthorityPack(pillarId) : null;
+  // Always call the hook (Rules of Hooks) — useAuthorityPack must handle an
+  // undefined pillarId internally rather than this component deciding
+  // whether to call it at all.
+  const authorityPack = useAuthorityPack(pillarId);
 
   // Base site configuration
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://thrive-health.com';
@@ -106,7 +152,7 @@ export function SEO({
   const generateMedicalSchema = () => {
     const baseSchema = {
       "@context": "https://schema.org",
-      "@type": "MedicalWebPage",
+      "@type": schemaType,
       name: title,
       description: description,
       url: fullUrl,
@@ -123,15 +169,61 @@ export function SEO({
       }
     };
 
-    // Add review info if medically reviewed
-    if (medicallyReviewed) {
+    // Add review info ONLY when both a real reviewer name and a real review
+    // date were explicitly passed in. No fallback organization name and no
+    // fallback to today's date — an unnamed or dated-by-default "review" is
+    // exactly the fabricated-credential signal Google's quality systems (and
+    // human YMYL raters) are checking for.
+    if (medicallyReviewed && reviewedByName && lastUpdated) {
       Object.assign(baseSchema, {
-        lastReviewed: lastUpdated || new Date().toISOString().split('T')[0],
+        lastReviewed: lastUpdated,
         reviewedBy: {
           "@type": "Organization",
-          name: "Thrive Health Editorial Team"
+          name: reviewedByName
         }
       });
+    } else if (medicallyReviewed) {
+      console.warn(
+        '⚠️ SEO: medicallyReviewed is true but reviewedByName and/or lastUpdated ' +
+        'is missing — skipping the reviewedBy/lastReviewed schema fields rather ' +
+        'than emitting a fabricated reviewer or date.'
+      );
+    }
+
+    // Separate, weaker claim: editorial fact-checking against reference
+    // sources, not clinical review. Only emitted when a real fact-checker
+    // name and real date are both provided — same reasoning as above.
+    // Uses `editor` + `dateModified`, standard CreativeWork properties that
+    // don't carry a "reviewed by a medical professional" implication the way
+    // reviewedBy/lastReviewed do on a MedicalWebPage.
+    if (factChecked && factCheckedBy && factCheckedDate) {
+      Object.assign(baseSchema, {
+        editor: {
+          "@type": "Organization",
+          name: factCheckedBy
+        },
+        dateModified: factCheckedDate
+      });
+
+      if (sourcesVerified && sourcesVerified.length > 0) {
+        const existingProps = (baseSchema as any).additionalProperty || [];
+        Object.assign(baseSchema, {
+          additionalProperty: [
+            ...existingProps,
+            {
+              "@type": "PropertyValue",
+              name: "factCheckSources",
+              value: sourcesVerified.join(', ')
+            }
+          ]
+        });
+      }
+    } else if (factChecked) {
+      console.warn(
+        '⚠️ SEO: factChecked is true but factCheckedBy and/or factCheckedDate ' +
+        'is missing — skipping the fact-check schema fields rather than ' +
+        'emitting an unnamed or undated claim.'
+      );
     }
 
     // Add authority pack data if available
@@ -251,7 +343,7 @@ export function SEO({
     }
     schemaScript.textContent = JSON.stringify(finalSchema);
 
-  }, [title, description, keywords, imageUrl, fullUrl, type, author, twitterHandle, pillarId, authorityPack, schema]);
+  }, [title, description, keywords, imageUrl, fullUrl, type, author, twitterHandle, pillarId, authorityPack, schema, medicallyReviewed, reviewedByName, lastUpdated, factChecked, factCheckedBy, factCheckedDate, sourcesVerified, schemaType]);
 
   return <></>;
 }
