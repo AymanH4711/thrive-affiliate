@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
+<<<<<<< HEAD
 Sitemap: https://thrivehealth360.org/sitemap.xml
+=======
+Sitemap: https://thrivehealth360.org/sitemap.xml
+>>>>>>> fad45c4ffbd561d194eccf13be6196bc704dc70b
