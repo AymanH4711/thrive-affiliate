@@ -18,12 +18,12 @@ const AboutPage: React.FC = () => {
     {
       icon: Shield,
       title: 'Evidence-Based',
-      description: 'Every guide is built on a foundation of 2024–2026 clinical research and peer-reviewed studies.'
+      description: 'Every guide is built on peer-reviewed clinical research, with a focus on the most recent studies (2024–2026) where available.'
     },
     {
       icon: Stethoscope,
       title: 'Safety First',
-      description: 'We prioritize products with NSF, GMP, and third-party purity certifications.'
+      description: 'We prioritize products with NSF or USP certifications, made by manufacturers operating under GMP standards.'
     },
     {
       icon: BookOpen,
@@ -177,6 +177,27 @@ const AboutPage: React.FC = () => {
           </div>
         </section>
 
+        {/* How We Fact-Check */}
+        <section className="py-20 bg-gray-50">
+          <div className="container mx-auto px-6 max-w-4xl text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 tracking-tight">How We Fact-Check</h2>
+            <div className="text-left space-y-4 bg-white p-10 rounded-3xl border-2 border-emerald-50 shadow-lg">
+              <div className="flex gap-4">
+                <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <p className="text-gray-700 leading-relaxed">Every health claim in our articles is linked to a peer-reviewed source.</p>
+              </div>
+              <div className="flex gap-4">
+                <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <p className="text-gray-700 leading-relaxed">References are checked against PubMed and CrossRef, alongside our own review, before publication.</p>
+              </div>
+              <div className="flex gap-4">
+                <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <p className="text-gray-700 leading-relaxed">We do not accept payment for positive reviews, and affiliate relationships never influence which products we recommend or how we rank them.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Affiliate Disclosure */}
         <section className="py-20 bg-gray-50 border-t border-gray-200">
           <div className="container mx-auto px-6 max-w-3xl text-center">
@@ -189,6 +210,19 @@ const AboutPage: React.FC = () => {
             </Card>
           </div>
         </section>
+        {/* Last Updated & Contact */}
+        <section className="py-6 bg-white border-t border-gray-100">
+          <div className="container mx-auto px-6 max-w-3xl text-center">
+            <p className="text-sm text-gray-500 mb-2">Last updated: September 2026</p>
+            <p className="text-sm text-gray-600">
+              Questions, corrections, or feedback? Reach us through our{' '}
+              <Link to="/contact" className="text-emerald-600 font-semibold hover:text-emerald-700">
+                Contact page
+              </Link>.
+            </p>
+          </div>
+        </section>
+
         {/* Policy Links Footer */}
         <section className="py-6 bg-amber-50 border-t border-amber-200">
           <div className="container mx-auto px-6 max-w-4xl">
