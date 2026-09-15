@@ -214,6 +214,16 @@ const GlucoCareNaturalDiabetesSupplementScienceBackedBenArticle: React.FC = () =
           </span>
           <h2 style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "clamp(1.25rem, 3vw, 1.75rem)", fontWeight: 700, color: "#fff", marginBottom: ".75rem", lineHeight: 1.3 }}>Considering Gluco Care?</h2>
           <p style={{ fontSize: "1rem", color: "rgba(255,255,255,.88)", marginBottom: "1rem", maxWidth: "520px", marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>See the ingredients, the research behind them, and whether Gluco Care is the right fit before you decide.</p>
+          <div style={{ background: "rgba(251,191,36,.15)", border: "1.5px solid rgba(251,191,36,.6)", borderRadius: "0.75rem", padding: "1rem 1.25rem", marginBottom: "1.25rem", maxWidth: "520px", marginLeft: "auto", marginRight: "auto", textAlign: "left" }}>
+            <p style={{ fontSize: ".875rem", color: "#fff", lineHeight: 1.6, margin: 0 }}>
+              <strong>⚠️ Before you buy:</strong> the label on this product lists Chromium at 67&nbsp;mg —
+              roughly 1,900&times; the typical daily value, which strongly suggests a unit labeling error
+              (mg vs. mcg). We've contacted the manufacturer and are awaiting confirmation. See the{' '}
+              <a href="#section-1" style={{ color: "#fde68a", textDecoration: "underline" }}>full explanation below</a>{' '}
+              before purchasing, and confirm the actual chromium amount on your bottle directly with the
+              manufacturer.
+            </p>
+          </div>
           <p style={{ fontSize: ".85rem", color: "rgba(255,255,255,.75)", marginBottom: "1.75rem", maxWidth: "520px", marginLeft: "auto", marginRight: "auto", lineHeight: 1.5 }}>
             Purchases currently include two digital bonus guides: <em>Balanced Bites: A Blood Sugar Cookbook</em> and <em>Vital Detox: Kidney &amp; Liver Rejuvenation</em> (digital downloads, not physical copies — confirm current bonus offers on the order page, as these can change).
           </p>
