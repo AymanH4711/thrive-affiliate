@@ -12,7 +12,6 @@ interface SEOProps {
   type?: string;
   author?: string;
   schema?: object;
-  twitterHandle?: string;
   // NEW: Medical/Authority props
   pillarId?: string;
   articleType?: 'educational' | 'product-review' | 'comparison' | 'how-to';
@@ -111,7 +110,6 @@ export function SEO({
   type = 'website',
   author = 'ThriveHealth360',
   schema,
-  twitterHandle = '@ThriveHealth',
   // NEW parameters
   pillarId,
   articleType = 'educational',
@@ -300,9 +298,7 @@ export function SEO({
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: title },
       { name: 'twitter:description', content: description },
-      { name: 'twitter:image', content: imageUrl },
-      { name: 'twitter:creator', content: twitterHandle },
-      { name: 'twitter:site', content: twitterHandle }
+      { name: 'twitter:image', content: imageUrl }
     ];
 
     twitterTags.forEach(tag => {
@@ -343,7 +339,7 @@ export function SEO({
     }
     schemaScript.textContent = JSON.stringify(finalSchema);
 
-  }, [title, description, keywords, imageUrl, fullUrl, type, author, twitterHandle, pillarId, authorityPack, schema, medicallyReviewed, reviewedByName, lastUpdated, factChecked, factCheckedBy, factCheckedDate, sourcesVerified, schemaType]);
+  }, [title, description, keywords, imageUrl, fullUrl, type, author, pillarId, authorityPack, schema, medicallyReviewed, reviewedByName, lastUpdated, factChecked, factCheckedBy, factCheckedDate, sourcesVerified, schemaType]);
 
   return <></>;
 }

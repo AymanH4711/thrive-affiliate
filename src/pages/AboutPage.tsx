@@ -63,7 +63,7 @@ const AboutPage: React.FC = () => {
         {/* Editorial Leadership Section */}
         <section className="py-20 border-b border-gray-100">
           <div className="container mx-auto px-6 max-w-5xl">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="grid md:grid-cols-2 gap-12 items-start">
               <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-emerald-50 aspect-square group bg-gray-50">
                 <img 
                   src="/images/about/ayman-hathoot-founder.webp" 
@@ -94,6 +94,11 @@ const AboutPage: React.FC = () => {
                   same peer-reviewed research I leaned on myself — that could help other people going
                   through the same thing. Our small team reviews recent studies from PubMed and CrossRef to
                   keep the content current as new research comes out.
+                </p>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  My background is in software development — I built this site myself — and I hold a
+                  master's degree in demography, which is where my interest in reading population health
+                  data started.
                 </p>
                 <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-4 text-sm text-amber-800 leading-relaxed">
                   <strong>Editorial Note:</strong> Ayman and the ThriveHealth360 team are not licensed medical
