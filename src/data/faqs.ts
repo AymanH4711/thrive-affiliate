@@ -56,7 +56,7 @@ export const bestSupplementsFAQs = [
   {
     question: 'Can I take berberine and Metformin at the same time?',
     answer:
-      "You should not combine berberine with Metformin without your doctor's approval. Both lower blood sugar through overlapping pathways — taking them together can cause blood sugar to drop too low (hypoglycemia). If you're already on Metformin, talk to your doctor before adding any berberine supplement, including GlucoBliss.",
+      "You should not combine berberine with Metformin without your doctor's approval. Both lower blood sugar through overlapping pathways — taking them together can cause blood sugar to drop too low (hypoglycemia). If you're already on Metformin, talk to your doctor before adding any berberine supplement.",
   },
   {
     question: 'How long does it take for blood sugar supplements to work?',
@@ -87,11 +87,6 @@ export const bestSupplementsFAQs = [
     question: 'How do I know if a supplement is actually working?',
     answer:
       "The best way is to track your fasting blood glucose (mg/dL) at home with a glucometer — ideally first thing in the morning before eating. Take a baseline reading for 1–2 weeks before starting a supplement, then compare after 4 weeks and again at 8 weeks. A meaningful drop of 10–20 mg/dL in fasting glucose is a positive sign.",
-  },
-  {
-    question: 'Why is GlucoBliss ranked #1 over standalone berberine?',
-    answer:
-      "GlucoBliss earns its top ranking because it addresses blood sugar through three separate pathways simultaneously: berberine activates AMPK and improves fasting glucose; Ceylon cinnamon reduces post-meal (postprandial) spikes; and chromium picolinate improves insulin receptor sensitivity. Standalone berberine only targets one pathway. GlucoBliss is also GMP-certified and lab-verified — ensuring what's on the label is actually in the bottle.",
   },
 ];
 // You can add more FAQ collections for other pages here

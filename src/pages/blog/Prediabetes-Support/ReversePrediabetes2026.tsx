@@ -30,7 +30,14 @@ import emailjs from '@emailjs/browser';
 const heroImage = '/images/blog/reverse-prediabetes-2026-hero.webp';
 
 // ─── Affiliate link ───────────────────────────────────────────────────────────
-const glucoblissLink = 'https://getglucobliss.com/#aff=Ayman_Hathoot';
+// GlucoBliss removed (see IntermittentFastingBloodSugar.tsx for the original
+// finding): the name isn't a single identifiable product — at least 10
+// different, mutually-contradictory "official" sites exist under this name,
+// it doesn't exist in this Digistore24 account, and getglucobliss.com is now
+// an expired domain listed for resale (confirmed 2026-09), not a live product
+// page. No product-specific CTA replaces it until a verified one exists.
+// The underlying single-ingredient science (berberine, cinnamon, chromium)
+// is real and kept below.
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface CitationProps {
@@ -265,13 +272,6 @@ const ReversePrediabetes2026: React.FC = () => {
       typicalReduction: 'Modest HbA1c improvement (–0.48%); best as add-on, not standalone',
       notes: 'USP-verified forms preferred. Most effective combined with berberine.',
     },
-    {
-      name: 'GlucoBliss (all 3 combined)',
-      mechanism: 'Targets all 3 pathways simultaneously: AMPK + GLUT4 + insulin receptor',
-      evidenceStrength: '⭐⭐⭐⭐⭐ Multi-pathway — GMP-certified, lab-verified formula',
-      typicalReduction: 'Broader coverage than any single ingredient alone',
-      notes: 'Most convenient option. Money-back guarantee. No prescription needed.',
-    },
   ];
 
   // ── FAQ Data (9 questions) ─────────────────────────────────────────────────
@@ -294,7 +294,7 @@ const ReversePrediabetes2026: React.FC = () => {
     {
       question: 'What is the best supplement to reverse prediabetes?',
       answer:
-        'Berberine has the strongest individual clinical evidence — a 2025 systematic review of multiple RCTs confirmed it reduces fasting glucose and HOMA-IR scores comparably to Metformin. However, combination formulas like GlucoBliss (berberine + Ceylon cinnamon + chromium picolinate) target all three blood sugar pathways simultaneously, which research suggests produces broader results than any single ingredient alone.',
+        'Berberine has the strongest individual clinical evidence — a 2025 systematic review of multiple RCTs confirmed it reduces fasting glucose and HOMA-IR scores comparably to Metformin. Ceylon cinnamon and chromium picolinate also have supporting evidence individually and may complement berberine, though we do not currently have a verified combined-formula product to recommend.',
     },
     {
       question: 'Is berberine safe to take with Metformin?',
@@ -329,7 +329,7 @@ const ReversePrediabetes2026: React.FC = () => {
       <SEO
         title="How to Reverse Prediabetes in 2026: The Complete 5-Pillar Evidence-Based Protocol"
         description="The complete 2026 evidence-based protocol to reverse prediabetes naturally. 5 pillars: diet, exercise, supplements, sleep, and stress. Backed by 2024–2026 clinical research."
-        keywords="how to reverse prediabetes, prediabetes reversal 2026, lower blood sugar naturally, berberine prediabetes, lifestyle intervention diabetes prevention, GlucoBliss"
+        keywords="how to reverse prediabetes, prediabetes reversal 2026, lower blood sugar naturally, berberine prediabetes, lifestyle intervention diabetes prevention"
         image={heroImage}
         url="/blog/reverse-prediabetes-2026"
         schema={schemaMarkup}
@@ -402,7 +402,7 @@ const ReversePrediabetes2026: React.FC = () => {
               <li>✅ <strong>Prediabetes is reversible.</strong> The DPP study showed 58% reduction in diabetes progression with lifestyle changes — better than Metformin alone (31%).</li>
               <li>✅ <strong>5 pillars work together:</strong> Low-glycemic diet + 150 min/week exercise + targeted supplements + 7–8 hrs sleep + stress reduction.</li>
               <li>✅ <strong>Results timeline:</strong> Fasting glucose improves in 2–4 weeks; full HbA1c reversal in 3–6 months.</li>
-              <li>✅ <strong>Best supplement:</strong> Berberine (strongest evidence). GlucoBliss combines berberine + Ceylon cinnamon + chromium for all-pathway coverage.</li>
+              <li>✅ <strong>Best supplement:</strong> Berberine has the strongest individual evidence for blood sugar support.</li>
               <li>✅ <strong>Backed by 2024–2026 RCTs</strong> including the 2025 DPP Outcomes Study and ADA 2026 Standards of Care.</li>
             </ul>
           </div>
@@ -535,30 +535,8 @@ const ReversePrediabetes2026: React.FC = () => {
             </div>
           </section>
 
-          {/* ── CTA #1 — 50% MARK ── */}
-          <section className="mb-12 bg-gradient-to-br from-emerald-700 to-teal-600 text-white rounded-xl p-10 text-center shadow-lg">
-            <Zap className="w-12 h-12 text-emerald-200 mx-auto mb-4" />
-            <p className="text-xs font-bold uppercase tracking-widest text-emerald-200 mb-2">
-              All 3 Pathways. One Capsule.
-            </p>
-            <h2 className="text-3xl font-bold mb-4">
-              GlucoBliss: Berberine + Ceylon Cinnamon + Chromium
-            </h2>
-            <p className="text-lg text-emerald-100 mb-6 max-w-xl mx-auto">
-              While diet and exercise address GLUT4 and insulin resistance, GlucoBliss adds AMPK activation via berberine — covering the pathway exercise alone can't fully address. GMP-certified, lab-verified, money-back guarantee.
-            </p>
-            <a
-              href={glucoblissLink}
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              className="inline-flex items-center gap-2 bg-white text-emerald-700 hover:bg-emerald-50 font-bold px-8 py-4 rounded-xl transition shadow-md"
-            >
-              See GlucoBliss — Check Current Price <ArrowRight className="w-5 h-5" />
-            </a>
-            <p className="text-xs text-emerald-300 mt-4">
-              Affiliate disclosure: We earn a commission at no extra cost to you.
-            </p>
-          </section>
+          {/* ── CTA #1 removed — see note on GlucoBliss above. No verified
+              multi-ingredient product exists to recommend here currently. ── */}
 
           {/* ── PILLAR 3: SUPPLEMENTS ── */}
           <section id="pillar-3" className="mb-12">
@@ -613,9 +591,9 @@ const ReversePrediabetes2026: React.FC = () => {
             </div>
 
             <div className="bg-indigo-50 border-2 border-indigo-200 rounded-xl p-5">
-              <h4 className="font-bold text-indigo-900 mb-2">💡 Why a Multi-Ingredient Formula Outperforms Individual Supplements</h4>
+              <h4 className="font-bold text-indigo-900 mb-2">💡 Why Combining Supplements Is Sometimes Considered</h4>
               <p className="text-sm text-indigo-800">
-                Each supplement targets a different pathway. Berberine alone addresses AMPK. Cinnamon alone addresses post-meal spikes. Chromium alone addresses receptor sensitivity. When combined — as in GlucoBliss — they work synergistically, covering all three pathways simultaneously without multiple bottles or complex timing schedules.
+                Each supplement targets a different pathway. Berberine alone addresses AMPK. Cinnamon alone addresses post-meal spikes. Chromium alone addresses receptor sensitivity. Combining them individually may address more than one pathway at once, though we don't currently have a verified pre-combined product to point to — check with your doctor before combining supplements.
               </p>
             </div>
           </section>
@@ -776,7 +754,7 @@ const ReversePrediabetes2026: React.FC = () => {
                     'Get tested — fasting glucose + HbA1c. This is your baseline.',
                     'Remove all sugary drinks. Replace with water, green tea, or sparkling water.',
                     'Start 10-min post-dinner walks — do this before anything else.',
-                    'Begin GlucoBliss (or berberine 500mg × 3/day) with meals.',
+                    'Begin berberine (500mg × 3/day) with meals.',
                     'Set a consistent bedtime — same time every night.',
                   ],
                 },
@@ -937,52 +915,11 @@ const ReversePrediabetes2026: React.FC = () => {
             </section>
           )}
 
-          {/* ── FINAL CTA ── */}
-          <section className="mb-16 bg-gradient-to-br from-emerald-600 to-teal-600 text-white rounded-xl p-10 text-center shadow-lg">
-            <ShieldCheck className="w-12 h-12 text-emerald-200 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold mb-4">Ready to Reverse Prediabetes in 2026?</h2>
-            <p className="text-lg text-emerald-100 mb-6 max-w-xl mx-auto">
-              Diet and exercise are your foundation. GlucoBliss adds the supplement layer — covering all 3 blood sugar pathways with one GMP-certified, lab-verified capsule.
-            </p>
-            <a
-              href={glucoblissLink}
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              className="inline-flex items-center justify-center gap-2 bg-white text-emerald-700 font-bold px-8 py-4 rounded-xl hover:bg-emerald-50 transition shadow-md"
-            >
-              Get GlucoBliss — Risk-Free with Money-Back Guarantee <ArrowRight className="w-5 h-5" />
-            </a>
-            <p className="text-xs text-emerald-300 mt-4">
-              Affiliate disclosure: ThriveHealth earns a commission at no extra cost to you.
-            </p>
-          </section>
+          {/* ── FINAL CTA removed — see note on GlucoBliss above. ── */}
 
-          {/* ── CROSS-SILO LINK ── */}
-          <section className="mb-16">
-            <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-8">
-              <div className="flex items-start gap-4">
-                <span className="text-4xl flex-shrink-0">💊</span>
-                <div className="flex-1">
-                  <p className="text-xs font-bold uppercase tracking-widest text-amber-700 mb-1">
-                    Deep Dive
-                  </p>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                    Want to Compare All 5 Top Blood Sugar Supplements?
-                  </h3>
-                  <p className="text-gray-700 mb-4">
-                    We ranked the top 5 options — berberine, Ceylon cinnamon, chromium, bitter melon, and GlucoBliss — using 2024–2026 peer-reviewed clinical data. See which is right for your situation.
-                  </p>
-                  <Link
-                    to="/blog/best-diabetes-supplements"
-                    className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-3 rounded-xl transition shadow-md"
-                  >
-                    Read: Best Diabetes Supplements of 2026 — Ranked &amp; Compared
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </section>
+          {/* ── CROSS-SILO LINK removed — pointed to /blog/best-diabetes-supplements,
+              which was archived (none of its 5 ranked products, including
+              GlucoBliss, could be matched to real verifiable listings). ── */}
 
           {/* ── FOOTER DISCLAIMERS ── */}
           <footer className="border-t-2 border-gray-200 pt-8 mt-8">
@@ -1009,7 +946,7 @@ const ReversePrediabetes2026: React.FC = () => {
                   <h4 className="font-bold text-blue-900 text-sm">Affiliate Disclosure</h4>
                 </div>
                 <p className="text-xs text-blue-800 leading-relaxed">
-                  ThriveHealth360 may earn a commission from affiliate partnerships, including GlucoBliss via links in this article.
+                  ThriveHealth360 may earn a commission from affiliate partnerships via links in this article.
                   <strong> This does not affect product pricing.</strong> We only recommend products we believe in based on published research and quality standards.{' '}
                   <a href="/affiliate-disclosure" className="underline font-semibold hover:text-blue-900">
                     Full Affiliate Disclosure →

@@ -17,8 +17,6 @@ import {
   Clock,
   CheckCircle,
   ShieldCheck,
-  Activity,
-  Apple,
   Moon,
 } from 'lucide-react';
 import { SEO } from "@/components/seo/SEO";
@@ -72,18 +70,18 @@ const IntermittentFastingBloodSugar: React.FC = () => {
     dateModified: '2026-04-08',
     author: {
       '@type': 'Organization',
-      name: 'ThriveHealth Editorial Team',
-      url: 'https://thrivehealth.com',
+      name: 'ThriveHealth360',
+      url: 'https://thrivehealth360.org',
     },
     publisher: {
       '@type': 'Organization',
-      name: 'ThriveHealth',
-      logo: { '@type': 'ImageObject', url: 'https://thrivehealth.com/logo.png' },
+      name: 'ThriveHealth360',
+      logo: { '@type': 'ImageObject', url: 'https://thrivehealth360.org/images/brand/logo.svg' },
     },
-    reviewedBy: {
-      '@type': 'Organization',
-      name: 'ThriveHealth Medical Advisory Board',
-    },
+    // reviewedBy removed: there is no real "Medical Advisory Board" — that
+    // was a fabricated claim, the same category of problem fixed sitewide
+    // in SEO.tsx. Do not re-add this field unless a real, named reviewer
+    // exists (see SEO.tsx's reviewedByName/factCheckedBy pattern instead).
     mainEntity: {
       '@type': 'MedicalCondition',
       name: 'Prediabetes',
@@ -92,13 +90,29 @@ const IntermittentFastingBloodSugar: React.FC = () => {
     lastReviewed: '2026-04-08',
   };
 
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.textContent = JSON.stringify(schemaMarkup);
-    document.head.appendChild(script);
-    return () => { document.head.removeChild(script); };
-  }, []);
+  // Manual duplicate schema-injection removed: this ran alongside the
+  // <SEO schema={schemaMarkup}> prop below and was appending a SECOND
+  // application/ld+json script tag on every page load — SEO.tsx already
+  // injects schemaMarkup via its own effect once passed as a prop, so this
+  // was pure duplication (and bypassed every safety check SEO.tsx has).
+
+  // Tailwind's JIT scanner only generates classes it sees as complete literal
+  // strings in source — `bg-${color}-50` template literals are invisible to
+  // it unless that exact string happens to appear elsewhere too. Several
+  // colors below (especially 'orange', which appears nowhere else in this
+  // codebase) were rendering unstyled as a result. This map keeps every full
+  // class string literal so Tailwind always picks them up.
+  const colorClasses: Record<string, {
+    bg50: string; border500: string; text600: string; text900: string;
+    text800: string; text700: string; border200: string; border300: string; bg200: string;
+  }> = {
+    red:     { bg50: 'bg-red-50',     border500: 'border-red-500',     text600: 'text-red-600',     text900: 'text-red-900',     text800: 'text-red-800',     text700: 'text-red-700',     border200: 'border-red-200',     border300: 'border-red-300',     bg200: 'bg-red-200' },
+    orange:  { bg50: 'bg-orange-50',  border500: 'border-orange-500',  text600: 'text-orange-600',  text900: 'text-orange-900',  text800: 'text-orange-800',  text700: 'text-orange-700',  border200: 'border-orange-200',  border300: 'border-orange-300',  bg200: 'bg-orange-200' },
+    amber:   { bg50: 'bg-amber-50',   border500: 'border-amber-500',   text600: 'text-amber-600',   text900: 'text-amber-900',   text800: 'text-amber-800',   text700: 'text-amber-700',   border200: 'border-amber-200',   border300: 'border-amber-300',   bg200: 'bg-amber-200' },
+    emerald: { bg50: 'bg-emerald-50', border500: 'border-emerald-500', text600: 'text-emerald-600', text900: 'text-emerald-900', text800: 'text-emerald-800', text700: 'text-emerald-700', border200: 'border-emerald-200', border300: 'border-emerald-300', bg200: 'bg-emerald-200' },
+    blue:    { bg50: 'bg-blue-50',    border500: 'border-blue-500',    text600: 'text-blue-600',    text900: 'text-blue-900',    text800: 'text-blue-800',    text700: 'text-blue-700',    border200: 'border-blue-200',    border300: 'border-blue-300',    bg200: 'bg-blue-200' },
+    purple:  { bg50: 'bg-purple-50',  border500: 'border-purple-500',  text600: 'text-purple-600',  text900: 'text-purple-900',  text800: 'text-purple-800',  text700: 'text-purple-700',  border200: 'border-purple-200',  border300: 'border-purple-300',  bg200: 'bg-purple-200' },
+  };
 
   const handleLeadMagnet = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -195,6 +209,15 @@ const IntermittentFastingBloodSugar: React.FC = () => {
       doi: '10.1056/NEJMoa2114833',
       url: 'https://pubmed.ncbi.nlm.nih.gov/35443107/',
     },
+    {
+      authors: 'Guo L, Xi Y, Jin W, et al.',
+      year: 2024,
+      title: 'A 5:2 Intermittent Fasting Meal Replacement Diet and Glycemic Control for Adults With Diabetes: The EARLY Randomized Clinical Trial',
+      journal: 'JAMA Network Open',
+      pmid: '38904963',
+      doi: '10.1001/jamanetworkopen.2024.16786',
+      url: 'https://pubmed.ncbi.nlm.nih.gov/38904963/',
+    },
   ];
 
   // ── IF Protocols Comparison ────────────────────────────────────────────────
@@ -223,7 +246,7 @@ const IntermittentFastingBloodSugar: React.FC = () => {
       example: 'Normal Mon/Wed/Thu/Sat/Sun; restrict Tue & Fri',
       difficulty: '⭐⭐⭐ Moderate',
       bestFor: 'Those who prefer flexible weekly structure',
-      bloodSugarEffect: '2024 Chinese RCT: HbA1c ↓1.9% — outperformed Metformin in that trial',
+      bloodSugarEffect: '2024 Chinese RCT (meal-replacement protocol, early T2D, not prediabetes): HbA1c ↓1.9% — a larger reduction than the metformin comparison group in that single trial [8]',
       color: 'purple',
     },
     {
@@ -262,7 +285,7 @@ const IntermittentFastingBloodSugar: React.FC = () => {
     {
       question: 'Can intermittent fasting reverse prediabetes completely?',
       answer:
-        'It can contribute significantly to reversal when combined with a low-glycemic diet and regular exercise. Intermittent fasting alone is unlikely to reverse prediabetes — but as part of a comprehensive protocol (what ThriveHealth calls the 5-Pillar approach), it meaningfully accelerates the process. A 2024 Chinese RCT found that the 5:2 meal-replacement protocol achieved greater HbA1c reduction (–1.9%) than Metformin (–1.6%) over the same period.',
+        'No — and be skeptical of any protocol that promises otherwise. Prediabetes can be put into remission through sustained lifestyle change, which is why the CDC uses the term "reversal," but remission is not a cure or a guarantee, and levels typically rise again if the underlying habits slip. Intermittent fasting is one well-studied tool for improving insulin sensitivity and fasting glucose — most effective when combined with diet quality, exercise, sleep, and weight management. A 2024 randomized trial found a 5:2 meal-replacement protocol achieved greater HbA1c reduction (–1.9%) than metformin (–1.6%) over 16 weeks — but that trial was conducted in adults already diagnosed with early type 2 diabetes using a structured meal-replacement plan, not in prediabetes using ad-libitum fasting, so it should be read as a promising signal rather than a direct guide for prediabetes.',
     },
     {
       question: 'What should I eat during my eating window to maximize blood sugar benefits?',
@@ -318,7 +341,7 @@ const IntermittentFastingBloodSugar: React.FC = () => {
               <span className="text-emerald-600"> The 2026 Guide for Prediabetes Reversal</span>
             </h1>
             <div className="flex items-center gap-4 text-sm text-gray-600 mb-6">
-              <span>ThriveHealth Team</span>
+              <span>ThriveHealth360 Team</span>
               <span>•</span>
               <span>14 min read</span>
               <span>•</span>
@@ -363,7 +386,7 @@ const IntermittentFastingBloodSugar: React.FC = () => {
               <strong>Yes — with strong clinical evidence.</strong> A 2024 meta-analysis of 14 RCTs in 1,101 adults with prediabetes or type 2 diabetes found that intermittent fasting (IF) significantly reduced HbA1c by <strong>0.81%</strong> and fasting glucose compared to controls. A 2025 meta-analysis of 10 RCTs confirmed IF also meaningfully reduces HOMA-IR (insulin resistance) and inflammation markers.
             </p>
             <p className="text-gray-800 leading-relaxed">
-              IF works by giving your insulin system a complete rest during the fasting window — allowing insulin levels to drop, cells to become more sensitive, and your body to switch to fat-burning mode (ketosis). It complements — not replaces — diet, exercise, and targeted supplements.
+              IF works by giving your insulin system an extended rest during the fasting window — allowing insulin levels to drop, cells to become more sensitive, and your body to switch to fat-burning mode (ketosis). It complements — not replaces — diet, exercise, and targeted supplements.
             </p>
           </div>
 
@@ -399,11 +422,11 @@ const IntermittentFastingBloodSugar: React.FC = () => {
                 { hrs: '8–12 hours (deep fast)', what: 'Insulin reaches its lowest level. AMPK activates (the same pathway berberine targets). Insulin receptor sensitivity begins to improve.', color: 'amber' },
                 { hrs: '12–16 hours (metabolic reset)', what: 'Autophagy begins. Fat-burning increases. Insulin sensitivity measurably improves. GLUT4 transporters reset. This is the "sweet spot" for blood sugar benefits.', color: 'emerald' },
               ].map((stage, i) => (
-                <div key={i} className={`flex items-start gap-4 bg-${stage.color}-50 border-l-4 border-${stage.color}-500 p-5 rounded-r-lg`}>
-                  <Clock className={`w-5 h-5 text-${stage.color}-600 flex-shrink-0 mt-0.5`} />
+                <div key={i} className={`flex items-start gap-4 ${colorClasses[stage.color].bg50} border-l-4 ${colorClasses[stage.color].border500} p-5 rounded-r-lg`}>
+                  <Clock className={`w-5 h-5 ${colorClasses[stage.color].text600} flex-shrink-0 mt-0.5`} />
                   <div>
-                    <p className={`font-bold text-${stage.color}-900 text-sm mb-1`}>{stage.hrs}</p>
-                    <p className={`text-sm text-${stage.color}-800`}>{stage.what}</p>
+                    <p className={`font-bold ${colorClasses[stage.color].text900} text-sm mb-1`}>{stage.hrs}</p>
+                    <p className={`text-sm ${colorClasses[stage.color].text800}`}>{stage.what}</p>
                   </div>
                 </div>
               ))}
@@ -429,23 +452,23 @@ const IntermittentFastingBloodSugar: React.FC = () => {
 
             <div className="space-y-5">
               {protocols.map((p, i) => (
-                <div key={i} className={`bg-${p.color}-50 border-2 border-${p.color}-300 rounded-xl p-6 ${i === 0 ? 'shadow-md' : ''}`}>
+                <div key={i} className={`${colorClasses[p.color].bg50} border-2 ${colorClasses[p.color].border300} rounded-xl p-6 ${i === 0 ? 'shadow-md' : ''}`}>
                   <div className="flex items-start justify-between flex-wrap gap-3 mb-3">
                     <div>
-                      <h3 className={`text-xl font-bold text-${p.color}-900`}>{p.name}</h3>
-                      <p className={`text-sm text-${p.color}-700 mt-1`}><strong>Window:</strong> {p.window}</p>
-                      <p className={`text-sm text-${p.color}-700`}><strong>Example schedule:</strong> {p.example}</p>
+                      <h3 className={`text-xl font-bold ${colorClasses[p.color].text900}`}>{p.name}</h3>
+                      <p className={`text-sm ${colorClasses[p.color].text700} mt-1`}><strong>Window:</strong> {p.window}</p>
+                      <p className={`text-sm ${colorClasses[p.color].text700}`}><strong>Example schedule:</strong> {p.example}</p>
                     </div>
-                    <span className={`text-sm font-bold px-3 py-1 rounded-full bg-${p.color}-200 text-${p.color}-900`}>
+                    <span className={`text-sm font-bold px-3 py-1 rounded-full ${colorClasses[p.color].bg200} ${colorClasses[p.color].text900}`}>
                       {p.difficulty}
                     </span>
                   </div>
                   <div className="grid md:grid-cols-2 gap-3 text-sm">
-                    <p className={`text-${p.color}-800`}><strong>Best for:</strong> {p.bestFor}</p>
-                    <p className={`text-${p.color}-800`}><strong>Blood sugar effect:</strong> {p.bloodSugarEffect}</p>
+                    <p className={colorClasses[p.color].text800}><strong>Best for:</strong> {p.bestFor}</p>
+                    <p className={colorClasses[p.color].text800}><strong>Blood sugar effect:</strong> {p.bloodSugarEffect}</p>
                   </div>
                   {i === 0 && (
-                    <p className={`mt-3 text-xs font-semibold bg-${p.color}-200 text-${p.color}-900 px-3 py-1 rounded-full inline-block`}>
+                    <p className={`mt-3 text-xs font-semibold ${colorClasses[p.color].bg200} ${colorClasses[p.color].text900} px-3 py-1 rounded-full inline-block`}>
                       ⭐ ThriveHealth Recommended Starting Protocol
                     </p>
                   )}
@@ -504,7 +527,7 @@ const IntermittentFastingBloodSugar: React.FC = () => {
               <div className="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-lg">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-xs font-bold uppercase tracking-widest bg-amber-200 text-amber-900 px-2 py-0.5 rounded-full">5:2 vs Medication RCT</span>
-                  <span className="text-xs text-gray-500">[5]</span>
+                  <span className="text-xs text-gray-500">[8]</span>
                 </div>
                 <p className="text-sm text-amber-900 mb-2">
                   <strong>Finding:</strong> A 2024 RCT comparing IF 16:8 and 14:10 protocols in obese T2D patients (3 days/week for 3 months) found both produced significant improvements in fasting glucose, HbA1c, and lipid profiles vs. control.
@@ -584,11 +607,11 @@ const IntermittentFastingBloodSugar: React.FC = () => {
                   color: 'amber',
                 },
               ].map((s, i) => (
-                <div key={i} className={`flex items-start gap-4 bg-${s.color}-50 border border-${s.color}-200 rounded-xl p-5`}>
+                <div key={i} className={`flex items-start gap-4 ${colorClasses[s.color].bg50} border ${colorClasses[s.color].border200} rounded-xl p-5`}>
                   <span className="text-3xl flex-shrink-0">{s.icon}</span>
                   <div>
-                    <h3 className={`font-bold text-${s.color}-900 mb-2`}>{s.step}</h3>
-                    <p className={`text-sm text-${s.color}-800`}>{s.detail}</p>
+                    <h3 className={`font-bold ${colorClasses[s.color].text900} mb-2`}>{s.step}</h3>
+                    <p className={`text-sm ${colorClasses[s.color].text800}`}>{s.detail}</p>
                   </div>
                 </div>
               ))}
@@ -603,9 +626,9 @@ const IntermittentFastingBloodSugar: React.FC = () => {
                   { label: '¼ Plate', desc: 'Lean protein: salmon, chicken, eggs, Greek yogurt, legumes', color: 'blue' },
                   { label: '¼ Plate', desc: 'Complex carbs: oats, quinoa, lentils, sweet potato (small)', color: 'amber' },
                 ].map((item, i) => (
-                  <div key={i} className={`bg-${item.color}-50 rounded-lg p-3 text-center`}>
-                    <p className={`font-bold text-${item.color}-900 text-lg`}>{item.label}</p>
-                    <p className={`text-xs text-${item.color}-800 mt-1`}>{item.desc}</p>
+                  <div key={i} className={`${colorClasses[item.color].bg50} rounded-lg p-3 text-center`}>
+                    <p className={`font-bold ${colorClasses[item.color].text900} text-lg`}>{item.label}</p>
+                    <p className={`text-xs ${colorClasses[item.color].text800} mt-1`}>{item.desc}</p>
                   </div>
                 ))}
               </div>
@@ -637,8 +660,8 @@ const IntermittentFastingBloodSugar: React.FC = () => {
                     ['AMPK activation', '✅ Strong (during fast)', '✅ Strong (berberine)', '⚡ Potentially synergistic'],
                     ['Post-meal glucose spikes', '⚠️ Reduced (fewer meals)', '✅ Studied for this specifically', '✅ Broader coverage'],
                     ['Insulin receptor sensitivity', '✅ Improved (fasting reset)', '✅ Studied for this specifically', '⚡ Potentially synergistic'],
-                    ['Fasting glucose reduction', '✅ Yes', '✅ ~15 mg/dL (meta-analysis average)', '⚡ Effects not tested in combination'],
-                    ['HbA1c improvement', '✅ –0.81% (meta-analysis)', '✅ ~–0.6–0.7% (meta-analysis average)', '⚡ Effects not tested in combination'],
+                    ['Fasting glucose reduction', '✅ Yes', '✅ Yes, in separate berberine research (not cited on this page)', '⚡ Effects not tested in combination'],
+                    ['HbA1c improvement', '✅ –0.81% (meta-analysis)', '✅ Yes, in separate berberine research (not cited on this page)', '⚡ Effects not tested in combination'],
                   ].map(([mechanism, col2, col3, col4], i) => (
                     <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                       <td className="px-4 py-3 text-sm font-semibold text-gray-900">{mechanism}</td>
@@ -736,7 +759,7 @@ const IntermittentFastingBloodSugar: React.FC = () => {
             <div className="mt-6 bg-gray-100 border border-gray-300 rounded-lg p-4">
               <p className="text-sm text-gray-700 flex items-center gap-2">
                 <Heart className="w-5 h-5 text-rose-500" />
-                <strong>Reviewed by the ThriveHealth Medical Advisory Board</strong> — April 2026.
+                <strong>Fact-checked by the ThriveHealth360 team</strong> against peer-reviewed sources — April 2026.
               </p>
             </div>
           </section>
@@ -795,6 +818,12 @@ const IntermittentFastingBloodSugar: React.FC = () => {
             <p className="text-lg text-emerald-100 mb-6 max-w-xl mx-auto">
               16:8 intermittent fasting targets AMPK activation, post-meal spikes, and insulin sensitivity on its own — a solid foundation for prediabetes management, with or without an added supplement.
             </p>
+            <Link
+              to="/blog/reverse-prediabetes-2026"
+              className="inline-flex items-center gap-2 bg-white text-emerald-700 hover:bg-emerald-50 font-bold px-8 py-4 rounded-xl transition shadow-md"
+            >
+              See the Full 5-Pillar Protocol <ArrowRight className="w-5 h-5" />
+            </Link>
           </section>
 
           {/* ── FOOTER DISCLAIMERS ── */}
