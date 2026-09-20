@@ -35,7 +35,7 @@ import { DownloadModal } from "@/components/DownloadModal";
 import { FoodCard } from "@/components/FoodCard";
 import { ArticleLayout } from "@/components/layout/ArticleLayout";
 import type { BlogArticleMeta } from "@/data/types";
-import { DietMedicalDisclaimerCompact, DietAffiliateDisclaimerProductCompact } from "@/components/disclaimers/DietDisclaimers";
+import { DietMedicalDisclaimerCompact } from "@/components/disclaimers/DietDisclaimers";
 
 // ============================================================================
 // CONFIGURATION & CONSTANTS
@@ -559,6 +559,7 @@ const BestFoodsBloodSugar = () => {
         url: seoConfig.slug,
       }}
       category="diet"
+      referencesCount={citations.length}
       title="Best Foods for Blood Sugar Control: The Science-Backed Prediabetes Diet Plan"
       readTime="12 min read"
       backLinkTo="/blog"
@@ -885,10 +886,7 @@ const BestFoodsBloodSugar = () => {
 
           {/* DISCLAIMERS */}
           <footer className="border-t-2 border-gray-200 pt-8 mt-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <DietMedicalDisclaimerCompact />
-              <DietAffiliateDisclaimerProductCompact />
-            </div>
+            <DietMedicalDisclaimerCompact />
           </footer>
 
       <DownloadModal isOpen={isDownloadModalOpen} onClose={() => setIsDownloadModalOpen(false)} />

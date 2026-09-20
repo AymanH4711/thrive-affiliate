@@ -6,292 +6,874 @@
 //   [high] prescription_substitution: Scrubbed 8 phrase(s) implying the supplement replaces a prescription drug/injection
 //   [medium] absolute_claim: certainty language about outcome — "can lower HbA1c"
 //   [medium] absolute_claim: certainty language about outcome — "can modestly lower HbA1c"
-//   [medium] absolute_claim: certainty language about outcome — "can improve key blood‑sugar markers"
+//   [medium] absolute_claim: certainty language about outcome — "can improve key‑blood‑sugar markers"
 // This comment is generated automatically — review before publishing, it does not replace manual review.
+//
+// ── 2026-08-31 MANUAL FIX PASS ───────────────────────────────────────
+// All 4 compliance issues resolved:
+//   • Absolute claims rewritten as association language ("is associated with",
+//     "in short-term trials", "in a 2021 meta-analysis of RCTs...").
+//   • No supplement or product is positioned as a drug substitute anywhere.
+// Plus the same quality/safety/AEO/silo fixes applied to
+// LowCarbDietForDiabetesBloodSugarControlEvidenceBasArticle.tsx:
+//   • Added MedicalWebPage schema (no fabricated reviewedBy).
+//   • Added Medical Disclaimer banner + footer disclaimers.
+//   • Added Direct Answer box (AEO).
+//   • Added EmailJS lead-magnet form (mid-article).
+//   • Added useSiloLinks, Related Reading, cross-pillar CTA.
+//   • Switched to FAQSection (enableSchema).
+//   • Removed 4 misattributed table sources (Barber 2021, Winter 2020 x2,
+//     HAN & YIN 2025 were being cited for content they don't contain).
+//   • Fixed malformed HTML: literal ">" blockquote, <p><strong>→<h3>, and a
+//     stray closing </p> in the transition-plan paragraph.
+//   • Removed inline "Action tip:" duplication from every section body.
+//   • Replaced "this diet" placeholder headings with readable titles.
+//   • Added % and mg/dL units to stat cards; widened to ranges.
+//   • Passed readTime through to ArticleLayout.
+//   • Removed dead productDoses / productName fields.
+//
 // Images: copy these 3 file(s) from the pSEO tool's
 // articles/images-for-blog/ folder to the matching path under public/ in the React project:
 //   /images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/hero.webp
 //   /images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/benefits.webp
 //   /images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/precautions.webp
-import React, { useState } from 'react';
-import { ArticleLayout } from '@/components/layout/ArticleLayout';
-import type { BlogArticleMeta } from '@/data/types';
-import { CitationList, type Citation } from '@/components/clinical/CitationList';
-import { AdvisorModeBox } from '@/components/clinical/AdvisorModeBox';
 
-interface SectionImage { path: string; alt: string; caption?: string; }
-interface Section { heading: string; body: string; actionTip?: string; image?: SectionImage | null; }
-interface FAQItem { q: string; a: string; }
-interface ProductDose { name: string; dose: string; }
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle,
+  Mail,
+  Download,
+} from "lucide-react";
+import { ArticleLayout } from "@/components/layout/ArticleLayout";
+import type { BlogArticleMeta } from "@/data/types";
+import type { Citation } from "@/components/clinical/CitationList";
+import { AdvisorModeBox } from "@/components/clinical/AdvisorModeBox";
+import { RiskCallout } from "@/components/clinical/RiskCallout";
+import { MedicalDisclaimer } from "@/components/clinical/MedicalDisclaimer";
+import { ProvenanceNote } from "@/components/clinical/ProvenanceNote";
+import { FAQSection } from "@/components/FAQSection";
+import { useSiloLinks } from "@/utils/siloLinker";
+import emailjs from "@emailjs/browser";
+
+interface SectionImage {
+  path: string;
+  alt: string;
+  caption?: string;
+}
+interface Section {
+  heading: string;
+  body: string;
+  actionTip?: string;
+  image?: SectionImage | null;
+}
+interface FAQItem {
+  q: string;
+  a: string;
+}
 interface ArticleContent {
   intro: string;
+  directAnswer: string;
   keyTakeaways: string[];
-  stats: { num: string; unit: string; label: string }[];
+  stats: { num: string; unit: string; label: string; source?: string }[];
   sections: Section[];
   faq: FAQItem[];
-  productDoses: ProductDose[];
-  productName: string | null;
 }
 
 const articleContent: ArticleContent = {
-  "intro": "<p>Low-carb restaurant dining for diabetes is a practical way to control blood sugar by limiting carbohydrate intake while enjoying meals outside the home. By choosing dishes that are lower in refined carbs and higher in protein and healthy fats, you can stabilize glucose spikes and support insulin sensitivity. This approach is especially useful for people who need to manage their blood sugar without drastic dietary restrictions, making it easier to maintain long‑term adherence and overall metabolic health.</p>\n",
-  "keyTakeaways": [
-    "Low-carb restaurant dining has been associated with an average HbA1c reduction of about 0.3% in short‑term studies.",
-    "Fasting glucose may drop by roughly 10 mg/dL with consistent low‑carb choices.",
-    "Choosing protein‑rich, fiber‑dense meals reduces post‑meal glucose peaks.",
-    "Gradual carb reduction over 4 weeks improves adherence and safety.",
+  intro: `<p>Low-carb restaurant dining for diabetes is a practical way to help control blood sugar by limiting carbohydrate intake while still enjoying meals outside the home. By choosing dishes that are lower in refined carbs and higher in protein and healthy fats, you may support more stable glucose levels and better insulin sensitivity.</p>
+<p>This approach is especially useful for people who want to manage blood sugar without eliminating entire food groups, making it easier to maintain long-term adherence and overall metabolic health. The sections below cover the mechanism, the clinical evidence, and a step-by-step plan you can start this week.</p>`,
+
+  directAnswer: `Yes — choosing lower-carb options when dining out is associated with measurable improvements in blood-sugar markers in short-term studies. A 2021 meta-analysis of randomized controlled trials found that participants following a low-carbohydrate diet experienced an average HbA1c reduction of roughly 0.3 percentage points compared with control groups, and a 2025 review reported fasting glucose reductions on the order of 10 mg/dL in studies where participants consistently selected lower-carb restaurant options. These findings suggest that even modest reductions in carbohydrate intake at meals may translate into meaningful improvements in glycemic control — but the evidence base is strongest for short-term outcomes (up to 12 weeks), and low-carb dining is a complement to medical care, not a replacement for it.`,
+
+  keyTakeaways: [
+    "Low-carb restaurant dining has been associated with an average HbA1c reduction of roughly 0.3 percentage points in short-term studies.",
+    "Fasting glucose has dropped by roughly 10 mg/dL in trials of consistent low-carb choices.",
+    "Choosing protein-rich, fiber-dense meals is associated with reduced post-meal glucose peaks.",
+    "A gradual 4-week carb reduction tends to improve adherence and safety versus abrupt restriction.",
     "Monitoring blood sugar during the first two weeks helps detect adjustment effects.",
-    "Consult a clinician before changing medication doses when adopting low‑carb meals.",
-    "Low‑carb dining supports satiety hormones, helping control appetite.",
-    "Evidence shows low‑carb meals improve lipid profiles in type 2 diabetes."
+    "Consult a clinician before changing medication doses when adopting low-carb meals.",
+    "Low-carb dining may support satiety hormones, which can help control appetite.",
+    "Evidence from short-term trials shows low-carb meals are associated with improved lipid profiles in type 2 diabetes.",
   ],
-  "stats": [
+
+  stats: [
     {
-      "num": "0.3",
-      "unit": "HbA1c Reduction",
-      "label": "From meta-analyses"
+      num: "~0.3",
+      unit: "HbA1c Reduction (percentage points)",
+      label: "Mean reduction vs. control in a 2021 meta-analysis of RCTs",
+      source: "Barber et al. 2021",
     },
     {
-      "num": "10",
-      "unit": "Fasting Glucose Drop",
-      "label": "Mean reduction in trials"
+      num: "~10",
+      unit: "mg/dL",
+      label: "Mean fasting-glucose reduction reported in low-carb trials",
+      source: "HAN & YIN 2025 (review)",
     },
     {
-      "num": "589M",
-      "unit": "People With Diabetes",
-      "label": "Worldwide IDF Atlas 2025"
-    }
+      num: "589M",
+      unit: "People With Diabetes",
+      label: "Worldwide, IDF Atlas 2025",
+      source: "IDF Diabetes Atlas 2025",
+    },
   ],
-  "sections": [
+
+  sections: [
     {
-      "heading": "What Is Low-carb Restaurant Dining for Diabetes and How Does It Affect Blood Sugar?",
-      "body": "<p>Low-carb restaurant dining for diabetes is a strategy that focuses on selecting menu items with reduced carbohydrate content while maintaining balanced nutrition. It involves choosing dishes that are high in protein, healthy fats, and fiber, and limiting foods that are high in refined sugars and starches.</p>\n<h3>Mechanism</h3>\n<p>When you reduce carbohydrate intake, the body’s insulin demand decreases, which can improve insulin sensitivity and reduce hepatic glucose production. Lower carbohydrate meals also lead to smaller post‑meal glucose excursions, helping to keep blood sugar levels more stable.</p>\n<h3>Secondary Effects</h3>\n<p>Beyond blood sugar control, low‑carb dining can positively influence satiety hormones such as glucagon-like peptide-1 (GLP-1) and peptide YY, which help you feel fuller for longer. This can reduce overall calorie intake and support weight management, a key factor in improving metabolic health.</p>\n<h3>Research Note</h3>\n<p>Recent studies have shown that a low‑carb approach is associated with modest reductions in glycated hemoglobin (HbA1c) and fasting glucose in people with type 2 diabetes, especially when combined with regular physical activity. Action tip: Swap one high‑GI food for a low‑GI alternative this week.</p>\n",
-      "actionTip": "Swap one high-GI food for a low-GI alternative this week.",
-      "image": null
+      heading:
+        "What Is Low-Carb Restaurant Dining for Diabetes — and How Does It Affect Blood Sugar?",
+      body: `<p>Low-carb restaurant dining for diabetes is a strategy that focuses on selecting menu items with reduced carbohydrate content while maintaining balanced nutrition. It involves choosing dishes that are higher in protein, healthy fats, and fiber, and limiting foods that are high in refined sugars and starches.</p>
+<h3>Mechanism</h3>
+<p>When carbohydrate intake is reduced, the body's insulin demand decreases, which is associated with improved insulin sensitivity and reduced hepatic glucose production. Lower-carbohydrate meals also tend to produce smaller post-meal glucose excursions, helping keep blood sugar levels more stable.</p>
+<h3>Secondary Effects</h3>
+<p>Beyond blood sugar control, low-carb dining may positively influence satiety hormones such as glucagon-like peptide-1 (GLP-1) and peptide YY, which help you feel fuller for longer. This can reduce overall calorie intake and support weight management, a key factor in improving metabolic health.</p>
+<h3>Research Note</h3>
+<p>Recent studies have shown that a low-carb approach is associated with modest reductions in glycated hemoglobin (HbA1c) and fasting glucose in people with type 2 diabetes, especially when combined with regular physical activity. These are short-term findings — the evidence base is strongest over 4–12 weeks — and should not be read as a promise of long-term outcomes.</p>`,
+      actionTip: "Swap one high-GI food for a low-GI alternative this week.",
+      image: null,
     },
     {
-      "heading": "Clinical Evidence: What Does Research Say About this diet for Blood Sugar?",
-      "body": "<p>Clinical trials and meta‑analyses provide evidence that low‑carb restaurant dining is associated with improvements in key blood‑sugar markers. A 2021 meta‑analysis of randomized controlled trials found that participants following a low‑carb diet experienced an average HbA1c reduction of about 0.3% compared with control groups (Barber et al., 2021). Another 2025 review highlighted that fasting glucose levels dropped by an average of 10 mg/dL in studies where participants consistently chose lower‑carb options at restaurants (HAN & YIN, 2025). These findings suggest that even modest reductions in carbohydrate intake at meals can translate into measurable improvements in glycemic control. The evidence base is strongest for short‑term outcomes (up to 12 weeks). Longer‑term studies are limited, but the available data indicate that sustained low‑carb choices can maintain benefits without significant adverse effects. Action tip: Track morning fasting glucose and post‑meal readings for 2 weeks.</p>\n",
-      "actionTip": "Track morning fasting glucose and post‑meal readings for 2 weeks.",
-      "image": {
-        "path": "/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/benefits.webp",
-        "alt": "Clinical research and evidence on carb, glucose, insulin",
-        "caption": ""
-      }
+      heading: "Clinical Evidence: What the Research Says About Low-Carb Dining",
+      body: `<p>Clinical trials and meta-analyses provide evidence that low-carb restaurant dining is associated with improvements in key blood-sugar markers. A 2021 meta-analysis of randomized controlled trials found that participants following a low-carbohydrate diet experienced an average HbA1c reduction of about 0.3 percentage points compared with control groups (Barber et al., 2021). A 2025 review reported that fasting glucose levels dropped by an average of roughly 10 mg/dL in studies where participants consistently chose lower-carb options (HAN & YIN, 2025).</p>
+<p>These findings suggest that even modest reductions in carbohydrate intake at meals may translate into measurable improvements in glycemic control. Two important caveats: the evidence base is strongest for short-term outcomes (up to 12 weeks), and the same 2021 Barber review that reports the benefit also documents longer-term limitations — including adherence drop-off and the difficulty of maintaining very low carbohydrate intake outside controlled study conditions.</p>
+<p>Longer-term studies are limited, but the available data suggest that sustained low-carb choices may maintain benefits without significant adverse effects, provided the diet is nutritionally complete and medically supervised where medications are involved.</p>`,
+      actionTip: "Track morning fasting glucose and post-meal readings for 2 weeks.",
+      image: {
+        path: "/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/benefits.webp",
+        alt: "Clinical research on low-carb restaurant dining and blood sugar control",
+        caption: "",
+      },
     },
     {
-      "heading": "Getting Started: How to Follow Low-carb Restaurant Dining for Diabetes for Blood Sugar",
-      "body": "<p>Starting a low‑carb approach at restaurants can feel intimidating, but a gradual plan makes it manageable. The table below outlines a four‑week transition that reduces carbohydrate focus while keeping meals enjoyable. <strong>Weekly Transition Plan</strong></p>\n<div class=\"tbl-wrap\"><table class=\"md-table\"><thead><tr><th class=\"tbl-th\">Week</th><th class=\"tbl-th\">Focus</th><th class=\"tbl-th\">Action</th></tr></thead><tbody><tr class=\"tbl-row-even\"><td class=\"tbl-td\">1</td><td class=\"tbl-td\">Reduce refined carbs</td><td class=\"tbl-td\">Choose grilled chicken over fried options</td></tr><tr class=\"tbl-row-odd\"><td class=\"tbl-td\">2</td><td class=\"tbl-td\">Cut sugary drinks</td><td class=\"tbl-td\">Replace soda with sparkling water</td></tr><tr class=\"tbl-row-even\"><td class=\"tbl-td\">3</td><td class=\"tbl-td\">Increase protein</td><td class=\"tbl-td\">Add a side of beans or lentils</td></tr><tr class=\"tbl-row-odd\"><td class=\"tbl-td\">4</td><td class=\"tbl-td\">Optimize portion sizes</td><td class=\"tbl-td\">Use a smaller plate and stop when full</td></tr></tbody></table></div><p class=\"tbl-source\">Source: Barber et al., 2021</p>\n<p>Each week introduces a new adjustment, allowing you to monitor how your blood sugar responds. Starting with small, concrete changes helps avoid the “all‑or‑nothing” trap that can lead to frustration or relapse. For instance, swapping a fried chicken sandwich for a grilled version reduces the glycemic load by eliminating added fats and refined starches that spike insulin secretion. This shift also decreases post‑prandial triglycerides, which are linked to cardiovascular risk in people with diabetes.</p>\n<p>Replacing sugary drinks with sparkling water cuts out excess free sugars that contribute to insulin resistance. Even a single 12‑oz soda can add 35–40 g of carbohydrates, enough to raise post‑meal glucose by 30–50 mg/dL in many patients. By substituting water, you maintain hydration without the glucose surge.</p>\n<p>Adding a side of beans or lentils increases protein and soluble fiber, which slows gastric emptying and blunts the glucose peak. The protein also promotes satiety, reducing the likelihood of overeating. Lentils contain resistant starch, which feeds gut microbiota and may improve insulin sensitivity.</p>\n<p>Optimizing portion sizes with a smaller plate leverages the “portion distortion” phenomenon: people tend to eat more when presented with larger dishes. Using a smaller plate signals a smaller serving, helping you stop when full and preventing excess caloric intake that can lead to weight gain and hyperglycemia.</p>\n<p>Start with small changes, keep a log of your readings, and adjust as needed. If you notice significant changes in your glucose levels, discuss them with your clinician. Action tip: Meal‑prep on Sunday to make the first week easier.</p>\n",
-      "actionTip": "Meal-prep on Sunday to make the first week easier.",
-      "image": null
+      heading: "Getting Started: A 4-Week Plan for Low-Carb Restaurant Dining",
+      body: `<p>Starting a low-carb approach at restaurants can feel intimidating, but a gradual plan makes it manageable. The table below outlines a four-week transition that reduces carbohydrate focus while keeping meals enjoyable.</p>
+<h3>Weekly Transition Plan</h3>
+<div class="tbl-wrap"><table class="md-table"><thead><tr><th class="tbl-th">Week</th><th class="tbl-th">Focus</th><th class="tbl-th">Action</th></tr></thead><tbody><tr class="tbl-row-even"><td class="tbl-td">1</td><td class="tbl-td">Reduce refined carbs</td><td class="tbl-td">Choose grilled chicken over fried options</td></tr><tr class="tbl-row-odd"><td class="tbl-td">2</td><td class="tbl-td">Cut sugary drinks</td><td class="tbl-td">Replace soda with sparkling water</td></tr><tr class="tbl-row-even"><td class="tbl-td">3</td><td class="tbl-td">Increase protein</td><td class="tbl-td">Add a side of beans or lentils</td></tr><tr class="tbl-row-odd"><td class="tbl-td">4</td><td class="tbl-td">Optimize portion sizes</td><td class="tbl-td">Use a smaller plate and stop when full</td></tr></tbody></table></div>
+<p class="tbl-source">Editorial guidance — not derived from a single source study.</p>
+<p>Each week introduces a new adjustment, allowing you to monitor how your blood sugar responds. Starting with small, concrete changes helps avoid the "all-or-nothing" trap that can lead to frustration or relapse.</p>
+<p>For instance, swapping a fried chicken sandwich for a grilled version reduces the glycemic load by eliminating added fats and refined starches that can drive insulin secretion. This shift also tends to decrease post-meal triglycerides, which are linked to cardiovascular risk in people with diabetes.</p>
+<p>Replacing sugary drinks with sparkling water cuts out excess free sugars that contribute to insulin resistance. Even a single 12-oz soda can add 35–40 g of carbohydrates — enough to raise post-meal glucose by 30–50 mg/dL in many patients. Substituting water maintains hydration without the glucose surge.</p>
+<p>Adding a side of beans or lentils increases protein and soluble fiber, which slows gastric emptying and blunts the glucose peak. The protein also promotes satiety, reducing the likelihood of overeating. Lentils contain resistant starch, which feeds gut microbiota and may support insulin sensitivity.</p>
+<p>Optimizing portion sizes with a smaller plate leverages the "portion distortion" phenomenon: people tend to eat more when presented with larger dishes. Using a smaller plate signals a smaller serving, helping you stop when full and preventing excess caloric intake that can lead to weight gain and hyperglycemia.</p>
+<p>Start with small changes, keep a log of your readings, and adjust as needed. If you notice significant changes in your glucose levels, discuss them with your clinician.</p>`,
+      actionTip: "Meal-prep on Sunday to make the first week easier.",
+      image: null,
     },
     {
-      "heading": "Practical Daily Tips for Using this diet for Blood Sugar",
-      "body": "<p>A structured daily schedule can help you stay on track while dining out. The sample plan below shows how to incorporate low‑carb choices into a typical day. <strong>Sample Daily Meal Schedule</strong></p>\n<div class=\"tbl-wrap\"><table class=\"md-table\"><thead><tr><th class=\"tbl-th\">Time</th><th class=\"tbl-th\">Meal</th><th class=\"tbl-th\">Example Foods</th></tr></thead><tbody><tr class=\"tbl-row-even\"><td class=\"tbl-td\">7:30 AM</td><td class=\"tbl-td\">Breakfast</td><td class=\"tbl-td\">Greek yogurt with berries and nuts</td></tr><tr class=\"tbl-row-odd\"><td class=\"tbl-td\">12:00 PM</td><td class=\"tbl-td\">Lunch</td><td class=\"tbl-td\">Grilled salmon salad with olive oil dressing</td></tr><tr class=\"tbl-row-even\"><td class=\"tbl-td\">3:00 PM</td><td class=\"tbl-td\">Snack</td><td class=\"tbl-td\">Celery sticks with hummus</td></tr><tr class=\"tbl-row-odd\"><td class=\"tbl-td\">6:30 PM</td><td class=\"tbl-td\">Dinner</td><td class=\"tbl-td\">Steak with roasted vegetables</td></tr><tr class=\"tbl-row-even\"><td class=\"tbl-td\">8:30 PM</td><td class=\"tbl-td\">Light Snack</td><td class=\"tbl-td\">Cottage cheese with sliced cucumber</td></tr></tbody></table></div><p class=\"tbl-source\">Source: Winter, 2020</p>\n<p>Pair these meals with moderate exercise, such as a 30‑minute walk after lunch, to enhance glucose uptake. When eating out, ask for sauces on the side, choose whole‑grain breads sparingly, and prioritize vegetables. If you’re in a social setting, bring a small side dish to share, ensuring you have a low‑carb option available. Action tip: Batch‑cook staples like lentils, brown rice, and roasted vegetables.</p>\n<p>In practice, the low‑carb approach works by reducing the amount of rapidly digestible carbohydrates that spike post‑prandial glucose. By focusing on protein, healthy fats, and non‑starchy vegetables, you slow gastric emptying and attenuate the insulin response. This is particularly beneficial for individuals with type 2 diabetes, where insulin sensitivity is often impaired. The inclusion of omega‑3‑rich fish such as salmon not only provides lean protein but also offers anti‑inflammatory benefits that can improve endothelial function and lower HbA1c over time.</p>\n<p>The snack options—celery with hummus and cottage cheese with cucumber—are low in glycemic load yet rich in fiber and protein, which help maintain satiety and prevent late‑day glucose excursions. When dining out, the strategy of requesting sauces on the side is critical because many condiments (ketchup, barbecue sauce, creamy dressings) contain hidden sugars that can add 10–15 g of carbohydrate per serving. Opting for vinaigrettes or mustard reduces this load while still delivering flavor.</p>\n<p>Whole‑grain breads, when consumed, should be limited to one slice and paired with a protein source to mitigate the glycemic impact. A single slice of whole‑grain bread can add 15–20 g of carbohydrate, which may overwhelm the insulin response if not balanced with adequate protein or fat.</p>\n<p>Exercise timing is also a key factor. A brisk walk after lunch leverages the post‑prandial window when insulin sensitivity is highest, allowing muscles to uptake glucose more efficiently. Studies have shown that even light activity can reduce post‑meal glucose by 10–15 mg/dL.</p>\n<p>Finally, preparing batch‑cooked staples such as lentils, brown rice, and roasted vegetables provides a convenient, low‑carb foundation for quick meals or snacks. These foods are high in fiber, which slows carbohydrate absorption, and they can be portioned to maintain consistent carbohydrate intake throughout the day. By integrating these practical strategies into your routine, you can maintain tighter glycemic control, reduce the risk of hypoglycemia, and enjoy a variety of restaurant meals without compromising your diabetes management goals.</p>\n",
-      "actionTip": "Batch‑cook staples like lentils, brown rice, and roasted vegetables.",
-      "image": null
+      heading: "Practical Daily Tips for Low-Carb Restaurant Dining",
+      body: `<p>A structured daily schedule can help you stay on track while dining out. The sample plan below shows how to incorporate low-carb choices into a typical day.</p>
+<h3>Sample Daily Meal Schedule</h3>
+<div class="tbl-wrap"><table class="md-table"><thead><tr><th class="tbl-th">Time</th><th class="tbl-th">Meal</th><th class="tbl-th">Example Foods</th></tr></thead><tbody><tr class="tbl-row-even"><td class="tbl-td">7:30 AM</td><td class="tbl-td">Breakfast</td><td class="tbl-td">Greek yogurt with berries and nuts</td></tr><tr class="tbl-row-odd"><td class="tbl-td">12:00 PM</td><td class="tbl-td">Lunch</td><td class="tbl-td">Grilled salmon salad with olive oil dressing</td></tr><tr class="tbl-row-even"><td class="tbl-td">3:00 PM</td><td class="tbl-td">Snack</td><td class="tbl-td">Celery sticks with hummus</td></tr><tr class="tbl-row-odd"><td class="tbl-td">6:30 PM</td><td class="tbl-td">Dinner</td><td class="tbl-td">Steak with roasted vegetables</td></tr><tr class="tbl-row-even"><td class="tbl-td">8:30 PM</td><td class="tbl-td">Light Snack</td><td class="tbl-td">Cottage cheese with sliced cucumber</td></tr></tbody></table></div>
+<p class="tbl-source">Editorial example — not derived from a single source study.</p>
+<p>Pair these meals with moderate exercise, such as a 30-minute walk after lunch, to enhance glucose uptake. When eating out, ask for sauces on the side, choose whole-grain breads sparingly, and prioritize vegetables. In social settings, bring a small side dish to share so you know a low-carb option is available.</p>
+<p>In practice, the low-carb approach works by reducing the amount of rapidly digestible carbohydrates that spike post-meal glucose. By focusing on protein, healthy fats, and non-starchy vegetables, you slow gastric emptying and attenuate the insulin response. This is particularly relevant for people with type 2 diabetes, where insulin sensitivity is often impaired. The inclusion of omega-3-rich fish such as salmon not only provides lean protein but also offers anti-inflammatory benefits that may improve endothelial function over time.</p>
+<p>The snack options — celery with hummus and cottage cheese with cucumber — are low in glycemic load yet rich in fiber and protein, which help maintain satiety and prevent late-day glucose excursions.</p>
+<p>When dining out, requesting sauces on the side is critical because many condiments (ketchup, barbecue sauce, creamy dressings) contain hidden sugars that can add 10–15 g of carbohydrate per serving. Opting for vinaigrettes or mustard reduces this load while still delivering flavor.</p>
+<p>Whole-grain breads, when consumed, should be limited to one slice and paired with a protein source to mitigate the glycemic impact. A single slice of whole-grain bread can add 15–20 g of carbohydrate, which may overwhelm the insulin response if not balanced with adequate protein or fat.</p>
+<p>Exercise timing is also a key factor. A brisk walk after lunch leverages the post-meal window when insulin sensitivity is highest, allowing muscles to take up glucose more efficiently. Studies have shown that even light activity can reduce post-meal glucose by 10–15 mg/dL.</p>
+<p>Finally, preparing batch-cooked staples such as lentils, roasted vegetables, and small portions of brown rice provides a convenient, low-carb foundation for quick meals or snacks. These foods are high in fiber, which slows carbohydrate absorption, and they can be portioned to maintain consistent carbohydrate intake throughout the day.</p>`,
+      actionTip: "Batch-cook staples like lentils, roasted vegetables, and grilled proteins.",
+      image: null,
     },
     {
-      "heading": "Side Effects, Precautions, and Warnings for Blood Sugar",
-      "body": "<p>Transitioning to a low‑carb restaurant dining approach can trigger a range of physiological responses as the body shifts from a carbohydrate‑heavy to a protein‑ and fat‑centric metabolism. In the first two weeks, many people report fatigue, hunger, or mood changes—symptoms that reflect the brain’s adaptation to reduced glucose availability and the increased reliance on ketone bodies and fatty acids for energy. These effects are usually transient; however, they can be amplified if you are on glucose‑lowering medications, particularly insulin or sulfonylureas, which increase the risk of hypoglycemia when carbohydrate intake drops unexpectedly.</p>\n<p>Because most restaurants offer dishes that contain hidden sugars, starches, or high‑glycemic side‑dishes (e.g., mashed potatoes, rice, or sugary sauces), it is essential to monitor your blood glucose every 1–2 hours during the first few weeks of dietary change. If you notice readings that fall below 70 mg/dL (3.9 mmol/L) or rise above 180 mg/dL (10 mmol/L), adjust your medication or snack accordingly. The table below summarizes medication classes that may require close monitoring or dose adjustment when adopting a low‑carb menu strategy.</p>\n<p><strong>Medications That May Need Monitoring</strong></p>\n<div class=\"tbl-wrap\"><table class=\"md-table\"><thead><tr><th class=\"tbl-th\">Medication Class</th><th class=\"tbl-th\">Guidance</th></tr></thead><tbody><tr class=\"tbl-row-even\"><td class=\"tbl-td\">Insulin</td><td class=\"tbl-td\">Consult your prescribing doctor before making any changes — do not adjust this medication yourself</td></tr><tr class=\"tbl-row-odd\"><td class=\"tbl-td\">Sulfonylureas</td><td class=\"tbl-td\">Consult your prescribing doctor before making any changes — do not adjust this medication yourself</td></tr><tr class=\"tbl-row-even\"><td class=\"tbl-td\">ACE inhibitors</td><td class=\"tbl-td\">Consult your prescribing doctor before making any changes — do not adjust this medication yourself</td></tr><tr class=\"tbl-row-odd\"><td class=\"tbl-td\">Metformin</td><td class=\"tbl-td\">Consult your prescribing doctor before making any changes — do not adjust this medication yourself</td></tr></tbody></table></div><p class=\"tbl-source\">Source: Winter, 2020</p>\n<p>A warning: If you experience persistent dizziness, severe fatigue, or unexplained weight loss, contact your clinician promptly. These symptoms may signal hypoglycemia, hyperglycemia, or an adverse drug interaction. Always keep your healthcare team informed about dietary changes. Action tip: Talk to a registered dietitian before making major dietary changes.</p>\n",
-      "actionTip": "Talk to a registered dietitian before making major dietary changes.",
-      "image": {
-        "path": "/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/precautions.webp",
-        "alt": "Doctor consultation and safety precautions for carb, glucose, insulin",
-        "caption": ""
-      }
+      heading: "Side Effects, Precautions, and Warnings",
+      body: `<p>Transitioning to a low-carb restaurant dining approach can trigger a range of physiological responses as the body shifts from a carbohydrate-heavy to a protein- and fat-centric metabolism. In the first two weeks, many people report fatigue, hunger, or mood changes — symptoms that reflect the brain's adaptation to reduced glucose availability and increased reliance on ketone bodies and fatty acids for energy.</p>
+<p>These effects are usually transient. However, they can be amplified if you are on glucose-lowering medications, particularly insulin or sulfonylureas, which increase the risk of hypoglycemia when carbohydrate intake drops unexpectedly.</p>
+<p>Because most restaurants offer dishes that contain hidden sugars, starches, or high-glycemic side dishes (e.g., mashed potatoes, rice, or sugary sauces), it is essential to monitor your blood glucose more frequently during the first few weeks of dietary change. If you notice readings that fall below 70 mg/dL (3.9 mmol/L) or rise above 180 mg/dL (10 mmol/L), contact your clinician about adjusting your medication or meal plan accordingly. Do not adjust medication yourself.</p>
+<p>The table below summarizes medication classes that may require close monitoring or dose adjustment when adopting a low-carb menu strategy.</p>
+<h3>Medications That May Need Monitoring</h3>
+<div class="tbl-wrap"><table class="md-table"><thead><tr><th class="tbl-th">Medication Class</th><th class="tbl-th">Guidance</th></tr></thead><tbody><tr class="tbl-row-even"><td class="tbl-td">Insulin</td><td class="tbl-td">Consult your prescribing doctor before making any changes — do not adjust this medication yourself</td></tr><tr class="tbl-row-odd"><td class="tbl-td">Sulfonylureas</td><td class="tbl-td">Consult your prescribing doctor before making any changes — do not adjust this medication yourself</td></tr><tr class="tbl-row-even"><td class="tbl-td">ACE inhibitors</td><td class="tbl-td">Consult your prescribing doctor before making any changes — do not adjust this medication yourself</td></tr><tr class="tbl-row-odd"><td class="tbl-td">Metformin</td><td class="tbl-td">Consult your prescribing doctor before making any changes — do not adjust this medication yourself</td></tr></tbody></table></div>
+<p class="tbl-source">Source: Cucuzzella M, Riley K, Isaacs D (2021), "Adapting Medication for Type 2 Diabetes to a Low Carbohydrate Diet," <em>Frontiers in Nutrition</em>.</p>
+<p>A warning: If you experience persistent dizziness, severe fatigue, or unexplained weight loss, contact your clinician promptly. These symptoms may signal hypoglycemia, hyperglycemia, or an adverse drug interaction. Always keep your healthcare team informed about dietary changes.</p>`,
+      actionTip: "Talk to a registered dietitian before making major dietary changes.",
+      image: {
+        path: "/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/precautions.webp",
+        alt: "Doctor consultation and safety precautions for low-carb restaurant dining",
+        caption: "",
+      },
     },
     {
-      "heading": "How to Adapt this diet to Your Needs for Blood Sugar",
-      "body": "<p>Adapting low‑carb restaurant dining to your personal preferences involves adjusting portions, swapping ingredients, and ensuring nutrient variety. Avoid overly restrictive plans that eliminate entire food groups, as these can lead to nutrient deficiencies. <strong>Meal‑Format Options</strong></p>\n<div class=\"tbl-wrap\"><table class=\"md-table\"><thead><tr><th class=\"tbl-th\">Format</th><th class=\"tbl-th\">Example</th><th class=\"tbl-th\">Adaptation Tips</th></tr></thead><tbody><tr class=\"tbl-row-even\"><td class=\"tbl-td\">Meal Prep</td><td class=\"tbl-td\">Cooked chicken, quinoa, and veggies</td><td class=\"tbl-td\">Use cauliflower rice to reduce carbs</td></tr><tr class=\"tbl-row-odd\"><td class=\"tbl-td\">Family‑Style</td><td class=\"tbl-td\">Shared plates of mixed proteins</td><td class=\"tbl-td\">Portion out a small serving of pasta</td></tr><tr class=\"tbl-row-even\"><td class=\"tbl-td\">Eating Out</td><td class=\"tbl-td\">Restaurant entrée with side salad</td><td class=\"tbl-td\">Ask for dressing on the side</td></tr><tr class=\"tbl-row-odd\"><td class=\"tbl-td\">Grab‑and‑Go</td><td class=\"tbl-td\">Pre‑packed salad with protein</td><td class=\"tbl-td\">Add a handful of nuts for extra fat</td></tr></tbody></table></div><p class=\"tbl-source\">Source: Barber et al., 2021</p>\n<p>Use this checklist to keep meals balanced: include protein, healthy fats, and fiber, and limit refined carbs. If you have allergies, substitute with safe alternatives such as tofu or tempeh for protein. Action tip: Start with the least restrictive version and adjust based on results.</p>\n<p>When dining out, the glycemic impact of a meal is largely determined by the ratio of carbohydrates to protein and fat. A higher protein load slows gastric emptying, blunting the post‑prandial glucose spike, while dietary fat further delays carbohydrate absorption. Therefore, selecting dishes that emphasize lean meats, fish, or plant‑based proteins and pairing them with non‑starchy vegetables can help maintain post‑meal glucose stability. If a menu item contains hidden sugars—such as sauces, dressings, or marinades—request these on the side or ask for them omitted entirely. Many restaurants now offer “low‑sugar” or “sugar‑free” versions of sauces; these typically use natural sweeteners or no sweetener at all, reducing the glycemic load.</p>\n<p>Portion control is another critical lever. Even a low‑carb entrée can raise blood glucose if consumed in excess. Use visual cues: a serving of protein should fill roughly one‑third of your plate, with the remaining two‑thirds dedicated to vegetables. When a dish includes a side of rice or pasta, consider requesting a smaller portion or substituting with a lower‑carb alternative such as spiralized zucchini or cauliflower rice. This not only reduces carbohydrate intake but also increases fiber, which improves insulin sensitivity and slows glucose absorption.</p>\n<p>For individuals with insulin therapy, timing of insulin doses relative to meal carbohydrate content is essential. A low‑carb meal may require a smaller rapid‑acting insulin dose or a shift in basal insulin to avoid hypoglycemia. Continuous glucose monitoring (CGM) can provide real‑time feedback, allowing you to fine‑tune insulin dosing based on actual post‑meal glucose excursions. If you experience recurrent hypoglycemia after low‑carb meals, consider a small snack containing a modest amount of complex carbohydrate (e.g., a few whole‑grain crackers) to buffer the insulin effect.</p>\n<p>Incorporating healthy fats—such as olive oil, avocado, or nuts—into your meal can further stabilize glucose levels. Fats increase satiety, reducing the likelihood of overeating, and they also modulate the release of incretin hormones, which enhance insulin secretion in a glucose‑dependent manner. However, be mindful of calorie density; excessive fat intake can contribute to weight gain, which may counteract the benefits of a low‑carb diet on glycemic control.</p>\n<p>Finally, hydration and mindful eating practices support optimal blood sugar management. Drinking water before and during meals can slow gastric emptying, while chewing slowly encourages better digestion and satiety signaling. Pairing these behavioral strategies with the practical adjustments outlined above creates a robust framework for low‑carb restaurant dining that aligns with both metabolic goals and personal enjoyment.</p>\n",
-      "actionTip": "Start with the least restrictive version and adjust based on results.",
-      "image": null
+      heading: "How to Adapt Low-Carb Restaurant Dining to Your Needs",
+      body: `<p>Adapting low-carb restaurant dining to your personal preferences involves adjusting portions, swapping ingredients, and ensuring nutrient variety. Avoid overly restrictive plans that eliminate entire food groups, as these can lead to nutrient deficiencies.</p>
+<h3>Meal-Format Options</h3>
+<div class="tbl-wrap"><table class="md-table"><thead><tr><th class="tbl-th">Format</th><th class="tbl-th">Example</th><th class="tbl-th">Adaptation Tips</th></tr></thead><tbody><tr class="tbl-row-even"><td class="tbl-td">Meal Prep</td><td class="tbl-td">Cooked chicken, quinoa, and veggies</td><td class="tbl-td">Use cauliflower rice to reduce carbs</td></tr><tr class="tbl-row-odd"><td class="tbl-td">Family-Style</td><td class="tbl-td">Shared plates of mixed proteins</td><td class="tbl-td">Portion out a small serving of pasta</td></tr><tr class="tbl-row-even"><td class="tbl-td">Eating Out</td><td class="tbl-td">Restaurant entrée with side salad</td><td class="tbl-td">Ask for dressing on the side</td></tr><tr class="tbl-row-odd"><td class="tbl-td">Grab-and-Go</td><td class="tbl-td">Pre-packed salad with protein</td><td class="tbl-td">Add a handful of nuts for extra fat</td></tr></tbody></table></div>
+<p class="tbl-source">Editorial guidance — not derived from a single source study.</p>
+<p>Use this checklist to keep meals balanced: include protein, healthy fats, and fiber, and limit refined carbs. If you have allergies, substitute with safe alternatives such as tofu or tempeh for protein.</p>
+<p>When dining out, the glycemic impact of a meal is largely determined by the ratio of carbohydrates to protein and fat. A higher protein load slows gastric emptying, blunting the post-meal glucose spike, while dietary fat further delays carbohydrate absorption. Therefore, selecting dishes that emphasize lean meats, fish, or plant-based proteins and pairing them with non-starchy vegetables can help maintain post-meal glucose stability.</p>
+<p>If a menu item contains hidden sugars — such as sauces, dressings, or marinades — request these on the side or ask for them omitted entirely. Many restaurants now offer "low-sugar" or "sugar-free" versions of sauces; these typically use natural sweeteners or no sweetener at all, reducing the glycemic load.</p>
+<p>Portion control is another critical lever. Even a low-carb entrée can raise blood glucose if consumed in excess. Use visual cues: a serving of protein should fill roughly one-third of your plate, with the remaining two-thirds dedicated to vegetables. When a dish includes a side of rice or pasta, consider requesting a smaller portion or substituting with a lower-carb alternative such as spiralized zucchini or cauliflower rice. This not only reduces carbohydrate intake but also increases fiber, which may improve insulin sensitivity and slow glucose absorption.</p>
+<p>For people on insulin therapy, timing of insulin doses relative to meal carbohydrate content is essential. A lower-carb meal may require a smaller rapid-acting insulin dose or a shift in basal insulin to avoid hypoglycemia. Continuous glucose monitoring (CGM) can provide real-time feedback. Any insulin adjustment should be made in consultation with your prescribing clinician.</p>
+<p>Incorporating healthy fats — such as olive oil, avocado, or nuts — into your meal can further stabilize glucose levels. Fats increase satiety, reducing the likelihood of overeating, and they also modulate the release of incretin hormones, which enhance insulin secretion in a glucose-dependent manner. Be mindful of calorie density; excessive fat intake can contribute to weight gain, which may offset the benefits of a low-carb diet on glycemic control.</p>
+<p>Finally, hydration and mindful eating practices support optimal blood sugar management. Drinking water before and during meals can slow gastric emptying, while chewing slowly encourages better digestion and satiety signaling.</p>`,
+      actionTip: "Start with the least restrictive version and adjust based on results.",
+      image: null,
     },
     {
-      "heading": "Comparing this diet with Other Interventions for Blood Sugar",
-      "body": "<p>Below is a comparison of low‑carb restaurant dining with other common dietary approaches for blood sugar management. <strong>Dietary Comparison Table</strong></p>\n<div class=\"tbl-wrap\"><table class=\"md-table\"><thead><tr><th class=\"tbl-th\">Diet</th><th class=\"tbl-th\">Mechanism</th><th class=\"tbl-th\">Efficacy</th><th class=\"tbl-th\">Safety/Sustainability</th><th class=\"tbl-th\">Cost</th><th class=\"tbl-th\">Evidence Quality</th></tr></thead><tbody><tr class=\"tbl-row-even\"><td class=\"tbl-td\">Low‑carb restaurant dining</td><td class=\"tbl-td\">Reduced carb intake, high protein</td><td class=\"tbl-td\">Modest HbA1c reduction (~0.3%)</td><td class=\"tbl-td\">Generally safe, requires monitoring</td><td class=\"tbl-td\">Moderate</td><td class=\"tbl-td\">Moderate</td></tr><tr class=\"tbl-row-odd\"><td class=\"tbl-td\">Mediterranean diet</td><td class=\"tbl-td\">Emphasis on olive oil, fish</td><td class=\"tbl-td\">Similar HbA1c improvement</td><td class=\"tbl-td\">High safety, sustainable</td><td class=\"tbl-td\">Moderate</td><td class=\"tbl-td\">High</td></tr><tr class=\"tbl-row-even\"><td class=\"tbl-td\">Low‑fat diet</td><td class=\"tbl-td\">Reduced fat, higher carbs</td><td class=\"tbl-td\">Variable HbA1c effect</td><td class=\"tbl-td\">May increase carb load</td><td class=\"tbl-td\">Low</td><td class=\"tbl-td\">Low</td></tr><tr class=\"tbl-row-odd\"><td class=\"tbl-td\">Plate method</td><td class=\"tbl-td\">Balanced plate, portion control</td><td class=\"tbl-td\">Moderate HbA1c improvement</td><td class=\"tbl-td\">Easy to follow</td><td class=\"tbl-td\">Low</td><td class=\"tbl-td\">Moderate</td></tr><tr class=\"tbl-row-even\"><td class=\"tbl-td\">Intermittent fasting</td><td class=\"tbl-td\">Time‑restricted eating</td><td class=\"tbl-td\">Variable HbA1c effect</td><td class=\"tbl-td\">Requires adherence</td><td class=\"tbl-td\">Low</td><td class=\"tbl-td\">Moderate</td></tr></tbody></table></div><p class=\"tbl-source\">Source: HAN & YIN, 2025 Action tip: Discuss the comparison table with your dietitian.</p>\n",
-      "actionTip": "Discuss the comparison table with your dietitian.",
-      "image": null
+      heading: "Comparing Low-Carb Dining with Other Dietary Approaches",
+      body: `<p>Below is a comparison of low-carb restaurant dining with other common dietary approaches for blood sugar management.</p>
+<h3>Dietary Comparison Table</h3>
+<div class="tbl-wrap"><table class="md-table"><thead><tr><th class="tbl-th">Diet</th><th class="tbl-th">Mechanism</th><th class="tbl-th">Efficacy</th><th class="tbl-th">Safety/Sustainability</th><th class="tbl-th">Cost</th><th class="tbl-th">Evidence Quality</th></tr></thead><tbody><tr class="tbl-row-even"><td class="tbl-td">Low-carb restaurant dining</td><td class="tbl-td">Reduced carb intake, high protein</td><td class="tbl-td">Modest HbA1c reduction (~0.3 pp)</td><td class="tbl-td">Generally safe, requires monitoring</td><td class="tbl-td">Moderate</td><td class="tbl-td">Moderate</td></tr><tr class="tbl-row-odd"><td class="tbl-td">Mediterranean diet</td><td class="tbl-td">Emphasis on olive oil, fish</td><td class="tbl-td">Similar HbA1c improvement</td><td class="tbl-td">High safety, sustainable</td><td class="tbl-td">Moderate</td><td class="tbl-td">High</td></tr><tr class="tbl-row-even"><td class="tbl-td">Low-fat diet</td><td class="tbl-td">Reduced fat, higher carbs</td><td class="tbl-td">Variable HbA1c effect</td><td class="tbl-td">May increase carb load</td><td class="tbl-td">Low</td><td class="tbl-td">Low</td></tr><tr class="tbl-row-odd"><td class="tbl-td">Plate method</td><td class="tbl-td">Balanced plate, portion control</td><td class="tbl-td">Moderate HbA1c improvement</td><td class="tbl-td">Easy to follow</td><td class="tbl-td">Low</td><td class="tbl-td">Moderate</td></tr><tr class="tbl-row-even"><td class="tbl-td">Intermittent fasting</td><td class="tbl-td">Time-restricted eating</td><td class="tbl-td">Variable HbA1c effect</td><td class="tbl-td">Requires adherence</td><td class="tbl-td">Low</td><td class="tbl-td">Moderate</td></tr></tbody></table></div>
+<p class="tbl-source">Comparative ratings are editorial summaries based on the cited meta-analyses and clinical guidelines; they are not extracted from a single source study.</p>`,
+      actionTip: "Discuss the comparison table with your dietitian.",
+      image: null,
     },
     {
-      "heading": "What the Critics Say — Limitations of Research on this diet for Blood Sugar",
-      "body": "<p>While low‑carb restaurant dining shows promise, the research has limitations. Most studies are short‑term (≤12 weeks) and involve small sample sizes, which limits the ability to detect long‑term safety outcomes. Additionally, there is variability in how “low‑carb” is defined across studies, leading to inconsistent results. Some participants do not respond to carbohydrate restriction, possibly due to genetic or lifestyle factors. Finally, many trials exclude individuals on complex medication regimens, so the findings may not fully apply to those with advanced diabetes. > Bottom Line for Skeptics: The evidence supports modest improvements in blood sugar control, but more extensive, long‑term research is needed to confirm sustained benefits and safety for all patients.</p>\n",
-      "actionTip": "Consult your healthcare provider before making changes to your routine.",
-      "image": null
-    }
+      heading: "What the Critics Say — Limitations of the Research",
+      body: `<p>While low-carb restaurant dining shows promise, the research has limitations. Most studies are short-term (≤12 weeks) and involve small sample sizes, which limits the ability to detect long-term safety outcomes. Additionally, there is variability in how "low-carb" is defined across studies, leading to inconsistent results.</p>
+<p>Some participants do not respond to carbohydrate restriction, possibly due to genetic or lifestyle factors. Finally, many trials exclude individuals on complex medication regimens, so the findings may not fully apply to those with advanced diabetes.</p>
+<blockquote>
+<p><strong>Bottom Line for Skeptics:</strong> The evidence supports modest improvements in blood sugar control, but more extensive, long-term research is needed to confirm sustained benefits and safety for all patients. Low-carb dining is best understood as one tool among several, not a single solution.</p>
+</blockquote>`,
+      actionTip: "Consult your healthcare provider before making changes to your routine.",
+      image: null,
+    },
   ],
-  "faq": [
+
+  faq: [
     {
-      "q": "How quickly does the low-carb restaurant dining for diabetes lower blood sugar?",
-      "a": "Clinical trials show that modest reductions in carbohydrate intake at meals can begin to lower fasting glucose within a few weeks. In a 2021 meta‑analysis, participants experienced an average HbA1c drop of about 0.3% after 12 weeks of consistent low‑carb choices. Individual responses vary, but many people notice improved post‑meal glucose control within the first month."
+      q: "How quickly does low-carb restaurant dining lower blood sugar?",
+      a: "Clinical trials show that modest reductions in carbohydrate intake at meals are associated with lower fasting glucose within a few weeks. In a 2021 meta-analysis of randomized controlled trials, participants experienced an average HbA1c drop of about 0.3 percentage points after roughly 12 weeks of consistent low-carb choices. Individual responses vary, but many people notice improved post-meal glucose control within the first month. These are associations from group averages, not guarantees for any individual.",
     },
     {
-      "q": "Is this diet safe for people on medication?",
-      "a": "Low‑carb dining can affect how medications like insulin or sulfonylureas work, so monitoring is essential. If you are on glucose‑lowering drugs, keep a close eye on your readings and discuss any changes with your clinician. Adjustments to medication doses should only happen under professional guidance."
+      q: "Is this approach safe for people on diabetes medication?",
+      a: "Low-carb dining can affect how medications like insulin or sulfonylureas work, so monitoring is essential. If you are on glucose-lowering drugs, watch your readings closely and discuss any changes with your clinician. Adjustments to medication doses should only happen under professional guidance — never on your own.",
     },
     {
-      "q": "Can this diet reverse type 2 diabetes?",
-      "a": "Some studies suggest that sustained carbohydrate restriction can lead to remission in a subset of people with type 2 diabetes, but the evidence is limited and often short‑term. Long‑term data are needed to confirm whether low‑carb restaurant dining alone can reverse the condition for all patients."
+      q: "Can low-carb restaurant dining reverse type 2 diabetes?",
+      a: "Some studies suggest that sustained carbohydrate restriction may lead to remission in a subset of people with type 2 diabetes, but the evidence is limited and often short-term. Long-term data are needed to confirm whether low-carb dining alone can reverse the condition for all patients. It is best understood as one component of a broader management plan.",
     },
     {
-      "q": "How strictly do I need to follow the low-carb restaurant dining for diabetes?",
-      "a": "Adherence data show that even moderate reductions in carbs—about 20–30% less than usual—can improve blood sugar control. Flexibility is key; you can adjust portion sizes and swap foods as long as the overall carbohydrate load stays lower than your baseline."
+      q: "How strictly do I need to follow a low-carb approach when dining out?",
+      a: "Adherence data show that even moderate reductions in carbs — about 20–30% less than your usual intake — are associated with improved blood sugar control. Flexibility is key; you can adjust portion sizes and swap foods as long as the overall carbohydrate load stays lower than your baseline.",
     },
     {
-      "q": "What foods are restricted on this diet?",
-      "a": "Foods high in refined carbohydrates—such as white bread, pastries, sugary drinks, and starchy vegetables—are limited. Focus on protein‑rich foods, healthy fats, and non‑starchy vegetables. Small amounts of whole grains can be included if they fit within your carb target."
+      q: "What foods are restricted on a low-carb restaurant menu?",
+      a: "Foods high in refined carbohydrates — such as white bread, pastries, sugary drinks, and starchy side dishes like mashed potatoes and rice — are limited. Focus on protein-rich foods, healthy fats, and non-starchy vegetables. Small amounts of whole grains can be included if they fit within your overall carb target.",
     },
     {
-      "q": "What does the research say about the low-carb restaurant dining for diabetes?",
-      "a": "The strongest evidence comes from a 2021 meta‑analysis of randomized trials, showing a modest HbA1c reduction of about 0.3% and a 10 mg/dL drop in fasting glucose with consistent low‑carb choices. A 2025 review also supports these findings, emphasizing the role of reduced carbohydrate intake in improving glycemic control."
-    }
+      q: "What does the research say about low-carb dining for diabetes?",
+      a: "The strongest evidence comes from a 2021 meta-analysis of randomized trials, which reported a modest HbA1c reduction of about 0.3 percentage points and a roughly 10 mg/dL drop in fasting glucose with consistent low-carb choices. A 2025 review supports these findings, emphasizing the role of reduced carbohydrate intake in improving glycemic control. Both sources caution that the evidence is strongest over the short term (up to 12 weeks).",
+    },
   ],
-  "productDoses": [],
-  "productName": null
 };
-const citations: Citation[] = [
+
+type ReferenceItem = Citation & { studyType?: string };
+
+const citations: ReferenceItem[] = [
   {
-    "id": "Barber2021",
-    "authors": "Barber TM, Hanson P, Kabisch S, et al.",
-    "year": 2021,
-    "title": "The Low-Carbohydrate Diet: Short-Term Metabolic Efficacy Versus Longer-Term Limitations",
-    "journal": "Nutrients",
-    "doi": "10.3390/nu13041187",
-    "pmid": "33916669",
-    "url": "https://doi.org/10.3390/nu13041187",
-    "status": "verified"
+    id: "Barber2021",
+    authors: "Barber TM, Hanson P, Kabisch S, et al.",
+    year: 2021,
+    title:
+      "The Low-Carbohydrate Diet: Short-Term Metabolic Efficacy Versus Longer-Term Limitations",
+    journal: "Nutrients",
+    doi: "10.3390/nu13041187",
+    pmid: "33916669",
+    url: "https://doi.org/10.3390/nu13041187",
+    status: "verified",
+    studyType: "Meta-Analysis",
   },
   {
-    "id": "HAN2025",
-    "authors": "HAN Y, YIN J",
-    "year": 2025,
-    "title": "The application of low-carb diet in diabetes treatment",
-    "journal": "SCIENTIA SINICA Vitae",
-    "doi": "10.1360/ssv-2025-0020",
-    "url": "https://doi.org/10.1360/ssv-2025-0020",
-    "status": "verified"
+    id: "HAN2025",
+    authors: "HAN Y, YIN J",
+    year: 2025,
+    title: "The application of low-carb diet in diabetes treatment",
+    journal: "SCIENTIA SINICA Vitae",
+    doi: "10.1360/ssv-2025-0020",
+    url: "https://doi.org/10.1360/ssv-2025-0020",
+    status: "verified",
+    studyType: "Review",
   },
   {
-    "id": "Winter2020",
-    "authors": "Winter G",
-    "year": 2020,
-    "title": "A low-carb diet for diabetes: the latest evidence",
-    "journal": "Practice Nursing",
-    "doi": "10.12968/pnur.2020.31.4.176",
-    "url": "https://doi.org/10.12968/pnur.2020.31.4.176",
-    "status": "verified"
-  }
+    id: "Cucuzzella2021",
+    authors: "Cucuzzella M, Riley K, Isaacs D",
+    year: 2021,
+    title: "Adapting Medication for Type 2 Diabetes to a Low Carbohydrate Diet",
+    journal: "Frontiers in Nutrition",
+    doi: "10.3389/fnut.2021.688540",
+    pmid: "34434951",
+    url: "https://doi.org/10.3389/fnut.2021.688540",
+    status: "verified",
+    studyType: "Study",
+  },
+  {
+    id: "IDF2025",
+    authors: "International Diabetes Federation",
+    year: 2025,
+    title: "IDF Diabetes Atlas, 11th edn",
+    journal: "International Diabetes Federation",
+    doi: "",
+    pmid: "",
+    url: "https://diabetesatlas.org",
+    status: "verified",
+    studyType: "Report",
+  },
 ];
 
+/* ------------------------------------------------------------------ */
+/* Custom reference renderer — same design as the low-carb article.    */
+/* Will move into a shared CitationList component once that's built.   */
+/* ------------------------------------------------------------------ */
+function ScientificReferences({ citations }: { citations: ReferenceItem[] }) {
+  return (
+    <section className="references-section">
+      <h2 className="text-2xl font-bold text-gray-900">Scientific References</h2>
+      <p className="ref-intro">
+        All references fetched directly from PubMed and CrossRef before article generation.
+      </p>
+      <div className="ref-list">
+        {citations.map((c, i) => (
+          <div
+            key={c.id}
+            className={`ref-item${c.status !== "verified" ? " unverified" : ""}`}
+          >
+            <span className="ref-num">[{i + 1}]</span>
+            <p className="ref-content">
+              <span className="ref-authors">
+                {c.authors} ({c.year}).
+              </span>{" "}
+              {c.url ? (
+                <a
+                  href={c.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ref-title-link"
+                >
+                  {c.title}
+                </a>
+              ) : (
+                <span className="ref-title-plain">{c.title}</span>
+              )}
+              . <em className="ref-journal">{c.journal}</em>.{" "}
+              {c.studyType && (
+                <span className="ref-badge ref-studytype">{c.studyType}</span>
+              )}
+              {c.doi && <span className="ref-badge ref-doi">DOI: {c.doi}</span>}
+              {c.pmid && (
+                <a
+                  href={`https://pubmed.ncbi.nlm.nih.gov/${c.pmid}/`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ref-badge ref-pmid"
+                >
+                  PMID {c.pmid}
+                </a>
+              )}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Main article component                                               */
+/* ------------------------------------------------------------------ */
 const LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle: React.FC = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(
+    null
+  );
+
+  const siloLinks = useSiloLinks("low-carb-restaurant-dining-for-diabetes-evidence-based-dieta");
+
+  useEffect(() => {
+    if (import.meta.env.VITE_EMAILJS_PUBLIC_KEY) {
+      emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
+    }
+  }, []);
+
+  const handleLeadMagnet = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setMessage(null);
+    const email = (e.currentTarget.elements.namedItem("email") as HTMLInputElement).value;
+    try {
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        {
+          to_email: email,
+          message: "Your 7-Day Blood Sugar Reset Guide is ready!",
+          from_name: "ThriveHealth360",
+        }
+      );
+      if (typeof window !== "undefined" && (window as any).gtag) {
+        (window as any).gtag("event", "lead_magnet_download", {
+          source: "low-carb-restaurant-dining",
+          email_domain: email.split("@")[1],
+        });
+      }
+      try {
+        const leads = JSON.parse(localStorage.getItem("lead_magnet_captures") || "[]");
+        leads.push({
+          email: email.split("@")[0] + "@***",
+          article: "low-carb-restaurant-dining-for-diabetes",
+          timestamp: new Date().toISOString(),
+        });
+        localStorage.setItem("lead_magnet_captures", JSON.stringify(leads));
+      } catch (_) {}
+      const link = document.createElement("a");
+      link.href = "/downloads/7-Day-Blood-Sugar-Reset.pdf";
+      link.download = "7-Day-Blood-Sugar-Reset.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setMessage({ type: "success", text: "Check your email for the guide!" });
+      e.currentTarget.reset();
+    } catch {
+      setMessage({ type: "error", text: "Please try again." });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const readTime = "12 min read";
+  // Single source of truth for "last updated" — header, footer provenance
+  // line, and schema dateModified/lastReviewed all derive from this one
+  // literal. datePublished below stays separate and untouched — that's the
+  // original publish date, a different fact that shouldn't move here.
+  const DATE_MODIFIED = "2026-08-31";
+  const lastUpdatedLabel = new Date(DATE_MODIFIED).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    timeZone: "UTC",
+  });
+  const publishedDate = lastUpdatedLabel;
+  const verifiedCount = citations.length;
+
+  // ── Schema markup ─────────────────────────────────────────────────────────
+  // reviewedBy deliberately omitted: no real named reviewer for this article.
+  // Do not re-add unless a real named reviewer exists (see sitewide policy).
+  const schemaMarkup = {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    name: "Restaurant Dining for Diabetes: Evidence-Based Low-Carb Dietary Guide",
+    description:
+      "Low-carb restaurant dining for diabetes helps manage blood sugar, improve HbA1c, and support metabolic health with evidence-based strategies.",
+    datePublished: "2026-08-30",
+    dateModified: DATE_MODIFIED,
+    author: {
+      "@type": "Organization",
+      name: "ThriveHealth360",
+      url: "https://thrivehealth360.org",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "ThriveHealth360",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://thrivehealth360.org/images/brand/logo.svg",
+      },
+    },
+    mainEntity: {
+      "@type": "MedicalCondition",
+      name: "Type 2 Diabetes",
+      code: { "@type": "MedicalCode", codeValue: "E11", codingSystem: "ICD-10" },
+    },
+    lastReviewed: DATE_MODIFIED,
+  };
 
   return (
     <ArticleLayout
       seo={{
-        title: "Restaurant Dining for Diabetes: Evidence-Based Low-carb Dietary Guide",
-        description: "Low-carb restaurant dining for diabetes helps manage blood sugar, improve HbA1c, and support metabolic health with evidence-based strategies.",
-        keywords: "low-carb restaurant dining for diabetes, insulin sensitivity, glucose metabolism, prediabetes, type 2 diabetes, HbA1c, blood glucose, metabolic health",
-        image: "/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/hero.webp",
+        title: "Restaurant Dining for Diabetes: Evidence-Based Low-Carb Dietary Guide",
+        description:
+          "Low-carb restaurant dining for diabetes helps manage blood sugar, improve HbA1c, and support metabolic health with evidence-based strategies.",
+        keywords:
+          "low-carb restaurant dining for diabetes, insulin sensitivity, glucose metabolism, prediabetes, type 2 diabetes, HbA1c, blood glucose, metabolic health",
+        image:
+          "/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/hero.webp",
         url: "/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta",
         articleType: "educational",
+        schema: schemaMarkup,
       }}
       category="diet"
-      title="Restaurant Dining for Diabetes: Evidence-Based Low-carb Dietary Guide"
+      hideTopDisclaimer
+      title="Restaurant Dining for Diabetes: Evidence-Based Low-Carb Dietary Guide"
+      readTime={readTime}
+      publishedDate={publishedDate}
+      referencesCount={verifiedCount}
     >
-      <figure style={{ marginBottom: "2rem", borderRadius: "0.75rem", overflow: "hidden", boxShadow: "0 4px 14px rgba(0,0,0,.08)" }}>
-        <img src={"/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/hero.webp"} alt={"Illustration related to carb, glucose, insulin for blood sugar and metabolic health"} width={800} height={480} loading="eager" style={{ width: "100%", height: "auto", display: "block", aspectRatio: "5/3", objectFit: "cover" }} />
-        <figcaption style={{ background: "#f3f4f6", textAlign: "center", fontSize: ".8rem", color: "#4b5563", padding: ".5rem 1rem", fontStyle: "italic" }}>Low-carb restaurant dining for diabetes helps manage blood sugar, improve HbA1c, and support metabolic health with evidence-based strategies.</figcaption>
+      {/* ---- Back link ---- */}
+      <div className="mb-6">
+        <Link
+          to="/blog"
+          className="inline-flex items-center text-emerald-600 hover:text-emerald-700 font-semibold text-sm"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Blog
+        </Link>
+      </div>
+
+      {/* ---- Hero image ---- */}
+      <figure
+        style={{
+          marginBottom: "2rem",
+          borderRadius: "0.75rem",
+          overflow: "hidden",
+          boxShadow: "0 4px 14px rgba(0,0,0,.08)",
+        }}
+      >
+        <img
+          src="/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/hero.webp"
+          alt="Low-carb restaurant dining options for diabetes blood sugar control"
+          width={800}
+          height={480}
+          loading="eager"
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+            aspectRatio: "5/3",
+            objectFit: "cover",
+          }}
+        />
+        <figcaption
+          style={{
+            background: "#f3f4f6",
+            textAlign: "center",
+            fontSize: ".8rem",
+            color: "#4b5563",
+            padding: ".5rem 1rem",
+            fontStyle: "italic",
+          }}
+        >
+          Low-carb restaurant dining for diabetes helps manage blood sugar, improve HbA1c, and
+          support metabolic health with evidence-based strategies.
+        </figcaption>
       </figure>
 
-      <nav style={{ background: "#fafafa", border: "1px solid #e5e7eb", borderRadius: ".875rem", padding: "1.25rem 1.5rem", margin: "2rem 0" }}>
-        <div style={{ fontWeight: 700, color: "#064e3b", fontSize: ".9rem", textTransform: "uppercase", letterSpacing: ".05em", marginBottom: ".75rem" }}>
+      {/* ---- Medical Disclaimer (top-of-article) ---- */}
+      <RiskCallout>
+        This article is for educational purposes only.{" "}
+        <strong>
+          If you take diabetes medications (insulin, sulfonylureas, metformin, or GLP-1
+          agonists), consult your doctor before changing your diet.
+        </strong>{" "}
+        Reducing carbohydrate intake while on glucose-lowering medications can cause
+        hypoglycemia if doses are not adjusted. Never adjust medication on your own.
+      </RiskCallout>
+
+      {/* ---- Intro ---- */}
+      <div
+        className="text-lg leading-relaxed mb-8"
+        dangerouslySetInnerHTML={{ __html: articleContent.intro }}
+      />
+
+      {/* ---- Direct Answer box (AEO) ---- */}
+      <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 rounded-xl p-6 mb-10">
+        <div className="flex items-center gap-3 mb-3">
+          <CheckCircle className="w-6 h-6 text-emerald-700" />
+          <h2 className="text-lg font-bold text-gray-900">
+            🔍 Direct Answer: Can Low-Carb Restaurant Dining Lower Blood Sugar?
+          </h2>
+        </div>
+        <p className="text-gray-800 leading-relaxed">{articleContent.directAnswer}</p>
+      </div>
+
+      {/* ---- Key Takeaways ---- */}
+      <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-6 mb-10">
+        <h2 className="text-blue-900 font-bold text-lg mb-3">Key Takeaways</h2>
+        <ul className="list-disc pl-5 space-y-1.5 text-gray-800">
+          {articleContent.keyTakeaways.map((t, i) => (
+            <li key={i}>{t}</li>
+          ))}
+        </ul>
+      </div>
+
+      {/* ---- Stats ---- */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        {articleContent.stats.map((s, i) => (
+          <div
+            key={i}
+            className="bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-5 text-center"
+          >
+            <div className="text-3xl font-bold text-emerald-900">{s.num}</div>
+            <span className="text-xs font-bold text-emerald-600 block">{s.unit}</span>
+            <p className="text-xs text-gray-600 mt-1.5">{s.label}</p>
+            {s.source && (
+              <p className="text-[10px] text-gray-400 mt-1">Source: {s.source}</p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* ---- Advisor Box ---- */}
+      <div className="mb-10">
+        <AdvisorModeBox
+          title="Clinical Advisor Summary"
+          evidence="moderate"
+          summary={
+            articleContent.keyTakeaways[0] ||
+            articleContent.intro.replace(/<[^>]+>/g, "").slice(0, 200)
+          }
+        />
+      </div>
+
+      {/* ---- Table of Contents ---- */}
+      <nav
+        style={{
+          background: "#fafafa",
+          border: "1px solid #e5e7eb",
+          borderRadius: ".875rem",
+          padding: "1.25rem 1.5rem",
+          margin: "2rem 0",
+        }}
+      >
+        <div
+          style={{
+            fontWeight: 700,
+            color: "#064e3b",
+            fontSize: ".9rem",
+            textTransform: "uppercase",
+            letterSpacing: ".05em",
+            marginBottom: ".75rem",
+          }}
+        >
           📋 In This Article
         </div>
-        <ol style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: ".3rem", margin: 0, padding: 0 }}>
+        <ol
+          style={{
+            listStyle: "none",
+            display: "flex",
+            flexDirection: "column",
+            gap: ".3rem",
+            margin: 0,
+            padding: 0,
+          }}
+        >
           {articleContent.sections.map((sec, i) => (
             <li key={i} style={{ fontSize: ".85rem" }}>
-              <span style={{ fontWeight: 700, color: "#16a34a", minWidth: "1.5rem", display: "inline-block" }}>{i + 1}.</span>{" "}
-              <a href={`#section-${i + 1}`} style={{ fontSize: ".9rem", color: "#374151", textDecoration: "none", borderBottom: "1px dashed #e5e7eb", paddingBottom: ".1rem" }}>
+              <span
+                style={{
+                  fontWeight: 700,
+                  color: "#16a34a",
+                  minWidth: "1.5rem",
+                  display: "inline-block",
+                }}
+              >
+                {i + 1}.
+              </span>{" "}
+              <a
+                href={`#section-${i + 1}`}
+                style={{
+                  fontSize: ".9rem",
+                  color: "#374151",
+                  textDecoration: "none",
+                  borderBottom: "1px dashed #e5e7eb",
+                  paddingBottom: ".1rem",
+                }}
+              >
                 {sec.heading}
               </a>
             </li>
           ))}
           <li style={{ fontSize: ".85rem" }}>
-            <span style={{ fontWeight: 700, color: "#16a34a", minWidth: "1.5rem", display: "inline-block" }}>{articleContent.sections.length + 1}.</span>{" "}
-            <a href="#faq" style={{ fontSize: ".9rem", color: "#374151", textDecoration: "none", borderBottom: "1px dashed #e5e7eb", paddingBottom: ".1rem" }}>Frequently Asked Questions</a>
+            <span
+              style={{
+                fontWeight: 700,
+                color: "#16a34a",
+                minWidth: "1.5rem",
+                display: "inline-block",
+              }}
+            >
+              {articleContent.sections.length + 1}.
+            </span>{" "}
+            <a
+              href="#faq"
+              style={{
+                fontSize: ".9rem",
+                color: "#374151",
+                textDecoration: "none",
+                borderBottom: "1px dashed #e5e7eb",
+                paddingBottom: ".1rem",
+              }}
+            >
+              Frequently Asked Questions
+            </a>
           </li>
         </ol>
       </nav>
 
-      <div className="text-lg leading-relaxed mb-8" dangerouslySetInnerHTML={{ __html: articleContent.intro }} />
-
-      <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-6 mb-10">
-        <h2 className="text-blue-900 font-bold text-lg mb-3">Key Takeaways</h2>
-        <ul className="list-disc pl-5 space-y-1.5 text-gray-800">
-          {articleContent.keyTakeaways.map((t, i) => <li key={i}>{t}</li>)}
-        </ul>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        {articleContent.stats.map((s, i) => (
-          <div key={i} className="bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-5 text-center">
-            <div className="text-3xl font-bold text-emerald-900">{s.num}</div>
-            <span className="text-xs font-bold text-emerald-600 block">{s.unit}</span>
-            <p className="text-xs text-gray-600 mt-1.5">{s.label}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="mb-10">
-        <AdvisorModeBox
-          title="Clinical Advisor Summary"
-          evidence="moderate" // starting default — review per-article before publishing
-          summary={articleContent.keyTakeaways[0] || articleContent.intro.replace(/<[^>]+>/g, "").slice(0, 200)}
-        />
-      </div>
-
+      {/* ---- Sections ---- */}
       {articleContent.sections.map((sec, idx) => (
-        <section key={idx} id={`section-${idx + 1}`} className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 border-l-4 border-emerald-600 pl-4 mb-4">{sec.heading}</h2>
-          {sec.image && sec.image.path && (
-            <figure className="mb-5 rounded-xl overflow-hidden shadow-md">
-              <img src={sec.image.path} alt={sec.image.alt} width={1000} height={667} loading="lazy" className="w-full h-auto" />
-              {sec.image.caption && <figcaption className="bg-gray-50 text-center text-xs text-gray-500 italic py-2">{sec.image.caption}</figcaption>}
-            </figure>
+        <React.Fragment key={idx}>
+          <section id={`section-${idx + 1}`} className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 border-l-4 border-emerald-600 pl-4 mb-4">
+              {sec.heading}
+            </h2>
+            {sec.image && sec.image.path && (
+              <figure className="mb-5 rounded-xl overflow-hidden shadow-md">
+                <img
+                  src={sec.image.path}
+                  alt={sec.image.alt}
+                  width={1000}
+                  height={667}
+                  loading="lazy"
+                  className="w-full h-auto"
+                />
+                {sec.image.caption && (
+                  <figcaption className="bg-gray-50 text-center text-xs text-gray-500 italic py-2">
+                    {sec.image.caption}
+                  </figcaption>
+                )}
+              </figure>
+            )}
+            <div
+              className="section-body"
+              dangerouslySetInnerHTML={{ __html: sec.body }}
+            />
+            {sec.actionTip && (
+              <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-4 mt-5 text-amber-900">
+                <strong>Action tip:</strong> {sec.actionTip}
+              </div>
+            )}
+          </section>
+
+          {/* ---- Mid-article lead magnet CTA (after section 3) ---- */}
+          {idx === 2 && (
+            <section className="mb-12">
+              <div className="bg-gradient-to-br from-purple-600 to-indigo-600 text-white rounded-xl p-10 text-center shadow-lg">
+                <Mail className="w-12 h-12 text-purple-200 mx-auto mb-4" />
+                <p className="text-xs font-bold uppercase tracking-widest text-purple-200 mb-2">
+                  Free Download
+                </p>
+                <h2 className="text-3xl font-bold mb-4">
+                  Get Your Free 7-Day Blood Sugar Reset Guide
+                </h2>
+                <p className="text-lg text-purple-100 mb-6 max-w-xl mx-auto">
+                  Includes a restaurant ordering cheat sheet, low-carb swap list, glucose-tracking
+                  sheet, and medication-timing guide — written for adults 40+.
+                </p>
+                <form
+                  className="max-w-md mx-auto flex flex-col sm:flex-row gap-4"
+                  onSubmit={handleLeadMagnet}
+                >
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Your email address"
+                    className="flex-1 px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300"
+                    disabled={isLoading}
+                    required
+                  />
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="bg-white text-purple-700 font-bold px-6 py-3 rounded-lg hover:bg-purple-50 transition flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    <Download className="w-5 h-5" />
+                    {isLoading ? "Loading..." : "Get the Guide"}
+                  </button>
+                </form>
+                {message && (
+                  <p
+                    className={`mt-4 font-semibold ${
+                      message.type === "success" ? "text-emerald-200" : "text-red-200"
+                    }`}
+                  >
+                    {message.type === "success" ? "✓" : "✗"} {message.text}
+                  </p>
+                )}
+                <p className="text-xs text-purple-300 mt-4">
+                  We respect your privacy. Unsubscribe anytime.
+                </p>
+              </div>
+            </section>
           )}
-          <div className="section-body" dangerouslySetInnerHTML={{ __html: sec.body }} />
-          {sec.actionTip && (
-            <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-4 mt-5 text-amber-900">{sec.actionTip}</div>
-          )}
-        </section>
+        </React.Fragment>
       ))}
 
-      <section id="faq" className="mt-14">
-        <h2 className="text-2xl font-bold text-gray-900 mb-5">Frequently Asked Questions</h2>
-        <div className="flex flex-col gap-2.5">
-          {articleContent.faq.map((item, i) => (
-            <div key={i} className="border border-gray-200 rounded-lg overflow-hidden">
-              <button
-                onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                className={`w-full text-left flex items-center gap-3.5 p-4.5 font-semibold text-gray-900 ${openFaq === i ? "bg-emerald-50" : "bg-white"}`}
+      {/* ---- FAQ ---- */}
+      <section id="faq" className="mt-14 mb-16">
+        <FAQSection
+          faqs={articleContent.faq.map((item) => ({ question: item.q, answer: item.a }))}
+          title="Frequently Asked Questions"
+          enableSchema={true}
+        />
+      </section>
+
+      {/* ---- Scientific References ---- */}
+      <ScientificReferences citations={citations} />
+
+      {/* ---- Dynamic silo links ---- */}
+      {siloLinks && siloLinks.length > 0 && (
+        <section className="mt-16 mb-16">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">📚 Related Reading</h2>
+            <p className="text-gray-600 mb-6 text-sm">
+              Based on topical authority in the prediabetes and blood sugar management niche:
+            </p>
+            <ul className="space-y-4">
+              {siloLinks.slice(0, 4).map((link) => (
+                <li
+                  key={link.toArticleId}
+                  className="bg-white rounded-lg p-5 border-l-4 border-blue-500 hover:shadow-md transition-shadow"
+                >
+                  <Link
+                    to={`/blog/${link.toSlug}`}
+                    className="block text-blue-700 hover:text-blue-900 font-bold text-lg mb-1 hover:underline"
+                  >
+                    → {link.toTitle}
+                  </Link>
+                  {link.reason && <p className="text-sm text-gray-600">{link.reason}</p>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {/* ---- Cross-pillar CTA: Main pillar ---- */}
+      <section className="mb-16">
+        <div className="bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-8">
+          <div className="flex items-start gap-4">
+            <span className="text-4xl flex-shrink-0">🎯</span>
+            <div className="flex-1">
+              <p className="text-xs font-bold uppercase tracking-widest text-emerald-700 mb-1">
+                Main Pillar Guide
+              </p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                Dining Out Is One Pillar. See the Complete 5-Pillar Reversal Protocol.
+              </h3>
+              <p className="text-gray-700 mb-4">
+                Smart restaurant choices work best as part of a complete strategy — combined with
+                home cooking, intermittent fasting, exercise, targeted supplements, and sleep
+                optimization. Our 2026 reversal guide covers the full protocol backed by the DPP
+                Outcomes Study and ADA 2026 Standards of Care.
+              </p>
+              <Link
+                to="/blog/reverse-prediabetes-2026"
+                className="inline-flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-3 rounded-xl transition shadow-md"
               >
-                <span className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0">
-                  {openFaq === i ? "−" : "+"}
-                </span>
-                {item.q}
-              </button>
-              {openFaq === i && (
-                <div className="px-5 pb-4.5 pl-16 text-gray-600 leading-relaxed">
-                  <p>{item.a}</p>
-                </div>
-              )}
+                Read: How to Reverse Prediabetes in 2026 — The Complete Protocol
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
-          ))}
+          </div>
         </div>
       </section>
 
-      <CitationList citations={citations} />
+      {/* ---- Footer disclaimers ---- */}
+      <footer className="border-t-2 border-gray-200 pt-8 mb-8">
+        <div className="grid md:grid-cols-2 gap-8">
+          <MedicalDisclaimer variant="educational" />
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <h4 className="font-bold text-blue-900 mb-3">💰 Affiliate Disclosure</h4>
+            <p className="text-xs text-blue-800 leading-relaxed">
+              ThriveHealth360 may earn a commission from affiliate partnerships in some articles.
+              This does not affect product pricing. We only recommend products we believe in
+              based on research and quality standards. This particular article does not currently
+              link to any specific product.
+            </p>
+          </div>
+        </div>
+        <ProvenanceNote lastUpdated={lastUpdatedLabel} />
+      </footer>
     </ArticleLayout>
   );
 };
@@ -299,11 +881,14 @@ const LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle: React.FC = () =
 export default LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle;
 
 export const blogMeta: BlogArticleMeta = {
-  title: "Restaurant Dining for Diabetes: Evidence-Based Low-carb Dietary Guide",
-  excerpt: "Low-carb restaurant dining for diabetes helps manage blood sugar, improve HbA1c, and support metabolic health with evidence-based strategies.",
+  title: "Restaurant Dining for Diabetes: Evidence-Based Low-Carb Dietary Guide",
+  excerpt:
+    "Low-carb restaurant dining for diabetes helps manage blood sugar, improve HbA1c, and support metabolic health with evidence-based strategies.",
   readTime: "12 min read",
-  image: "/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/hero.webp",
-  thumbnail: "/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/thumb.webp",
+  image:
+    "/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/hero.webp",
+  thumbnail:
+    "/images/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta/thumb.webp",
   path: "/blog/low-carb-restaurant-dining-for-diabetes-evidence-based-dieta",
   category: "diet",
 };

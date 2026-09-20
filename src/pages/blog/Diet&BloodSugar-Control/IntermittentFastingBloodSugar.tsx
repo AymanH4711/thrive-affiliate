@@ -13,7 +13,6 @@ import {
   Mail,
   Download,
   ArrowRight,
-  Heart,
   Clock,
   CheckCircle,
   ShieldCheck,
@@ -23,6 +22,7 @@ import { SEO } from "@/components/seo/SEO";
 import type { BlogArticleMeta } from "@/data/types";
 import { useSiloLinks } from '@/utils/siloLinker';
 import { FAQSection } from '@/components/FAQSection';
+import { ProvenanceNote } from '@/components/clinical/ProvenanceNote';
 import emailjs from '@emailjs/browser';
 
 // ─── Hero image (800×480px, 5:3, 72 DPI, webp) ──────────────────────────────
@@ -60,6 +60,25 @@ const IntermittentFastingBloodSugar: React.FC = () => {
 
   const siloLinks = useSiloLinks('intermittent-fasting-blood-sugar');
 
+  // Single source of truth for "last updated" — the header line, the
+  // footer provenance line, and the schema's dateModified/lastReviewed all
+  // derive from this one literal instead of three separate hardcoded
+  // strings that happened to agree by coincidence. Two display formats
+  // because the header originally showed a full date and the footer
+  // originally showed month + year — granularity preserved, source unified.
+  const DATE_MODIFIED = '2026-04-08';
+  const lastUpdatedLabelFull = new Date(DATE_MODIFIED).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+  const lastUpdatedLabel = new Date(DATE_MODIFIED).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    timeZone: 'UTC',
+  });
+
   const schemaMarkup = {
     '@context': 'https://schema.org',
     '@type': 'MedicalWebPage',
@@ -67,7 +86,7 @@ const IntermittentFastingBloodSugar: React.FC = () => {
     description:
       'Can intermittent fasting lower blood sugar and reverse prediabetes? Complete 2026 evidence-based guide covering the best IF protocols, safety, timing, and how to combine IF with supplements.',
     datePublished: '2026-04-08',
-    dateModified: '2026-04-08',
+    dateModified: DATE_MODIFIED,
     author: {
       '@type': 'Organization',
       name: 'ThriveHealth360',
@@ -87,7 +106,7 @@ const IntermittentFastingBloodSugar: React.FC = () => {
       name: 'Prediabetes',
       code: { '@type': 'MedicalCode', codeValue: 'R73.03', codingSystem: 'ICD-10' },
     },
-    lastReviewed: '2026-04-08',
+    lastReviewed: DATE_MODIFIED,
   };
 
   // Manual duplicate schema-injection removed: this ran alongside the
@@ -123,7 +142,7 @@ const IntermittentFastingBloodSugar: React.FC = () => {
       await emailjs.send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        { to_email: email, message: 'Your 7-Day Blood Sugar Reset Guide is ready!', from_name: 'ThriveHealth' }
+        { to_email: email, message: 'Your 7-Day Blood Sugar Reset Guide is ready!', from_name: 'ThriveHealth360' }
       );
       if (typeof window !== 'undefined' && (window as any).gtag) {
         (window as any).gtag('event', 'lead_magnet_download', {
@@ -345,7 +364,7 @@ const IntermittentFastingBloodSugar: React.FC = () => {
               <span>•</span>
               <span>14 min read</span>
               <span>•</span>
-              <span>Last updated: April 8, 2026</span>
+              <span>Last updated: {lastUpdatedLabelFull}</span>
             </div>
             <div className="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-lg">
               <div className="flex gap-4">
@@ -469,7 +488,7 @@ const IntermittentFastingBloodSugar: React.FC = () => {
                   </div>
                   {i === 0 && (
                     <p className={`mt-3 text-xs font-semibold ${colorClasses[p.color].bg200} ${colorClasses[p.color].text900} px-3 py-1 rounded-full inline-block`}>
-                      ⭐ ThriveHealth Recommended Starting Protocol
+                      ⭐ ThriveHealth360 Recommended Starting Protocol
                     </p>
                   )}
                 </div>
@@ -756,12 +775,7 @@ const IntermittentFastingBloodSugar: React.FC = () => {
                 </div>
               ))}
             </div>
-            <div className="mt-6 bg-gray-100 border border-gray-300 rounded-lg p-4">
-              <p className="text-sm text-gray-700 flex items-center gap-2">
-                <Heart className="w-5 h-5 text-rose-500" />
-                <strong>Fact-checked by the ThriveHealth360 team</strong> against peer-reviewed sources — April 2026.
-              </p>
-            </div>
+            <ProvenanceNote lastUpdated={lastUpdatedLabel} />
           </section>
 
           {/* ── DYNAMIC SILO LINKS ── */}
@@ -833,13 +847,13 @@ const IntermittentFastingBloodSugar: React.FC = () => {
                 <h4 className="font-bold text-amber-900 mb-3">⚠️ Medical Disclaimer</h4>
                 <p className="text-xs text-amber-800 leading-relaxed">
                   This article is for educational purposes only. Always consult a qualified healthcare provider before starting any fasting protocol, especially if you take medications that affect blood sugar.
-                  ThriveHealth does not diagnose, treat, cure, or prevent disease. Individual results may vary.
+                  ThriveHealth360 does not diagnose, treat, cure, or prevent disease. Individual results may vary.
                 </p>
               </div>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
                 <h4 className="font-bold text-blue-900 mb-3">💰 Affiliate Disclosure</h4>
                 <p className="text-xs text-blue-800 leading-relaxed">
-                  ThriveHealth may earn a commission from affiliate partnerships in some articles.
+                  ThriveHealth360 may earn a commission from affiliate partnerships in some articles.
                   This does not affect product pricing. We only recommend products we believe in based on research and quality standards — this particular article does not currently link to any specific product.
                 </p>
               </div>

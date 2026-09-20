@@ -133,8 +133,7 @@ const heroImage = '/images/blog/5-warning-signs-cover.webp';
 // Internal Links
 const internalLinks = {
   pillar: '/prediabetes-support',
-  silo: '/blog/prediabetes-vs-type2-diabetes',
-  crossSilo: '/blog/best-diabetes-supplements'
+  silo: '/blog/prediabetes-vs-type2-diabetes'
 };
 
 // ============================================================================
@@ -275,11 +274,26 @@ const FiveWarningSignsPrediabetes = () => {
               5 Warning Signs of <span className="text-emerald-600">Prediabetes</span> (And What to Do About It)
             </h1>
             <div className="flex items-center gap-4 text-sm text-gray-600 mb-6">
-              <span>ThriveHealth Team</span>
+              <span>ThriveHealth360 Team</span>
               <span>•</span>
               <span>8 min read</span>
               <span>•</span>
               <span>Last updated March 29, 2026</span>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mb-6">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">
+                ✅ Evidence-Based
+              </span>
+              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-blue-100 text-blue-800">
+                🔬 {citations.length} Verified References
+              </span>
+              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-100 text-indigo-800">
+                🏥 PubMed & CrossRef Sourced
+              </span>
+              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-purple-100 text-purple-800">
+                📋 Peer-Reviewed Data
+              </span>
             </div>
             
             {/* Medical Disclaimer - Top */}
@@ -912,23 +926,6 @@ const FiveWarningSignsPrediabetes = () => {
             {/* Step 4 */}
             <div className="bg-green-50 border-l-4 border-green-600 p-6 rounded-r-lg mb-6">
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Step 4: Follow Our 5-Step Reversal Plan (Starting This Week)</h3>
-              
-              {/* Cross-Silo Link — styled mini CTA */}
-              <div className="bg-white border border-green-200 rounded-xl p-5 mb-4">
-                <p className="text-gray-700 mb-3">
-                  Want additional support? Certain clinically studied supplements may complement the effect of diet and exercise — some research suggests benefits for AMPK activation, post-meal glucose, and insulin sensitivity. Always discuss with your healthcare provider first.
-                </p>
-                <Link
-                  to={internalLinks.crossSilo}
-                  className="inline-flex items-center gap-2 text-green-700 hover:text-green-900 font-bold underline"
-                >
-                  See our ranked guide: Best Diabetes Supplements of 2026 →
-                </Link>
-                <p className="text-xs text-gray-500 mt-2 italic">
-                  * Some links in the guide are affiliate links. We may earn a commission at no extra cost to you.{' '}
-                  <a href="#affiliate-disclosure" className="underline hover:text-gray-700">See full disclosure below.</a>
-                </p>
-              </div>
 
               <h4 className="font-bold text-gray-900 mb-3">The 5-Step Protocol:</h4>
               <ol className="space-y-2 text-gray-700 list-decimal list-inside">
@@ -994,41 +991,6 @@ const FiveWarningSignsPrediabetes = () => {
                   day your body continues down the path toward full diabetes. But every day you take action is a day your 
                   body begins healing.
                 </p>
-              </div>
-            </div>
-          </section>
-
-          {/* ── CTA #2 — SUPPLEMENTS CROSS-LINK (End of Content) ── */}
-          <section className="mb-12">
-            <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-8">
-              <div className="flex items-start gap-4">
-                <span className="text-4xl flex-shrink-0" aria-hidden="true">💊</span>
-                <div className="flex-1">
-                  <p className="text-xs font-bold uppercase tracking-widest text-amber-700 mb-1">
-                    Supplements &amp; Natural Health
-                  </p>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                    Want Additional Support? Explore Evidence-Reviewed Supplements
-                  </h3>
-                  <p className="text-gray-700 mb-4 leading-relaxed">
-                    Diet and movement are step one. Some clinically studied supplements — berberine, Ceylon cinnamon,
-                    and chromium — have been researched for effects on blood sugar pathways. We reviewed the top options 
-                    using 2024–2026 peer-reviewed data to help you make an informed choice with your healthcare provider.
-                  </p>
-                  <Link
-                    to={internalLinks.crossSilo}
-                    className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-3 rounded-xl transition shadow-md"
-                  >
-                    Read: Best Diabetes Supplements of 2026 — Ranked &amp; Compared →
-                  </Link>
-                  <p className="text-xs text-gray-500 mt-3">
-                    Evidence-reviewed · GMP-certified picks only · No fluff
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1 italic">
-                    * Some product links in that guide are affiliate links. We may earn a commission at no extra cost to you.{' '}
-                    <a href="#affiliate-disclosure" className="underline hover:text-gray-700">See full disclosure below.</a>
-                  </p>
-                </div>
               </div>
             </div>
           </section>
@@ -1140,34 +1102,17 @@ const FiveWarningSignsPrediabetes = () => {
             </div>
           </section>
 
-          {/* Disclaimer & Disclosure */}
-          <div className="grid md:grid-cols-2 gap-8 mt-12">
+          {/* Disclaimer */}
+          <div className="mt-12">
             <div className="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-lg">
               <p className="font-bold text-amber-900 mb-2">Medical Disclaimer</p>
               <p className="text-sm text-amber-800 leading-relaxed">
                 The information on this page is for educational purposes only and does not constitute medical advice.
-                These statements have not been evaluated by the U.S. Food and Drug Administration (FDA).
                 No content here is intended to diagnose, treat, cure, or prevent any disease.
                 Insulin resistance is a serious metabolic condition — always consult a qualified healthcare provider
-                before starting any supplement regimen, making significant dietary changes, or beginning a new exercise
+                before making significant dietary changes or beginning a new exercise
                 protocol, especially if you are taking medications or have an existing health condition.
                 Individual results may vary and reversal is not guaranteed.
-              </p>
-            </div>
-
-            <div id="affiliate-disclosure" className="bg-gray-50 border-l-4 border-gray-400 p-6 rounded-r-lg">
-              <p className="font-bold text-gray-900 mb-2">Affiliate Disclosure</p>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                <strong>Transparency notice:</strong> This page contains affiliate links to supplement and wellness
-                products. ThriveHealth360 may earn a commission if you purchase through these links, at no additional
-                cost to you. This financial relationship may influence which products we feature and how they are
-                presented. We apply editorial and quality standards to all recommendations; however, you should
-                conduct your own research and consult a qualified healthcare professional before purchasing any
-                supplement. This disclosure is provided in accordance with the FTC's guidelines on endorsements and
-                testimonials (16 CFR §255).{' '}
-                <a href="/affiliate-disclosure" className="underline text-emerald-700 font-semibold">
-                  Full Disclosure Policy →
-                </a>
               </p>
             </div>
           </div>

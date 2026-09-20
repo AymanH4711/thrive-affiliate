@@ -31,8 +31,7 @@ export function DietMedicalDisclaimer() {
           <div>
             <h3 className="font-bold text-red-900 text-lg mb-2">⚠️ IMPORTANT MEDICAL DISCLAIMER</h3>
             <p className="text-red-800 mb-3">
-              The dietary information on this page has not been evaluated by the FDA, MHRA, TGA, or
-              Health Canada. <strong>This is NOT medical advice.</strong> Carbohydrate targets, calorie
+              <strong>This is NOT medical advice.</strong> Carbohydrate targets, calorie
               needs, and dietary changes should be planned with a qualified clinician or registered
               dietitian — especially if you take blood sugar medications, as dietary changes can affect
               dosing needs.
@@ -59,7 +58,7 @@ export function DietMedicalDisclaimerCompact() {
         <div className="flex gap-3 items-start">
           <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-red-800">
-            <strong>Medical Disclaimer:</strong> For educational purposes only. Not evaluated by the FDA, MHRA, TGA, or Health Canada.
+            <strong>Medical Disclaimer:</strong> For educational purposes only — this is not medical advice.
             Work with a clinician or registered dietitian before making major dietary changes, especially if you take blood sugar
             medications. Individual results may vary.
           </p>

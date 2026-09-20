@@ -110,6 +110,12 @@ export interface ArticleLayoutProps {
       has its own in-body CTA block and the sticky one would be redundant.
       Default: false (sticky CTA renders whenever affiliateCTA is provided). */
   hideStickyCTA?: boolean;
+  /** Set true to skip the layout's own generic top disclaimer — e.g. when the
+      article renders a more specific condition/medication warning of its own
+      (like RiskCallout) and the generic category box directly above it would
+      just be a second, less useful "Medical Disclaimer" box.
+      Default: false (top disclaimer renders as normal). */
+  hideTopDisclaimer?: boolean;
   backLinkTo?: string;
   children: React.ReactNode;
 }
@@ -223,6 +229,7 @@ export function ArticleLayout({
   referencesCount,
   affiliateCTA,
   hideStickyCTA = false,
+  hideTopDisclaimer = false,
   backLinkTo = '/blog',
   children,
 }: ArticleLayoutProps) {
@@ -269,18 +276,8 @@ export function ArticleLayout({
               {title}
             </h1>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-600 mb-2">
-              <span>
-                <span className="font-semibold text-gray-900">Written by</span> Ayman Hathoot
-              </span>
-              <span className="text-gray-300">•</span>
-              <Link to="/about/author" className="text-emerald-700 hover:underline font-semibold">
-                About the author
-              </Link>
               {readTime && (
-                <>
-                  <span className="text-gray-300">•</span>
-                  <span>{readTime}</span>
-                </>
+                <span>{readTime}</span>
               )}
               {typeof referencesCount === 'number' && referencesCount > 0 && (
                 <>
@@ -320,9 +317,11 @@ export function ArticleLayout({
             )}
           </header>
 
-          <div className="mb-8 -mx-6">
-            <CategoryDisclaimer category={category} position="top" />
-          </div>
+          {!hideTopDisclaimer && (
+            <div className="mb-8 -mx-6">
+              <CategoryDisclaimer category={category} position="top" />
+            </div>
+          )}
 
           {children}
 
@@ -333,7 +332,6 @@ export function ArticleLayout({
                 : 'mt-16 px-6 grid grid-cols-1 gap-4 max-w-[640px] mx-auto'
             }
           >
-            <CategoryDisclaimer category={category} position="top" />
             {affiliateCTA && (
               <CategoryDisclaimer category={category} position="bottom" />
             )}
