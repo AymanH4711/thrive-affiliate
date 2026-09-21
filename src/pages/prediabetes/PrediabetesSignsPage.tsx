@@ -5,15 +5,26 @@
 import { Link } from 'react-router-dom';
 import {
   AlertTriangle, CheckCircle, ArrowRight,
-  Eye, Droplets, Zap, Activity, Wind,
-  Thermometer, Hand, Moon, Info, ChevronRight,
+  Eye, Droplets, Zap, Waves, ShieldAlert,
+  Thermometer, Hand, Layers, ChevronRight,
   Brain, Tag
 } from 'lucide-react';
 import { SEO } from '@/components/seo/SEO';
 
+// Full literal class names per color, so Tailwind's JIT scanner can see and
+// generate them. Interpolated strings like `bg-${card.color}-50` are
+// invisible to the scanner — only classes it sees as complete literals in
+// source get generated. Same fix pattern applied in IntermittentFastingBloodSugar.tsx.
+const colorClasses: Record<string, { bg50: string; border200: string; bg600: string }> = {
+  emerald: { bg50: 'bg-emerald-50', border200: 'border-emerald-200', bg600: 'bg-emerald-600' },
+  blue:    { bg50: 'bg-blue-50',    border200: 'border-blue-200',    bg600: 'bg-blue-600' },
+  purple:  { bg50: 'bg-purple-50',  border200: 'border-purple-200',  bg600: 'bg-purple-600' },
+};
+
 export default function PrediabetesSignsPage() {
 
   const scrollTo = (id: string) => {
+    if (typeof document === 'undefined') return;
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -25,7 +36,7 @@ export default function PrediabetesSignsPage() {
       note: 'Not every thirsty person has prediabetes, but combined with other signs it is a key flag.',
     },
     {
-      icon: Activity,
+      icon: Waves,
       title: 'Frequent Urination',
       body: 'Your kidneys work harder to filter excess glucose, producing more urine than normal (polyuria). Needing to urinate more than 7–8 times per day warrants attention.',
       note: 'Often noticed at night (nocturia) — waking once or more to urinate.',
@@ -40,7 +51,7 @@ export default function PrediabetesSignsPage() {
       icon: Eye,
       title: 'Blurred Vision',
       body: 'High blood sugar causes fluid shifts in the lens of the eye, temporarily altering its shape and affecting focus. Vision may fluctuate throughout the day.',
-      note: 'This symptom often resolves when blood sugar normalises — but prompt evaluation is important.',
+      note: 'This symptom often resolves when blood sugar normalizes — but prompt evaluation is important.',
     },
     {
       icon: Thermometer,
@@ -49,7 +60,7 @@ export default function PrediabetesSignsPage() {
       note: 'Particularly watch healing times on the lower legs and feet.',
     },
     {
-      icon: Wind,
+      icon: ShieldAlert,
       title: 'Frequent Infections',
       body: 'Glucose-rich blood can feed bacteria and fungi, while insulin resistance weakens the immune system. Recurring skin, gum, bladder, or yeast infections may reflect prediabetes.',
       note: 'Recurring infections that do not respond quickly to treatment are worth investigating.',
@@ -57,11 +68,11 @@ export default function PrediabetesSignsPage() {
     {
       icon: Hand,
       title: 'Tingling or Numbness',
-      body: 'Elevated glucose over time can begin to affect nerve fibres, causing tingling, burning, or numbness — particularly in the hands and feet (peripheral neuropathy).',
+      body: 'Elevated glucose over time can begin to affect nerve fibers, causing tingling, burning, or numbness — particularly in the hands and feet (peripheral neuropathy).',
       note: 'Even in prediabetes — before full diabetes — early nerve changes can occur.',
     },
     {
-      icon: Moon,
+      icon: Layers,
       title: 'Darkened Skin Patches',
       body: 'Acanthosis nigricans — patches of dark, velvety skin in body folds (neck, armpits, groin) — is strongly linked to insulin resistance and is considered a visible metabolic warning sign.',
       note: 'This is one of the most distinctive and visible signs of insulin resistance.',
@@ -95,11 +106,81 @@ export default function PrediabetesSignsPage() {
     'Physically inactive (less than 3 sessions of moderate activity per week)',
     'History of gestational diabetes or baby over 9 lbs at birth',
     'Polycystic ovary syndrome (PCOS)',
-    'Sleep apnoea or chronically poor sleep',
+    'Sleep apnea or chronically poor sleep',
     'High blood pressure (above 140/90 mmHg)',
     'Low HDL cholesterol or high triglycerides',
     'History of cardiovascular disease',
   ];
+
+  // Grounded in facts already stated and sourced elsewhere on this page —
+  // A1C range from the table (ADA/WHO), the 58%/71% DPP figures below, and
+  // the "no fasting required for A1C" line from the risk section. Same
+  // array drives both the visible FAQ section and FAQPage schema, so the
+  // two can't drift apart.
+  const faqs = [
+    {
+      q: 'What are the first signs of prediabetes?',
+      a: 'The earliest and most common signs include increased thirst, unexplained fatigue, and frequent urination — caused by rising blood glucose before it reaches diabetic levels. No single sign confirms prediabetes on its own; a blood test is the only way to know for sure.',
+    },
+    {
+      q: 'What A1C level is considered prediabetes?',
+      a: 'An A1C between 5.7% and 6.4% is classified as prediabetes by the ADA and WHO. Below 5.7% is normal; 6.5% or above is type 2 diabetes.',
+    },
+    {
+      q: 'Can prediabetes be reversed?',
+      a: 'Yes. The Diabetes Prevention Program found that lifestyle changes — diet, activity, and modest weight loss — reduced progression to type 2 diabetes by 58% overall, and by 71% in adults over 60 (CDC).',
+    },
+    {
+      q: 'Do I need to fast before an A1C test?',
+      a: 'No. Unlike a fasting glucose test, the A1C blood draw does not require fasting and can be done at any time of day.',
+    },
+    {
+      q: 'At what age should I get screened for prediabetes?',
+      a: 'The ADA recommends routine screening for all adults 35 and older, or earlier if you have one or more risk factors such as obesity, a family history of type 2 diabetes, or high blood pressure.',
+    },
+  ];
+
+  // MedicalWebPage + FAQPage structured data. reviewedBy is deliberately
+  // omitted — no fabricated reviewers (sitewide policy).
+  //
+  // datePublished / dateModified are intentionally left out below rather
+  // than filled with a placeholder — this page had no existing date
+  // anywhere to draw from, and inventing one would be exactly the kind of
+  // unverifiable claim this site has been stripping out elsewhere. Add both
+  // as real ISO dates ('YYYY-MM-DD') once known; Google treats their
+  // absence as a missed optional field, not an error.
+  const schemaMarkup = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'MedicalWebPage',
+        name: '10 Warning Signs of Prediabetes',
+        description: 'Learn the 10 key warning signs of prediabetes — including fatigue, mood changes, skin tags, tingling, and darkened skin. Understand your blood sugar ranges and when to act.',
+        url: 'https://thrivehealth360.org/prediabetes-signs',
+        author: { '@type': 'Organization', name: 'ThriveHealth360', url: 'https://thrivehealth360.org' },
+        publisher: {
+          '@type': 'Organization',
+          name: 'ThriveHealth360',
+          logo: { '@type': 'ImageObject', url: 'https://thrivehealth360.org/images/logo.png' },
+        },
+        mainEntity: {
+          '@type': 'MedicalCondition',
+          name: 'Prediabetes',
+          code: { '@type': 'MedicalCode', codeValue: 'R73.03', codingSystem: 'ICD-10' },
+          signOrSymptom: signs.map((s) => ({ '@type': 'MedicalSignOrSymptom', name: s.title })),
+          riskFactor: riskFactors.map((r) => ({ '@type': 'MedicalRiskFactor', description: r })),
+        },
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: faqs.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      },
+    ],
+  };
 
   return (
     <>
@@ -109,6 +190,7 @@ export default function PrediabetesSignsPage() {
         keywords="signs of prediabetes, prediabetes symptoms, warning signs high blood sugar, acanthosis nigricans, skin tags insulin resistance, mood changes blood sugar, prediabetes A1C range"
         image="/images/prediabetes-support-hero.webp"
         url="/prediabetes-signs"
+        schema={schemaMarkup}
       />
 
       <div className="bg-white min-h-screen font-sans text-gray-800">
@@ -137,7 +219,7 @@ export default function PrediabetesSignsPage() {
             <div className="flex flex-wrap gap-4">
               <button onClick={() => scrollTo('signs')}
                 className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-7 rounded-xl transition flex items-center gap-2">
-                See the 8 Signs <ArrowRight className="w-4 h-4" />
+                See the 10 Signs <ArrowRight className="w-4 h-4" />
               </button>
               <button onClick={() => scrollTo('ranges')}
                 className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold py-3 px-7 rounded-xl transition">
@@ -163,19 +245,18 @@ export default function PrediabetesSignsPage() {
           </div>
         </div>
 
-                {/* ── MEDICAL DISCLAIMER ───────────────────────────────────────── */}
+        {/* ── MEDICAL DISCLAIMER ───────────────────────────────────────── */}
         <div className="bg-amber-50 border-b border-amber-200">
           <div className="container mx-auto px-4 max-w-4xl py-4">
             <div className="flex gap-3">
-              <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
               <div>
                 <p className="text-sm font-bold text-amber-900 mb-1">Medical Disclaimer</p>
                 <p className="text-sm text-amber-800 leading-relaxed">
                   The information on this page is for educational purposes only and does not constitute medical advice.
-                  These statements have not been evaluated by the U.S. Food and Drug Administration (FDA).
                   No content here is intended to diagnose, treat, cure, or prevent any disease.
                   Insulin resistance is a serious metabolic condition — always consult a qualified healthcare provider
-                  before starting any supplement regimen, making significant dietary changes, or beginning a new exercise
+                  before making significant dietary changes or beginning a new exercise
                   protocol, especially if you are taking medications or have an existing health condition.
                   Individual results may vary and reversal is not guaranteed.{' '}
                   <Link to="/medical-disclaimer" className="underline font-semibold">Full disclaimer →</Link>
@@ -192,7 +273,7 @@ export default function PrediabetesSignsPage() {
               {[
                 { stat: '98M+',  label: 'US adults with prediabetes',       sub: '(CDC, 2024)' },
                 { stat: '80%',   label: 'Don\'t know they have it',          sub: 'It is often asymptomatic' },
-                { stat: '70%',   label: 'Risk of progression without action', sub: 'Action can reduce this to <5%' },
+                { stat: '70%',   label: 'Risk of progression without action', sub: 'Lifestyle change can cut this by 58% (CDC)' },
               ].map((c, i) => (
                 <div key={i} className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center">
                   <p className="text-3xl font-bold text-emerald-700 mb-1">{c.stat}</p>
@@ -207,26 +288,25 @@ export default function PrediabetesSignsPage() {
                 Prediabetes is a metabolic condition where blood glucose levels are higher than normal — but not yet high enough to be classified as type 2 diabetes. It reflects underlying <strong>insulin resistance</strong>: your cells have become less responsive to insulin, so glucose builds up in the bloodstream.
               </p>
               <p className="text-gray-700 leading-relaxed">
-                The encouraging reality is that prediabetes is <strong>reversible</strong>. Multiple large-scale trials — including the Diabetes Prevention Program — have shown that lifestyle changes reduce progression to type 2 diabetes by 58% or more. But the window for action requires recognising the signs early.
+                The encouraging reality is that prediabetes is <strong>reversible</strong>. The Diabetes Prevention Program (DPP) showed that lifestyle changes reduce progression to type 2 diabetes by 58% overall — and by 71% in adults over 60 (CDC). But the window for action requires recognizing the signs early.
               </p>
             </div>
           </div>
         </section>
 
-        {/* ── 8 SIGNS ──────────────────────────────────────────────────── */}
+        {/* ── 10 SIGNS ─────────────────────────────────────────────────── */}
         <section id="signs" className="py-16 bg-emerald-50 scroll-mt-16">
           <div className="container mx-auto px-4 max-w-4xl">
             <p className="text-sm font-bold tracking-widest text-emerald-600 uppercase mb-2">Know Your Body</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-3">The 10 Warning Signs</h2>
             <p className="text-gray-600 mb-10 max-w-2xl">
               These signs do not confirm prediabetes on their own — but if several apply to you,
-              it is worth asking your doctor for a blood sugar test. Signs 1–8 are the most
-              clinically documented; signs 9–10 are also well-supported and covered in depth
-              in our{' '}
-              <a href="/blog/5-warning-signs-of-prediabetes"
+              it is worth asking your doctor for a blood sugar test. For more on recognizing these
+              signs early, see our{' '}
+              <Link to="/blog/5-warning-signs-of-prediabetes"
                 className="text-emerald-700 underline font-semibold hover:text-emerald-900">
                 companion blog article
-              </a>.
+              </Link>.
             </p>
             <div className="grid md:grid-cols-2 gap-6">
               {signs.map((sign, i) => (
@@ -242,7 +322,7 @@ export default function PrediabetesSignsPage() {
                       <h3 className="font-bold text-gray-900 mb-2">{sign.title}</h3>
                       <p className="text-sm text-gray-700 leading-relaxed mb-3">{sign.body}</p>
                       <div className="flex gap-2 bg-amber-50 border border-amber-200 rounded-lg p-3">
-                        <AlertTriangle className="w-3.5 h-3.5 text-amber-600 flex-shrink-0 mt-0.5" />
+                        <AlertTriangle className="w-3.5 h-3.5 text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
                         <p className="text-xs text-amber-800">{sign.note}</p>
                       </div>
                     </div>
@@ -265,10 +345,10 @@ export default function PrediabetesSignsPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-gray-50">
-                    <th className="text-left p-4 font-bold text-gray-700 border-b border-gray-200">Test</th>
-                    <th className="text-center p-4 font-bold text-emerald-700 border-b border-gray-200">Normal</th>
-                    <th className="text-center p-4 font-bold text-amber-700 border-b border-gray-200">Prediabetes</th>
-                    <th className="text-center p-4 font-bold text-red-700 border-b border-gray-200">Diabetes</th>
+                    <th scope="col" className="text-left p-4 font-bold text-gray-700 border-b border-gray-200">Test</th>
+                    <th scope="col" className="text-center p-4 font-bold text-emerald-700 border-b border-gray-200">Normal</th>
+                    <th scope="col" className="text-center p-4 font-bold text-amber-700 border-b border-gray-200">Prediabetes</th>
+                    <th scope="col" className="text-center p-4 font-bold text-red-700 border-b border-gray-200">Diabetes</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -318,7 +398,7 @@ export default function PrediabetesSignsPage() {
         <section id="nextStep" className="py-16 bg-white scroll-mt-16">
           <div className="container mx-auto px-4 max-w-4xl">
             <p className="text-sm font-bold tracking-widest text-emerald-600 uppercase mb-2">Take Action</p>
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">What to Do If You Recognise These Signs</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">What to Do If You Recognize These Signs</h2>
             <p className="text-gray-600 mb-10">
               Prediabetes is not a life sentence. These are your next steps.
             </p>
@@ -333,7 +413,7 @@ export default function PrediabetesSignsPage() {
                 {
                   step: '2',
                   title: 'Start the 5-Step Plan',
-                  desc: 'Diet, exercise, monitoring, supplements, and sleep optimisation — together these reduce progression by 58–80% in clinical trials.',
+                  desc: 'Diet, exercise, monitoring, supplements, and sleep optimization — the DPP showed a 58% reduction in progression overall, rising to almost 80% among participants with the best adherence (Diabetes Care, 2023).',
                   color: 'blue',
                 },
                 {
@@ -343,8 +423,8 @@ export default function PrediabetesSignsPage() {
                   color: 'purple',
                 },
               ].map((card, i) => (
-                <div key={i} className={`bg-${card.color}-50 border border-${card.color}-200 rounded-2xl p-6`}>
-                  <div className={`w-9 h-9 bg-${card.color}-600 text-white rounded-full flex items-center justify-center font-bold mb-4 text-sm`}>
+                <div key={i} className={`${colorClasses[card.color].bg50} border ${colorClasses[card.color].border200} rounded-2xl p-6`}>
+                  <div className={`w-9 h-9 ${colorClasses[card.color].bg600} text-white rounded-full flex items-center justify-center font-bold mb-4 text-sm`}>
                     {card.step}
                   </div>
                   <h3 className="font-bold text-gray-900 mb-2">{card.title}</h3>
@@ -367,24 +447,21 @@ export default function PrediabetesSignsPage() {
           </div>
         </section>
 
-                {/* ── AFFILIATE DISCLOSURE ─────────────────────────────────────── */}
-        <section className="bg-gray-50 border-t border-gray-200 py-6">
+        {/* ── FAQ ──────────────────────────────────────────────────────── */}
+        <section id="faq" className="py-16 bg-emerald-50 scroll-mt-16">
           <div className="container mx-auto px-4 max-w-4xl">
-            <div className="flex gap-3">
-              <Info className="w-5 h-5 text-gray-500 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-bold text-gray-700 mb-1">Affiliate Disclosure</p>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  <strong>Transparency notice:</strong> This page contains affiliate links to supplement and wellness
-                  products. ThriveHealth360 may earn a commission if you purchase through these links, at no additional
-                  cost to you. This financial relationship may influence which products we feature and how they are
-                  presented. We apply editorial and quality standards to all recommendations; however, you should
-                  conduct your own research and consult a qualified healthcare professional before purchasing any
-                  supplement. This disclosure is provided in accordance with the FTC's guidelines on endorsements and
-                  testimonials (16 CFR §255).{' '}
-                  <Link to="/affiliate-disclosure" className="underline text-emerald-700 font-semibold">Full Disclosure Policy →</Link>
-                </p>
-              </div>
+            <p className="text-sm font-bold tracking-widest text-emerald-600 uppercase mb-2">Common Questions</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+            <div className="space-y-3">
+              {faqs.map((item, i) => (
+                <details key={i} className="bg-white border border-gray-200 rounded-xl p-5 group">
+                  <summary className="font-bold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+                    {item.q}
+                    <ChevronRight className="w-4 h-4 text-emerald-600 flex-shrink-0 transition-transform group-open:rotate-90" />
+                  </summary>
+                  <p className="text-sm text-gray-700 leading-relaxed mt-3">{item.a}</p>
+                </details>
+              ))}
             </div>
           </div>
         </section>

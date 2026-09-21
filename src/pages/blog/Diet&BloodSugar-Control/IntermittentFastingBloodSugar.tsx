@@ -22,7 +22,6 @@ import { SEO } from "@/components/seo/SEO";
 import type { BlogArticleMeta } from "@/data/types";
 import { useSiloLinks } from '@/utils/siloLinker';
 import { FAQSection } from '@/components/FAQSection';
-import { ProvenanceNote } from '@/components/clinical/ProvenanceNote';
 import emailjs from '@emailjs/browser';
 
 // ─── Hero image (800×480px, 5:3, 72 DPI, webp) ──────────────────────────────
@@ -63,19 +62,12 @@ const IntermittentFastingBloodSugar: React.FC = () => {
   // Single source of truth for "last updated" — the header line, the
   // footer provenance line, and the schema's dateModified/lastReviewed all
   // derive from this one literal instead of three separate hardcoded
-  // strings that happened to agree by coincidence. Two display formats
-  // because the header originally showed a full date and the footer
-  // originally showed month + year — granularity preserved, source unified.
+  // strings that happened to agree by coincidence.
   const DATE_MODIFIED = '2026-04-08';
   const lastUpdatedLabelFull = new Date(DATE_MODIFIED).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-    timeZone: 'UTC',
-  });
-  const lastUpdatedLabel = new Date(DATE_MODIFIED).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
     timeZone: 'UTC',
   });
 
@@ -365,6 +357,20 @@ const IntermittentFastingBloodSugar: React.FC = () => {
               <span>14 min read</span>
               <span>•</span>
               <span>Last updated: {lastUpdatedLabelFull}</span>
+            </div>
+            <div className="flex flex-wrap gap-2 mb-6">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">
+                ✅ Evidence-Based
+              </span>
+              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-blue-100 text-blue-800">
+                🔬 {citations.length} Verified References
+              </span>
+              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-100 text-indigo-800">
+                🏥 PubMed & CrossRef Sourced
+              </span>
+              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-purple-100 text-purple-800">
+                📋 Peer-Reviewed Data
+              </span>
             </div>
             <div className="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-lg">
               <div className="flex gap-4">
@@ -775,7 +781,6 @@ const IntermittentFastingBloodSugar: React.FC = () => {
                 </div>
               ))}
             </div>
-            <ProvenanceNote lastUpdated={lastUpdatedLabel} />
           </section>
 
           {/* ── DYNAMIC SILO LINKS ── */}

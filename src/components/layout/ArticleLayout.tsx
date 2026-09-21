@@ -333,7 +333,10 @@ export function ArticleLayout({
             }
           >
             {affiliateCTA && (
-              <CategoryDisclaimer category={category} position="bottom" />
+              <>
+                <CategoryDisclaimer category={category} position="top" />
+                <CategoryDisclaimer category={category} position="bottom" />
+              </>
             )}
           </div>
         </article>

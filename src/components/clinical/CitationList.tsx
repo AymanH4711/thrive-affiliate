@@ -4,6 +4,14 @@
 // Status values align with the /cite-audit → /cite-clean workflow
 // defined in the ThriveHealth360 Prompt & Skill Library.
 //
+// The status banner, per-citation status badges, and debug notes below are
+// an internal editorial QA tool — never meant for readers. They're gated on
+// import.meta.env.DEV (true under `npm run dev`, false in any production
+// build) so the workflow keeps working locally without shipping internal
+// text like "Do not publish until resolved" or "/cite-bridge {id}" to the
+// live site. Previously these defaulted to visible in every environment,
+// including production.
+//
 // Usage:
 //   import { CitationList } from '@/components/clinical/CitationList';
 //   <CitationList citations={citations} />
@@ -162,26 +170,28 @@ function CitationRow({ citation, index }: { citation: Citation; index: number })
             <span className="text-xs text-gray-500">{identifierLabel}</span>
           )}
 
-          <span
-            className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${cfg.badgeBg} ${cfg.badgeText}`}
-          >
-            <StatusIcon className={`w-3 h-3 ${cfg.iconColor}`} aria-hidden="true" />
-            {cfg.label}
-          </span>
+          {import.meta.env.DEV && (
+            <span
+              className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${cfg.badgeBg} ${cfg.badgeText}`}
+            >
+              <StatusIcon className={`w-3 h-3 ${cfg.iconColor}`} aria-hidden="true" />
+              {cfg.label}
+            </span>
+          )}
         </div>
 
         {citation.note && (
           <p className="mt-1.5 text-xs text-gray-500 italic">{citation.note}</p>
         )}
 
-        {citation.status === 'citation-error' && (
+        {import.meta.env.DEV && citation.status === 'citation-error' && (
           <p className="mt-2 text-xs text-red-700 font-medium">
             DOI resolves to a different paper. Author must supply the correct DOI manually.
             Do not publish until resolved.
           </p>
         )}
 
-        {citation.status === 'orphan' && (
+        {import.meta.env.DEV && citation.status === 'orphan' && (
           <p className="mt-2 text-xs text-orange-700 font-medium">
             In citations array but not cited in article body. Run{' '}
             <code className="bg-orange-100 px-1 rounded">/cite-bridge {citation.id}</code>{' '}
@@ -231,7 +241,9 @@ function CitationSummaryBanner({ citations }: { citations: Citation[] }) {
 
 interface CitationListProps {
   citations: Citation[];
-  /** Show the cite-audit status summary banner. Default: true */
+  /** Show the cite-audit status summary banner. Default: import.meta.env.DEV
+      (visible while running `npm run dev`, hidden in any production build).
+      Pass explicitly to override either way. */
   showStatusBanner?: boolean;
   /** Section heading text. Default: "References" */
   heading?: string;
@@ -239,7 +251,7 @@ interface CitationListProps {
 
 export function CitationList({
   citations,
-  showStatusBanner = true,
+  showStatusBanner = import.meta.env.DEV,
   heading = 'References',
 }: CitationListProps) {
   if (citations.length === 0) return null;
@@ -268,10 +280,12 @@ export function CitationList({
         ))}
       </div>
 
-      <p className="mt-6 text-xs text-gray-400 leading-relaxed">
-        Citation status managed via the ThriveHealth360 /cite-audit → /cite-clean workflow.
-        Do not publish until all entries show ✅ VERIFIED, ✅ BRIDGED, or ✅ CONFIRMED.
-      </p>
+      {import.meta.env.DEV && (
+        <p className="mt-6 text-xs text-gray-400 leading-relaxed">
+          Citation status managed via the ThriveHealth360 /cite-audit → /cite-clean workflow.
+          Do not publish until all entries show ✅ VERIFIED, ✅ BRIDGED, or ✅ CONFIRMED.
+        </p>
+      )}
     </section>
   );
 }

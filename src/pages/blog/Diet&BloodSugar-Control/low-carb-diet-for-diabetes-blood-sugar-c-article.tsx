@@ -27,7 +27,6 @@ import type { Citation } from "@/components/clinical/CitationList";
 import { AdvisorModeBox } from "@/components/clinical/AdvisorModeBox";
 import { RiskCallout } from "@/components/clinical/RiskCallout";
 import { MedicalDisclaimer } from "@/components/clinical/MedicalDisclaimer";
-import { ProvenanceNote } from "@/components/clinical/ProvenanceNote";
 import { FAQSection } from "@/components/FAQSection";
 import { useSiloLinks } from "@/utils/siloLinker";
 import emailjs from "@emailjs/browser";
@@ -1002,7 +1001,6 @@ const LowCarbDietForDiabetesBloodSugarControlEvidenceBasArticle: React.FC = () =
             </p>
           </div>
         </div>
-        <ProvenanceNote lastUpdated={lastUpdatedLabel} />
       </footer>
     </ArticleLayout>
   );

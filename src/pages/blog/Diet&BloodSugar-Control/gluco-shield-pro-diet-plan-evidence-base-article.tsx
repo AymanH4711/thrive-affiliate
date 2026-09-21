@@ -188,6 +188,7 @@ const GlucoShieldProDietPlanEvidenceBasedGuideForBloodSuArticle: React.FC = () =
         articleType: "product-review",
       }}
       category="diet"
+      referencesCount={citations.length}
       title="Gluco Shield Pro Diet Plan: Evidence-Based Guide for Blood Sugar Control"
       affiliateCTA={{
         productName: "Gluco Shield Pro",
