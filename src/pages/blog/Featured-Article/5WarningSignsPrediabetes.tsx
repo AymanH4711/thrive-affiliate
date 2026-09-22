@@ -239,6 +239,7 @@ const FiveWarningSignsPrediabetes = () => {
         image={heroImage}
         url="/blog/5-warning-signs-of-prediabetes"
         canonical="/prediabetes-signs"
+        pillarId="prediabetes"
         schema={schemaMarkup}
       />
       

@@ -28,6 +28,7 @@ const LeadMagnet: React.FC = () => {
       // through the same verified, working configuration.
       const templateParams = {
         user_email: email,
+        name: name,
         downloaded_resources: 'The Complete 12-Week Metabolic Reset Protocol',
       };
 
@@ -54,7 +55,7 @@ const LeadMagnet: React.FC = () => {
 
         // Fire-and-forget — download/email already succeeded above; a
         // failed list-add here shouldn't block the user's download.
-        subscribeToNewsletter(email, '12-week-protocol').then((result) => {
+        subscribeToNewsletter(email, '12-week-protocol', name).then((result) => {
           if (!result.success) {
             console.warn('Newsletter subscribe failed (download still succeeded):', result.message);
           }
