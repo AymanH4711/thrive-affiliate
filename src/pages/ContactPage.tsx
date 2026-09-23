@@ -49,7 +49,7 @@ export default function ContactPage() {
     setError('');
 
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID_CONTACT;
 
     try {
       await emailjs.sendForm(serviceId!, templateId!, formRef.current!);
