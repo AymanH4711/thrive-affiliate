@@ -85,8 +85,8 @@ const LeadMagnet: React.FC = () => {
             The Complete 12-Week Metabolic Reset Protocol
           </h2>
           <p className="text-emerald-100 mb-6 leading-relaxed text-sm">
-            An evidence-based lifestyle guide to support blood sugar management and help reverse
-            prediabetes — built on peer-reviewed research and practical, real-world strategies.
+            An evidence-based lifestyle guide to support healthy blood sugar and lower your risk of
+            type 2 diabetes — built on peer-reviewed research and practical, real-world strategies.
           </p>
           <ul className="space-y-3">
             {[
@@ -186,7 +186,7 @@ export default function HomePage() {
     <>
       <SEO
         title="Thrive Health | Science-Backed Blood Sugar & Metabolic Guides"
-        description="Evidence-based guides to help you reverse prediabetes, stabilize blood sugar, and reclaim your energy — for readers worldwide."
+        description="Evidence-based guides to help you understand prediabetes, support healthy blood sugar, and build habits that lower your diabetes risk — for readers worldwide."
         url="/"
       />
 
@@ -213,7 +213,7 @@ export default function HomePage() {
                 </h1>
 
                 <p className="text-base text-emerald-100 mb-7 leading-relaxed font-light max-w-lg">
-                  Evidence-based guides that help you reverse prediabetes, stabilise glucose, and take back control – without the noise.
+                  Evidence-based guides that help you understand prediabetes, support healthy glucose levels, and take back control – without the noise.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3">
@@ -315,7 +315,7 @@ export default function HomePage() {
                 { title: 'Glucose Monitoring',            desc: 'How to track your blood sugar at home, understand your readings (mg/dL & mmol/L), and use the data.',                                    href: '/glucose-monitoring-tools', affiliate: false },
                 { title: 'Natural Blood Sugar Support',   desc: 'Evidence-based supplements and lifestyle approaches reviewed for safety and effectiveness.',                                              href: '/natural-blood-sugar', affiliate: true },
                 { title: 'Sleep & Stress Management',     desc: 'How sleep quality and cortisol directly affect your glucose — and practical steps to improve both.',                                     href: '/prediabetes-sleep-stress', affiliate: false },
-                { title: 'Full Reversal Plan',            desc: 'A structured 5-step guide that brings diet, movement, monitoring, and lifestyle together into one clear programme.',                     href: '/reverse-prediabetes', affiliate: false },
+                { title: '5-Step Prediabetes Plan',      desc: 'A structured 5-step plan covering diet, movement, tracking, supplements, and sleep, grounded in research on lowering type 2 diabetes risk.',         href: '/prediabetes-plan', affiliate: true },
               ].map((card, i) => (
                 <div key={i} className="bg-white border border-emerald-100 rounded-2xl overflow-hidden hover:shadow-md transition">
                   <a href={card.href} className="block p-6 hover:border-emerald-400 group">
@@ -349,7 +349,7 @@ export default function HomePage() {
                 <AlertTriangle className="w-5 h-5 text-amber-500" /> A Skeptic’s View
               </h3>
               <p className="text-gray-600 text-sm leading-relaxed">
-                Not everyone reverses prediabetes with lifestyle alone. Genetics, medications, and other health conditions matter. 
+                Lifestyle changes don’t work the same way for everyone. Genetics, medications, and other health conditions matter. 
                 Some people may need medical intervention despite perfect habits. <strong>Always monitor with your doctor</strong> – 
                 this site provides educational tools, not guarantees.
               </p>

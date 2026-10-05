@@ -1,6 +1,6 @@
 // src/pages/prediabetes/PrediabetesSupportHub.tsx
 // Route: /prediabetes-support
-// Entry hub page — distinct from ReversePrediabetesPage (/reverse-prediabetes)
+// Entry hub page — distinct from ReversePrediabetesPage (/prediabetes-plan)
 // Purpose: explain what prediabetes is, who is at risk, and link to all sub-resources
 
 import { Link } from 'react-router-dom';
@@ -124,7 +124,7 @@ export default function PrediabetesSupportHub() {
                   grounded in peer-reviewed research and written in plain English.
                 </p>
                 <div className="flex flex-wrap gap-4">
-                  <Link to="/reverse-prediabetes"
+                  <Link to="/prediabetes-plan"
                     className="bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-3 px-8 rounded-xl transition shadow-xl flex items-center gap-2">
                     Start the 5-Step Reversal Plan <ArrowRight className="w-4 h-4" />
                   </Link>
@@ -306,7 +306,7 @@ export default function PrediabetesSupportHub() {
               <h2 className="text-3xl font-bold text-gray-900 mb-3">5 Pillars of Prediabetes Support</h2>
               <p className="text-gray-600 max-w-xl mx-auto">
                 Each pillar is a separate, detailed guide. Together they form our{' '}
-                <Link to="/reverse-prediabetes" className="text-emerald-700 font-semibold underline">
+                <Link to="/prediabetes-plan" className="text-emerald-700 font-semibold underline">
                   complete 5-step reversal plan
                 </Link>.
               </p>
@@ -415,7 +415,7 @@ export default function PrediabetesSupportHub() {
               Start with the 5-step plan, one day at a time.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/reverse-prediabetes"
+              <Link to="/prediabetes-plan"
                 className="bg-emerald-500 hover:bg-emerald-400 text-white font-bold px-8 py-4 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
                 Start the 5-Step Plan <ArrowRight className="w-5 h-5" />
               </Link>

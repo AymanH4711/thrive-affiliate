@@ -1,4 +1,4 @@
-// src/pages/ReversePrediabetesPage.tsx
+// src/pages/reversal-plan/PrediabetesPlanPage.tsx
 import { Link } from 'react-router-dom';
 import { SEO } from "@/components/seo/SEO";
 import { AdvisorModeBox } from "@/components/clinical/AdvisorModeBox";
@@ -15,7 +15,7 @@ import {
   Home
 } from 'lucide-react';
 
-export default function ReversePrediabetesPage() {
+export default function PrediabetesPlanPage() {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -26,9 +26,10 @@ export default function ReversePrediabetesPage() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Guide",
-    "headline": "5-Step Prediabetes Reversal Plan",
-    "description": "Evidence-based 5-step plan to support prediabetes reversal naturally",
-    "image": "https://www.thrivehealth360.com/images/reverse-prediabetes-hero-og.webp",
+    "headline": "5-Step Prediabetes Plan",
+    "description": "A 5-step lifestyle plan for prediabetes covering diet, movement, tracking, supplements and sleep. Educational only.",
+    "image": "https://thrivehealth360.org/images/reverse-prediabetes-hero-og.webp",
+    "url": "https://thrivehealth360.org/prediabetes-plan",
     "author": {
       "@type": "Organization",
       "name": "ThriveHealth360"
@@ -46,11 +47,11 @@ export default function ReversePrediabetesPage() {
       icon: Apple,
       color: 'emerald',
       link: '/prediabetes-diet',
-      description: 'Every meal either raises or lowers your insulin levels. By choosing blood-sugar-friendly foods, you reduce insulin spikes and allow your cells to become sensitive again.',
+      description: 'Food choices shape how much your blood sugar and insulin rise after meals. Choosing blood-sugar-friendly foods can reduce those spikes and support insulin sensitivity over time.',
       points: [
-        'Eliminate refined carbs: White bread, sugar, processed snacks',
-        'Add protein & fiber: Stabilize blood sugar at every meal',
-        'Practice intermittent fasting: Give your pancreas a rest'
+        'Cut back on refined carbs: white bread, sugary drinks, processed snacks',
+        'Add protein & fiber: helps steady blood sugar after meals',
+        'Meal timing: some people find regular meal times or time-restricted eating helpful — check with your doctor first'
       ]
     },
     {
@@ -62,11 +63,11 @@ export default function ReversePrediabetesPage() {
       icon: Activity,
       color: 'blue',
       link: '/prediabetes-exercise',
-      description: 'When you move, your muscles consume glucose directly—bypassing the insulin pathway. This immediately improves insulin sensitivity.',
+      description: 'During and after activity, your muscles take up glucose partly without needing insulin, and insulin sensitivity stays improved for hours afterward. Regular movement helps keep that effect going.',
       points: [
-        'Post-meal walks: 10-15 minutes after eating reduces glucose spikes by 20-30%',
-        'Strength training: 3x per week builds muscle (your biggest glucose sink)',
-        'Daily walking: 7,000+ steps to stay active'
+        'Post-meal walks: a 10-15 minute walk after eating can help blunt the blood sugar rise',
+        'Strength training: 2-3 times per week builds muscle, a major site of glucose uptake',
+        'Daily walking: many people aim for 7,000+ steps — build up gradually'
       ]
     },
     {
@@ -77,26 +78,26 @@ export default function ReversePrediabetesPage() {
       icon: BarChart3,
       color: 'purple',
       link: '/glucose-monitoring-tools',
-      description: 'Data is motivation. Seeing your numbers improve keeps you committed and helps you understand what works for your body.',
+      description: 'Data can be motivating. Tracking your numbers helps you see what works for your body and gives you something concrete to review with your doctor.',
       points: [
-        'Fasting glucose: Test first thing in the morning (target: below 100 mg/dL)',
-        'A1C test: Every 3 months (target: below 5.7)',
-        'CGM (optional): Continuous glucose monitor shows real-time patterns'
+        'Fasting glucose: test first thing in the morning (normal range: below 100 mg/dL or 5.6 mmol/L)',
+        'A1C test: ask your doctor how often to repeat it (normal range: below 5.7%)',
+        'CGM (optional): a continuous glucose monitor shows real-time patterns — ask your doctor whether it makes sense for you'
       ]
     },
     {
       id: 'step-4',
       number: 4,
       title: 'Add Supplement Support',
-      subtitle: 'Accelerate Your Results',
+      subtitle: 'Optional, After the Basics',
       icon: Zap,
       color: 'amber',
       link: '/natural-blood-sugar',
-      description: 'Supplements amplify the effects of diet and exercise. They fill nutritional gaps and support your body\'s natural ability to restore insulin sensitivity.',
+      description: 'Supplements are an optional add-on, never a replacement for diet, movement, sleep, or medical care. Some have early research behind them, but effects are modest and vary, and they can interact with medications.',
       points: [
-        'Berberine: Nature\'s metformin—activates the same cellular pathways',
-        'Cinnamon & Chromium: Improve glucose uptake by cells',
-        'Magnesium: Supports metabolic function and reduces insulin resistance'
+        'Berberine: some studies suggest a modest effect on blood sugar; it can interact with medications and is not suitable for everyone, including during pregnancy',
+        'Cinnamon & chromium: evidence is mixed and effects, if any, are small',
+        'Magnesium: low intake is linked to higher type 2 diabetes risk; food sources come first, so ask your doctor before supplementing, especially with kidney problems'
       ]
     },
     {
@@ -108,11 +109,11 @@ export default function ReversePrediabetesPage() {
       icon: Moon,
       color: 'rose',
       link: '/prediabetes-sleep-stress',
-      description: 'Poor sleep and chronic stress raise cortisol, which directly blocks insulin sensitivity and promotes belly fat storage. These are foundational.',
+      description: 'Poor sleep and chronic stress are linked with higher cortisol, worse insulin sensitivity, and harder blood sugar control. These habits support the other four steps.',
       points: [
-        '7-9 hours of sleep: Non-negotiable for metabolic healing',
-        'Stress management: Meditation, breathing, yoga reduce cortisol',
-        'Magnesium & relaxation: Create a sleep sanctuary'
+        '7-9 hours of sleep: the range most adults need for healthy metabolism',
+        'Stress management: meditation, breathing exercises, or yoga can help you manage stress',
+        'A calm sleep routine: regular bedtime, a dark cool room, screens off before bed'
       ]
     }
   ];
@@ -128,11 +129,11 @@ export default function ReversePrediabetesPage() {
   return (
     <>
       <SEO
-        title="5-Step Prediabetes Reversal Plan | ThriveHealth360"
-        description="The evidence-based 5-step prediabetes reversal plan: diet, exercise, monitoring, natural supplements and sleep optimisation. Backed by peer-reviewed research."
-        keywords="reverse prediabetes, prediabetes treatment, 5-step plan, blood sugar reversal, diabetes prevention"
+        title="5-Step Prediabetes Plan | ThriveHealth360"
+        description="A 5-step lifestyle plan for prediabetes: diet, movement, tracking, supplements and sleep, grounded in research on lowering type 2 diabetes risk. Educational only."
+        keywords="prediabetes plan, 5-step prediabetes plan, lower diabetes risk, prediabetes lifestyle changes, blood sugar support"
         image="/images/reverse-prediabetes-hero-og.webp"
-        url="/reverse-prediabetes"
+        url="/prediabetes-plan"
         schema={schema}
       />
 
@@ -146,13 +147,13 @@ export default function ReversePrediabetesPage() {
                   <Home className="w-4 h-4 mr-2" /> Back Home
                 </Link>
                 <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-5 leading-tight">
-                  The 5-Step Reversal Plan
+                  The 5-Step Prediabetes Plan
                 </h1>
                 <p className="text-lg text-gray-700 mb-4 font-semibold">
-                  Your Complete Roadmap to Restore Healthy Blood Sugar
+                  A Practical Roadmap to Support Healthy Blood Sugar
                 </p>
                 <p className="text-base text-gray-600 leading-relaxed mb-7">
-                  Follow these five interconnected steps to address the root cause of prediabetes and achieve lasting reversal in 3 years or less.
+                  Follow these five connected steps to build the habits linked to a lower risk of type 2 diabetes. Progress takes months, not weeks, and results vary from person to person.
                 </p>
               </div>
 
@@ -160,7 +161,7 @@ export default function ReversePrediabetesPage() {
               <div className="hidden md:block">
                 <img 
                   src="/images/reverse-prediabetes-hero-thumb-og.webp" 
-                  alt="Woman preparing healthy food as part of prediabetes reversal plan"
+                  alt="Woman preparing a healthy meal as part of a prediabetes lifestyle plan"
                   className="rounded-xl shadow-2xl w-full h-auto object-cover"
                 />
               </div>
@@ -172,7 +173,7 @@ export default function ReversePrediabetesPage() {
         <div className="md:hidden bg-white px-4 py-6">
           <img 
             src="/images/reverse-prediabetes-hero.webp" 
-            alt="Woman preparing healthy food as part of prediabetes reversal plan"
+            alt="Woman preparing a healthy meal as part of a prediabetes lifestyle plan"
             className="rounded-xl shadow-lg w-full h-auto object-cover"
           />
         </div>
@@ -209,7 +210,7 @@ export default function ReversePrediabetesPage() {
               <div>
                 <p className="font-bold text-base text-amber-900 mb-2">Medical Disclaimer</p>
                 <p className="text-base text-amber-800 leading-relaxed">
-                  These statements have not been evaluated by the U.S. Food and Drug Administration (FDA). This content is for educational and informational purposes only. It is not intended to diagnose, treat, cure, or prevent any disease or health condition, and is not a substitute for professional medical advice, diagnosis, or treatment. Individual results may vary. Always consult a qualified healthcare provider before making changes to your diet, exercise routine, or supplement regimen, especially if you have a pre-existing medical condition or are taking prescription medications. Individual results may vary and reversal is not guaranteed.
+                  All content on ThriveHealth360 is for general educational and informational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment. Supplements, foods, and lifestyle interventions discussed on this site have not been evaluated by the FDA, MHRA, TGA, or Health Canada and are not intended to diagnose, treat, cure, or prevent any disease. Always consult your doctor or a qualified healthcare provider before making changes to your diet, exercise routine, medications, or supplement regimen. Individual results vary and are not guaranteed. Health regulations differ by country — content may not apply in your jurisdiction.
                 </p>
               </div>
             </div>
@@ -223,10 +224,11 @@ export default function ReversePrediabetesPage() {
             <AdvisorModeBox
               title="Clinical Evidence Summary"
               evidence="strong"
-              summary="Multiple large-scale RCTs — including the Diabetes Prevention Program (n=3,234) and the Finnish Diabetes Prevention Study — show lifestyle intervention reduces progression to type 2 diabetes by 58% overall and 71% in adults over 60. The five steps below are grounded in that evidence base."
+              summary="Two landmark trials tested intensive diet-and-activity programmes in overweight adults with impaired glucose tolerance: the Diabetes Prevention Program (n=3,234) and the Finnish Diabetes Prevention Study (n=522). In the DPP, lifestyle intervention lowered the risk of developing type 2 diabetes by 58% over about three years compared with placebo (71% in adults over 60); the Finnish study also found a 58% reduction. Steps 1 and 2 reflect those programmes; steps 3-5 are supporting habits with less direct evidence."
               caveats={[
-                'Individual outcomes depend on adherence, baseline A1C, age, and comorbidities.',
-                'Supplements on this page have not been FDA-evaluated for diabetes prevention.',
+                'Results depend on adherence, starting blood sugar, age, weight, and other health conditions.',
+                'Not everyone returns to the normal range, and some people progress to type 2 diabetes despite their efforts.',
+                'Supplements are not part of this evidence and have not been evaluated by regulators for preventing or treating prediabetes or diabetes.',
                 'Consult your doctor before starting any new supplement, diet, or exercise programme.',
               ]}
             />
@@ -241,11 +243,11 @@ export default function ReversePrediabetesPage() {
             <section className="mb-20">
               <h2 className="text-3xl font-bold text-gray-900 mb-6">How This Plan Works</h2>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-                Prediabetes is a metabolic condition that develops over time. Reversing it requires a comprehensive approach that addresses all the factors driving insulin resistance.
+                Prediabetes means your blood sugar is higher than normal but not yet in the diabetes range. For many people it develops gradually, and lifestyle changes are the best-studied way to lower the risk of it progressing to type 2 diabetes. This plan brings the main habits together in one place.
               </p>
               <div className="bg-emerald-50 border-l-4 border-emerald-600 p-8 rounded-r-lg">
                 <p className="text-2xl font-semibold text-gray-900">
-                  This 5-step plan isn't about quick fixes. It's about sustainable lifestyle changes that rewire your metabolism and restore your health.
+                  This plan isn't about quick fixes. It's about sustainable habits that support your metabolism and your long-term health.
                 </p>
               </div>
             </section>
@@ -319,14 +321,17 @@ export default function ReversePrediabetesPage() {
 
             {/* TIMELINE */}
             <section className="mb-20">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Your Reversal Timeline</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">What to Expect Over Time</h2>
+              <p className="text-lg text-gray-700 mb-8">
+                Everyone's timeline is different. This is a general picture of how progress often looks, not a promise or a prediction.
+              </p>
               <div className="space-y-6">
                 {[
-                  { period: 'Weeks 1-4', title: 'Foundation', desc: 'Establish new habits. Start seeing energy improvements.' },
-                  { period: 'Weeks 5-8', title: 'Momentum', desc: 'Diet adaptation improves. Exercise becomes easier. First lab improvements possible.' },
-                  { period: 'Months 3-6', title: 'Breakthrough', desc: 'Significant A1C improvements. Noticeable weight loss. Insulin sensitivity restoration begins.' },
-                  { period: 'Months 6-12', title: 'Transformation', desc: 'Major metabolic improvements. Sustainable lifestyle integrated. Prediabetes reversal likely.' },
-                  { period: '1-3 Years', title: 'Complete Reversal', desc: 'Full prediabetes reversal possible. New baseline established. Long-term health secured.' },
+                  { period: 'Weeks 1-4', title: 'Foundation', desc: 'Build the habits. Some people notice steadier energy or better sleep; changes in lab results usually take longer.' },
+                  { period: 'Weeks 5-8', title: 'Momentum', desc: 'Routines start to feel more natural. Home readings may begin to show patterns. A1C reflects about three months, so it changes more slowly.' },
+                  { period: 'Months 3-6', title: 'Checkpoint', desc: 'A good time to repeat tests with your doctor. Some people see improvements in A1C, fasting glucose, or weight; others see little change and may need a different approach.' },
+                  { period: 'Months 6-12', title: 'Consolidation', desc: 'Habits become routine. In the major prevention trials, lifestyle changes lowered the risk of developing type 2 diabetes; your own results depend on your starting point and consistency.' },
+                  { period: '1-3 Years', title: 'Long-Term', desc: 'Keeping the habits going matters most. Some people return to normal blood sugar levels, some stay in the prediabetes range, and some progress. In follow-up research on the Diabetes Prevention Program, people who returned to normal even once had about 56% lower risk of later diabetes than those who stayed in the prediabetes range. Regular check-ups keep you informed.' },
                 ].map((item, i) => (
                   <div key={i} className="flex gap-6 p-8 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl border-2 border-emerald-200">
                     <div className="flex-shrink-0">
@@ -344,9 +349,9 @@ export default function ReversePrediabetesPage() {
             {/* FINAL CTA */}
             <section>
               <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-2xl p-12 text-center">
-                <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Start Your Reversal?</h2>
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Start Your Plan?</h2>
                 <p className="text-lg mb-8 text-emerald-50">
-                  Complete all 5 steps within 4-6 weeks. Measurable blood sugar improvements typically appear within 6-8 weeks.
+                  Start with one step this week and add the next when it feels manageable. Most people need a few months of steady habits before lab results change, and it is a good idea to talk with your doctor before you begin.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button
@@ -364,6 +369,17 @@ export default function ReversePrediabetesPage() {
                   </Link>
                 </div>
               </div>
+            </section>
+
+
+            {/* SOURCES */}
+            <section className="mt-16 text-sm text-gray-600">
+              <h2 className="text-xl font-bold text-gray-900 mb-3">Sources</h2>
+              <ol className="list-decimal pl-5 space-y-1">
+                <li>Knowler WC, et al. Reduction in the incidence of type 2 diabetes with lifestyle intervention or metformin. N Engl J Med 2002;346:393-403.</li>
+                <li>Tuomilehto J, et al. Prevention of type 2 diabetes mellitus by changes in lifestyle among subjects with impaired glucose tolerance. N Engl J Med 2001;344:1343-1350.</li>
+                <li>Perreault L, et al. Effect of regression from prediabetes to normal glucose regulation on long-term reduction in diabetes risk: results from the Diabetes Prevention Program Outcomes Study. Lancet 2012;379:2243-2251.</li>
+              </ol>
             </section>
 
           </div>

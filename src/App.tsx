@@ -71,7 +71,7 @@ const BloodSugarResetBook = lazy(() => import("./books/BloodSugarResetBook"));
 // ── Prediabetes Pillar Pages ──────────────────────────────────────────────────
 const PrediabetesSupportHub     = lazy(() => import("./pages/prediabetes/PrediabetesSupportHub"));
 const PrediabetesSignsPage      = lazy(() => import("./pages/prediabetes/PrediabetesSignsPage"));
-const ReversePrediabetesPage    = lazy(() => import("./pages/reversal-plan/ReversePrediabetesPage"));
+const PrediabetesPlanPage       = lazy(() => import("./pages/reversal-plan/PrediabetesPlanPage"));
 const PrediabetesDietPage       = lazy(() => import("./pages/reversal-plan/PrediabetesDietPage"));
 const PrediabetesExercisePage   = lazy(() => import("./pages/reversal-plan/PrediabetesExercisePage"));
 const PrediabetesMonitoringPage = lazy(() => import("./pages/reversal-plan/PrediabetesMonitoringPage"));
@@ -128,7 +128,7 @@ function App() {
               {/* ── Blog: Prediabetes Support ──────────────────────────────── */}
               <Route path="/blog/prediabetes-vs-type2-diabetes" element={<PrediabetesVsType2Diabetes />} />
               <Route path="/blog/insulin-sensitivity-faq-2026" element={<InsulinSensitivityFAQ2026 />} />
-              <Route path="/blog/reverse-prediabetes-2026"     element={<ReversePrediabetes2026 />} />
+              <Route path="/blog/prediabetes-plan-2026"     element={<ReversePrediabetes2026 />} />
 
               {/* ── Blog: Diet & Blood Sugar Control ───────────────────────── */}
               <Route path="/blog/intermittent-fasting-blood-sugar" element={<IntermittentFastingBloodSugar />} />
@@ -202,7 +202,8 @@ function App() {
               {/* ── Prediabetes Pillars ───────────────────────────────────── */}
               <Route path="/prediabetes-support"   element={<PrediabetesSupportHub />} />
               <Route path="/prediabetes-signs"     element={<PrediabetesSignsPage />} />
-              <Route path="/reverse-prediabetes"   element={<ReversePrediabetesPage />} />
+              <Route path="/prediabetes-plan"      element={<PrediabetesPlanPage />} />
+              <Route path="/prediabetes-plan"   element={<Navigate to="/prediabetes-plan" replace />} />
               <Route path="/prediabetes-diet"      element={<PrediabetesDietPage />} />
               <Route path="/prediabetes-exercise"  element={<PrediabetesExercisePage />} />
               <Route path="/prediabetes-sleep-stress" element={<PrediabetesSleepStressPage />} />
