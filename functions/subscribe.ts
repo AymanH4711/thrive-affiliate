@@ -22,6 +22,7 @@ interface Env {
 interface SubscribeRequestBody {
   email?: string;
   source?: string;
+  name?: string;
 }
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
@@ -37,7 +38,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     );
   }
 
-  const { email, source = 'lead-magnet' } = body;
+  const { email, source = 'lead-magnet', name } = body;
+  const firstName = typeof name === 'string' ? name.trim().slice(0, 100) : '';
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return new Response(
@@ -69,6 +71,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         attributes: {
           SOURCE: source,
           CAPTURED_DATE: new Date().toISOString(),
+          ...(firstName ? { FIRSTNAME: firstName } : {}),
         },
         listIds: [listId],
         updateEnabled: true, // don't error if the contact already exists — just update it

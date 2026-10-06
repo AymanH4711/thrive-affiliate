@@ -246,7 +246,7 @@ export default function ContactPage() {
                 {/* GDPR / Privacy consent notice — required for UK/EU/AU/CA readers */}
                 <p className="text-xs text-gray-500 leading-relaxed border border-gray-100 bg-gray-50 rounded-xl px-4 py-3">
                   By submitting this form, you agree that your name, email address, and message will be processed by ThriveHealth360 and our email delivery provider (<strong>EmailJS</strong>) solely for the purpose of responding to your enquiry. We do not sell or share your data with third parties for marketing. Data is retained only as long as necessary to resolve your enquiry. For full details, see our{' '}
-                  <Link to="/privacy-policy" className="underline text-emerald-700 font-semibold hover:text-emerald-600">Privacy Policy</Link>.
+                  <Link to="/privacy" className="underline text-emerald-700 font-semibold hover:text-emerald-600">Privacy Policy</Link>.
                   {' '}UK/EU residents have the right to access, correct, or request deletion of their data under GDPR.
                 </p>
 
@@ -266,7 +266,7 @@ export default function ContactPage() {
                   Messages delivered via EmailJS (third-party processor)
                 </div>
                 <p className="text-gray-400">We do not sell or share your personal information.{' '}
-                  <Link to="/privacy-policy" className="underline hover:text-gray-600">Privacy Policy</Link>
+                  <Link to="/privacy" className="underline hover:text-gray-600">Privacy Policy</Link>
                 </p>
               </div>
             </div>
