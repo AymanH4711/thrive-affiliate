@@ -7,7 +7,8 @@
 
 export async function subscribeToNewsletter(
   email: string,
-  source: string = 'lead-magnet'
+  source: string = 'lead-magnet',
+  name?: string // <-- 1. Added 'name' parameter here
 ): Promise<{ success: boolean; message: string }> {
   try {
     const response = await fetch('/subscribe', {
@@ -15,7 +16,7 @@ export async function subscribeToNewsletter(
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, source }),
+      body: JSON.stringify({ email, source, name }), // <-- 2. Added 'name' to the body here
     });
 
     const data = await response.json().catch(() => ({}));
