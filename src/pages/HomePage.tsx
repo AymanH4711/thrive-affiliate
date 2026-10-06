@@ -37,7 +37,7 @@ const LeadMagnet: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           service_id: import.meta.env.VITE_EMAILJS_SERVICE_ID,
-          template_id: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+          template_id: import.meta.env.VITE_EMAILJS_TEMPLATE_ID_LEADMAGNET,
           user_id: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
           template_params: templateParams,
         }),
