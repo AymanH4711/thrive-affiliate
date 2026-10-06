@@ -315,7 +315,7 @@ export default function HomePage() {
                 { title: 'Glucose Monitoring',            desc: 'How to track your blood sugar at home, understand your readings (mg/dL & mmol/L), and use the data.',                                    href: '/glucose-monitoring-tools', affiliate: false },
                 { title: 'Natural Blood Sugar Support',   desc: 'Evidence-based supplements and lifestyle approaches reviewed for safety and effectiveness.',                                              href: '/natural-blood-sugar', affiliate: true },
                 { title: 'Sleep & Stress Management',     desc: 'How sleep quality and cortisol directly affect your glucose — and practical steps to improve both.',                                     href: '/prediabetes-sleep-stress', affiliate: false },
-                { title: '5-Step Prediabetes Plan',      desc: 'A structured 5-step plan covering diet, movement, tracking, supplements, and sleep, grounded in research on lowering type 2 diabetes risk.',         href: '/prediabetes-plan', affiliate: true },
+                { title: '5-Step Prediabetes Plan',      desc: 'A structured 5-step plan covering diet, movement, tracking, supplements, and sleep, grounded in research on lowering type 2 diabetes risk.',         href: '/prediabetes-plan', affiliate: false },
               ].map((card, i) => (
                 <div key={i} className="bg-white border border-emerald-100 rounded-2xl overflow-hidden hover:shadow-md transition">
                   <a href={card.href} className="block p-6 hover:border-emerald-400 group">

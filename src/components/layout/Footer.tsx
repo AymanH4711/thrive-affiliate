@@ -40,7 +40,11 @@ export default function Footer() {
               Prediabetes Guides
             </h3>
             <ul className="space-y-3 text-sm text-gray-600 font-sans">
-              <li><Link to="/reverse-prediabetes"    className="hover:text-emerald-600 transition">Reverse Prediabetes</Link></li>
+              <li>
+                <Link to="/prediabetes-plan" className="hover:text-emerald-600 transition">
+                  Prediabetes Plan
+                </Link>
+              </li>
               <li><Link to="/prediabetes-diet"       className="hover:text-emerald-600 transition">Diet & Nutrition Plan</Link></li>
               <li><Link to="/prediabetes-exercise"   className="hover:text-emerald-600 transition">Exercise Guide</Link></li>
               <li><Link to="/prediabetes-sleep-stress" className="hover:text-emerald-600 transition">Sleep & Stress</Link></li>

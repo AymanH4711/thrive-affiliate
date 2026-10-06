@@ -658,7 +658,7 @@ const BerberineVsMetformin: React.FC = () => {
               Follow our complete 5-step protocol for maximum results.
             </p>
             <Link 
-              to="/reverse-prediabetes"
+              to="/prediabetes-plan"
               className="inline-flex items-center justify-center gap-2 bg-white text-emerald-600 font-bold px-8 py-4 rounded-xl hover:bg-emerald-50 transition"
             >
               View 5-Step Reversal Plan

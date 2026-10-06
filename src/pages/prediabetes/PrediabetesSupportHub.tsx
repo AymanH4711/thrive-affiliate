@@ -126,7 +126,7 @@ export default function PrediabetesSupportHub() {
                 <div className="flex flex-wrap gap-4">
                   <Link to="/prediabetes-plan"
                     className="bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-3 px-8 rounded-xl transition shadow-xl flex items-center gap-2">
-                    Start the 5-Step Reversal Plan <ArrowRight className="w-4 h-4" />
+                    Start the 5-Step Prediabetes Plan <ArrowRight className="w-4 h-4" />
                   </Link>
                   <Link to="/prediabetes-signs"
                     className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold py-3 px-8 rounded-xl transition">
@@ -307,7 +307,7 @@ export default function PrediabetesSupportHub() {
               <p className="text-gray-600 max-w-xl mx-auto">
                 Each pillar is a separate, detailed guide. Together they form our{' '}
                 <Link to="/prediabetes-plan" className="text-emerald-700 font-semibold underline">
-                  complete 5-step reversal plan
+                  complete 5-step prediabetes plan
                 </Link>.
               </p>
             </div>
@@ -417,7 +417,7 @@ export default function PrediabetesSupportHub() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/prediabetes-plan"
                 className="bg-emerald-500 hover:bg-emerald-400 text-white font-bold px-8 py-4 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
-                Start the 5-Step Plan <ArrowRight className="w-5 h-5" />
+                Start the Prediabetes Plan <ArrowRight className="w-5 h-5" />
               </Link>
               <Link to="/prediabetes-signs"
                 className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold px-8 py-4 rounded-xl transition flex items-center justify-center gap-2">

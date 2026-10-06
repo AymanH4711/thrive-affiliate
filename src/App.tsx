@@ -203,7 +203,8 @@ function App() {
               <Route path="/prediabetes-support"   element={<PrediabetesSupportHub />} />
               <Route path="/prediabetes-signs"     element={<PrediabetesSignsPage />} />
               <Route path="/prediabetes-plan"      element={<PrediabetesPlanPage />} />
-              <Route path="/prediabetes-plan"   element={<Navigate to="/prediabetes-plan" replace />} />
+              {/* ── Backwards-compat redirect for old URL ── */}
+              <Route path="/reverse-prediabetes" element={<Navigate to="/prediabetes-plan" replace />} />
               <Route path="/prediabetes-diet"      element={<PrediabetesDietPage />} />
               <Route path="/prediabetes-exercise"  element={<PrediabetesExercisePage />} />
               <Route path="/prediabetes-sleep-stress" element={<PrediabetesSleepStressPage />} />
