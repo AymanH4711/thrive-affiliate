@@ -37,7 +37,7 @@ const LeadMagnet: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           service_id: import.meta.env.VITE_EMAILJS_SERVICE_ID,
-          template_id: import.meta.env.VITE_EMAILJS_TEMPLATE_ID_LEADMAGNET,
+          template_id: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
           user_id: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
           template_params: templateParams,
         }),
@@ -126,10 +126,6 @@ const LeadMagnet: React.FC = () => {
                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                 <Download className="w-5 h-5" /> {isSending ? 'Sending...' : 'Send My Free Guide'}
               </button>
-              <p className="text-xs text-gray-500 text-center leading-relaxed">
-                We'll email you the guide plus occasional health tips. Unsubscribe anytime.{' '}
-                <Link to="/privacy" className="underline hover:text-gray-700">Privacy Policy</Link>
-              </p>
               <div className="flex items-center justify-center gap-2 text-[10px] text-gray-400 uppercase tracking-widest font-medium">
                 <Lock className="w-3 h-3" /> Secure & Spam-Free
               </div>
@@ -319,7 +315,7 @@ export default function HomePage() {
                 { title: 'Glucose Monitoring',            desc: 'How to track your blood sugar at home, understand your readings (mg/dL & mmol/L), and use the data.',                                    href: '/glucose-monitoring-tools', affiliate: false },
                 { title: 'Natural Blood Sugar Support',   desc: 'Evidence-based supplements and lifestyle approaches reviewed for safety and effectiveness.',                                              href: '/natural-blood-sugar', affiliate: true },
                 { title: 'Sleep & Stress Management',     desc: 'How sleep quality and cortisol directly affect your glucose — and practical steps to improve both.',                                     href: '/prediabetes-sleep-stress', affiliate: false },
-                { title: '5-Step Prediabetes Plan',      desc: 'A structured 5-step plan covering diet, movement, tracking, supplements, and sleep, grounded in research on lowering type 2 diabetes risk.',         href: '/prediabetes-plan', affiliate: false },
+                { title: '5-Step Prediabetes Plan',      desc: 'A structured 5-step plan covering diet, movement, tracking, supplements, and sleep, grounded in research on lowering type 2 diabetes risk.',         href: '/prediabetes-plan', affiliate: true },
               ].map((card, i) => (
                 <div key={i} className="bg-white border border-emerald-100 rounded-2xl overflow-hidden hover:shadow-md transition">
                   <a href={card.href} className="block p-6 hover:border-emerald-400 group">

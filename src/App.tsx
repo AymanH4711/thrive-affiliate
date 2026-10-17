@@ -128,7 +128,7 @@ function App() {
               {/* ── Blog: Prediabetes Support ──────────────────────────────── */}
               <Route path="/blog/prediabetes-vs-type2-diabetes" element={<PrediabetesVsType2Diabetes />} />
               <Route path="/blog/insulin-sensitivity-faq-2026" element={<InsulinSensitivityFAQ2026 />} />
-              <Route path="/blog/prediabetes-plan-2026"     element={<ReversePrediabetes2026 />} />
+              <Route path="/blog/reverse-prediabetes-2026"     element={<ReversePrediabetes2026 />} />
 
               {/* ── Blog: Diet & Blood Sugar Control ───────────────────────── */}
               <Route path="/blog/intermittent-fasting-blood-sugar" element={<IntermittentFastingBloodSugar />} />
@@ -203,8 +203,7 @@ function App() {
               <Route path="/prediabetes-support"   element={<PrediabetesSupportHub />} />
               <Route path="/prediabetes-signs"     element={<PrediabetesSignsPage />} />
               <Route path="/prediabetes-plan"      element={<PrediabetesPlanPage />} />
-              {/* ── Backwards-compat redirect for old URL ── */}
-              <Route path="/reverse-prediabetes" element={<Navigate to="/prediabetes-plan" replace />} />
+              <Route path="/reverse-prediabetes"   element={<Navigate to="/prediabetes-plan" replace />} />
               <Route path="/prediabetes-diet"      element={<PrediabetesDietPage />} />
               <Route path="/prediabetes-exercise"  element={<PrediabetesExercisePage />} />
               <Route path="/prediabetes-sleep-stress" element={<PrediabetesSleepStressPage />} />

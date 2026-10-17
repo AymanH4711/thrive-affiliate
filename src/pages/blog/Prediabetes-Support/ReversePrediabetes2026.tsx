@@ -4,14 +4,14 @@
 // Target: American seniors 40–75+ with prediabetes
 
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { submitLeadMagnet, triggerDownload } from '@/api/leadMagnet';
+import { Link } from 'react-router-dom'; // Ensure this is imported for the privacy link
 import {
   ArrowLeft,
   AlertCircle,
   Zap,
   Mail,
   Download,
-  ArrowRight,
   Heart,
   CheckCircle,
   TrendingUp,
@@ -24,7 +24,6 @@ import {
 import { SEO } from "@/components/seo/SEO";
 import type { BlogArticleMeta } from "@/data/types";
 import { useSiloLinks } from '@/utils/siloLinker';
-import emailjs from '@emailjs/browser';
 
 // ─── Hero image (800×480px, 5:3, 72 DPI, webp) ──────────────────────────────
 const heroImage = '/images/blog/reverse-prediabetes-2026-hero.webp';
@@ -103,11 +102,6 @@ const ReversePrediabetes2026: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // ── EmailJS Init ───────────────────────────────────────────────────────────
-  useEffect(() => {
-    emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
-  }, []);
-
   // ── Silo Linking ───────────────────────────────────────────────────────────
   const siloLinks = useSiloLinks('reverse-prediabetes-2026');
 
@@ -156,33 +150,34 @@ const ReversePrediabetes2026: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     setMessage(null);
-    const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
+
+    const form = e.currentTarget;
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
+    const name = (form.elements.namedItem('name') as HTMLInputElement).value.trim();
+
     try {
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        { to_email: email, message: 'Your 7-Day Blood Sugar Reset Guide is ready!', from_name: 'ThriveHealth' }
-      );
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('event', 'lead_magnet_download', {
-          source: 'reverse-prediabetes-2026', email_domain: email.split('@')[1],
+      const { subscribed, emailed } = await submitLeadMagnet({
+        email,
+        name,
+        resourceName: '7-Day Blood Sugar Reset Guide',
+        source: 'blog-reverse-prediabetes-2026',
+      });
+
+      if (subscribed || emailed) {
+        triggerDownload('7-Day-Blood-Sugar-Reset.pdf');
+        setMessage({
+          type: 'success',
+          text: emailed
+            ? 'Check your email, and your guide is downloading now.'
+            : 'Your guide is downloading now.',
         });
+        form.reset();
+      } else {
+        setMessage({ type: 'error', text: 'Something went wrong. Please try again in a moment.' });
       }
-      try {
-        const leads = JSON.parse(localStorage.getItem('lead_magnet_captures') || '[]');
-        leads.push({ email: email.split('@')[0] + '@***', article: 'reverse-prediabetes-2026', timestamp: new Date().toISOString() });
-        localStorage.setItem('lead_magnet_captures', JSON.stringify(leads));
-      } catch (_) {}
-      const link = document.createElement('a');
-      link.href = '/downloads/7-Day-Blood-Sugar-Reset.pdf';
-      link.download = '7-Day-Blood-Sugar-Reset.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setMessage({ type: 'success', text: 'Check your email for the guide!' });
-      e.currentTarget.reset();
-    } catch {
-      setMessage({ type: 'error', text: 'Please try again.' });
+    } catch (error) {
+      console.error('Lead magnet submission failed:', error);
+      setMessage({ type: 'error', text: 'Something went wrong. Please try again in a moment.' });
     } finally {
       setIsLoading(false);
     }
@@ -811,14 +806,22 @@ const ReversePrediabetes2026: React.FC = () => {
             <p className="text-lg text-purple-100 mb-6">
               Day-by-day meal plan, supplement timing schedule, and fasting glucose tracking sheets — written for adults 40+ with prediabetes.
             </p>
-            <form className="max-w-md mx-auto flex flex-col sm:flex-row gap-4" onSubmit={handleLeadMagnet}>
+            <form className="max-w-md mx-auto flex flex-col gap-3" onSubmit={handleLeadMagnet}>
+              <input
+                type="text"
+                name="name"
+                placeholder="First name"
+                required
+                disabled={isLoading}
+                className="px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300"
+              />
               <input
                 type="email"
                 name="email"
                 placeholder="Your email address"
-                className="flex-1 px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300"
-                disabled={isLoading}
                 required
+                disabled={isLoading}
+                className="px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300"
               />
               <button
                 type="submit"
@@ -833,7 +836,10 @@ const ReversePrediabetes2026: React.FC = () => {
                 {message.type === 'success' ? '✓' : '✗'} {message.text}
               </p>
             )}
-            <p className="text-xs text-purple-300 mt-4">We respect your privacy. Unsubscribe anytime.</p>
+            <p className="text-xs text-purple-100 mt-4">
+              We'll email you the guide plus occasional health tips. Unsubscribe anytime.{' '}
+              <Link to="/privacy" className="underline">Privacy Policy</Link>
+            </p>
           </section>
 
           {/* ── FAQ ── */}

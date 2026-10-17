@@ -17,10 +17,17 @@
 // IntermittentFastingBloodSugar.tsx. Fixed three misattributed table sources
 // (Ebbeling/Cucuzzella/Aranha were being cited for content they don't cover).
 // Softened stat figures that were at the very low end of reported ranges.
+//
+// 2026-08 update #2 (lead-magnet fix): Replaced the broken inline EmailJS handler
+// (which sent `to_email`/`message`/`from_name` instead of `user_email`/`name`/
+// `downloaded_resources`, never called subscribeToNewsletter, called
+// e.currentTarget.reset() after an await, and had no name field) with the shared
+// submitLeadMagnet/triggerDownload helper. Removed dead gtag/localStorage/emailjs
+// code. See chat for details.
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom"; // Ensure this is imported for the privacy link
 import { ArrowRight, CheckCircle, Mail, Download, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
 import { ArticleLayout } from "@/components/layout/ArticleLayout";
 import type { BlogArticleMeta } from "@/data/types";
 import type { Citation } from "@/components/clinical/CitationList";
@@ -29,7 +36,7 @@ import { RiskCallout } from "@/components/clinical/RiskCallout";
 import { MedicalDisclaimer } from "@/components/clinical/MedicalDisclaimer";
 import { FAQSection } from "@/components/FAQSection";
 import { useSiloLinks } from "@/utils/siloLinker";
-import emailjs from "@emailjs/browser";
+import { submitLeadMagnet, triggerDownload } from "@/api/leadMagnet";
 
 interface SectionImage {
   path: string;
@@ -409,7 +416,6 @@ function ScientificReferences({ citations }: { citations: ReferenceItem[] }) {
 /* Main article component                                               */
 /* ------------------------------------------------------------------ */
 const LowCarbDietForDiabetesBloodSugarControlEvidenceBasArticle: React.FC = () => {
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(
     null
@@ -417,52 +423,47 @@ const LowCarbDietForDiabetesBloodSugarControlEvidenceBasArticle: React.FC = () =
 
   const siloLinks = useSiloLinks("low-carb-diet-for-diabetes-blood-sugar-control-evidence-base");
 
-  useEffect(() => {
-    if (import.meta.env.VITE_EMAILJS_PUBLIC_KEY) {
-      emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
-    }
-  }, []);
-
   const handleLeadMagnet = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setMessage(null);
-    const email = (e.currentTarget.elements.namedItem("email") as HTMLInputElement).value;
+
+    // Capture the form element BEFORE any await. React clears currentTarget
+    // once the handler returns, so reading e.currentTarget.reset() after the
+    // await throws and would overwrite the success message with an error.
+    const form = e.currentTarget;
+    const email = (form.elements.namedItem("email") as HTMLInputElement).value.trim();
+    const name = (form.elements.namedItem("name") as HTMLInputElement).value.trim();
+
     try {
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        {
-          to_email: email,
-          message: "Your 7-Day Blood Sugar Reset Guide is ready!",
-          from_name: "ThriveHealth360",
-        }
-      );
-      if (typeof window !== "undefined" && (window as any).gtag) {
-        (window as any).gtag("event", "lead_magnet_download", {
-          source: "low-carb-diet-diabetes",
-          email_domain: email.split("@")[1],
+      const { subscribed, emailed } = await submitLeadMagnet({
+        email,
+        name,
+        resourceName: "7-Day Blood Sugar Reset Guide",
+        source: "blog-low-carb-diet-diabetes",
+      });
+
+      if (subscribed || emailed) {
+        triggerDownload("7-Day-Blood-Sugar-Reset.pdf");
+        setMessage({
+          type: "success",
+          text: emailed
+            ? "Check your email, and your guide is downloading now."
+            : "Your guide is downloading now.",
+        });
+        form.reset();
+      } else {
+        setMessage({
+          type: "error",
+          text: "Something went wrong. Please try again in a moment.",
         });
       }
-      try {
-        const leads = JSON.parse(localStorage.getItem("lead_magnet_captures") || "[]");
-        leads.push({
-          email: email.split("@")[0] + "@***",
-          article: "low-carb-diet-for-diabetes-blood-sugar-control",
-          timestamp: new Date().toISOString(),
-        });
-        localStorage.setItem("lead_magnet_captures", JSON.stringify(leads));
-      } catch (_) {}
-      const link = document.createElement("a");
-      link.href = "/downloads/7-Day-Blood-Sugar-Reset.pdf";
-      link.download = "7-Day-Blood-Sugar-Reset.pdf";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setMessage({ type: "success", text: "Check your email for the guide!" });
-      e.currentTarget.reset();
-    } catch {
-      setMessage({ type: "error", text: "Please try again." });
+    } catch (error) {
+      console.error("Lead magnet submission failed:", error);
+      setMessage({
+        type: "error",
+        text: "Something went wrong. Please try again in a moment.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -788,21 +789,29 @@ const LowCarbDietForDiabetesBloodSugarControlEvidenceBasArticle: React.FC = () =
                   guide, and a glucose-tracking sheet — written for adults 40+.
                 </p>
                 <form
-                  className="max-w-md mx-auto flex flex-col sm:flex-row gap-4"
+                  className="max-w-md mx-auto flex flex-col gap-3"
                   onSubmit={handleLeadMagnet}
                 >
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="First name"
+                    required
+                    disabled={isLoading}
+                    className="px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300 border border-gray-200"
+                  />
                   <input
                     type="email"
                     name="email"
                     placeholder="Your email address"
-                    className="flex-1 px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300"
-                    disabled={isLoading}
                     required
+                    disabled={isLoading}
+                    className="px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300 border border-gray-200"
                   />
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="bg-white text-purple-700 font-bold px-6 py-3 rounded-lg hover:bg-purple-50 transition flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="w-full bg-white text-purple-700 font-bold px-6 py-3 rounded-lg hover:bg-purple-50 transition flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     <Download className="w-5 h-5" />
                     {isLoading ? "Loading..." : "Get the Guide"}
@@ -817,8 +826,11 @@ const LowCarbDietForDiabetesBloodSugarControlEvidenceBasArticle: React.FC = () =
                     {message.type === "success" ? "✓" : "✗"} {message.text}
                   </p>
                 )}
-                <p className="text-xs text-purple-300 mt-4">
-                  We respect your privacy. Unsubscribe anytime.
+                <p className="text-xs text-purple-100 mt-4">
+                  We'll email you the guide plus occasional health tips. Unsubscribe anytime.{" "}
+                  <Link to="/privacy" className="underline">
+                    Privacy Policy
+                  </Link>
                 </p>
               </div>
             </section>

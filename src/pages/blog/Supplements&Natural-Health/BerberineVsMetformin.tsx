@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { submitLeadMagnet, triggerDownload } from '@/api/leadMagnet';
 import { Link } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -17,8 +18,7 @@ import { SEO } from "@/components/seo/SEO";
 import type { BlogArticleMeta } from "@/data/types";
 import { useSiloLinks } from '@/utils/siloLinker';
 import { FAQSection } from '@/components/FAQSection';
-import { berberineFAQs } from '@/data/faqs'; // Create this file with all FAQs
-import emailjs from '@emailjs/browser';
+import { berberineFAQs } from '@/data/faqs';
 
 const berberineImage = '/images/blog/berberine-vs-metformin-comparison.webp';
 
@@ -35,13 +35,7 @@ const BerberineVsMetformin: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // ==================== EMAILJS INIT ====================
-  useEffect(() => {
-    emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
-  }, []);
-
   // ==================== SILO LINKING ====================
-  // Get contextually relevant articles based on topical authority
   const siloLinks = useSiloLinks('berberine-vs-metformin');
   
   const schemaMarkup = {
@@ -91,56 +85,39 @@ const BerberineVsMetformin: React.FC = () => {
     };
   }, []);
 
-  // ==================== LEAD MAGNET HANDLER (EMAILJS) ====================
+  // ==================== LEAD MAGNET HANDLER ====================
   const handleLeadMagnet = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setMessage(null);
 
-    const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
+    const form = e.currentTarget; // Captured before await
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
+    const name = (form.elements.namedItem('name') as HTMLInputElement).value.trim();
 
     try {
-      // Send email via EmailJS
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        {
-          to_email: email,
-          message: 'Your 7-Day Blood Sugar Reset Guide is ready! Download it using the link below.',
-          from_name: 'ThriveHealth'
-        }
-      );
-
-      // Track event in Google Analytics (optional)
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('event', 'lead_magnet_download', {
-          source: 'berberine-article',
-          email_domain: email.split('@')[1] // Track domain, not full email
-        });
-      }
-
-      // Save to localStorage (optional, for your own tracking)
-      const leads = JSON.parse(localStorage.getItem('lead_magnet_captures') || '[]');
-      leads.push({
-        email: email.split('@')[0] + '@***', // Masked email
-        article: 'berberine-vs-metformin',
-        timestamp: new Date().toISOString()
+      const { subscribed, emailed } = await submitLeadMagnet({
+        email,
+        name,
+        resourceName: '7-Day Blood Sugar Reset Guide',
+        source: 'blog-berberine-vs-metformin',
       });
-      localStorage.setItem('lead_magnet_captures', JSON.stringify(leads));
 
-      // Download PDF
-      const link = document.createElement('a');
-      link.href = '/7-day-reset-guide.pdf';
-      link.download = '7-day-reset-guide.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      setMessage({ type: 'success', text: 'Check your email for the guide!' });
-      e.currentTarget.reset();
+      if (subscribed || emailed) {
+        triggerDownload('7-Day-Blood-Sugar-Reset.pdf');
+        setMessage({
+          type: 'success',
+          text: emailed
+            ? 'Check your email, and your guide is downloading now.'
+            : 'Your guide is downloading now.',
+        });
+        form.reset();
+      } else {
+        setMessage({ type: 'error', text: 'Something went wrong. Please try again in a moment.' });
+      }
     } catch (error) {
-      console.error('EmailJS error:', error);
-      setMessage({ type: 'error', text: 'Please try again.' });
+      console.error('Lead magnet submission failed:', error);
+      setMessage({ type: 'error', text: 'Something went wrong. Please try again in a moment.' });
     } finally {
       setIsLoading(false);
     }
@@ -374,14 +351,7 @@ const BerberineVsMetformin: React.FC = () => {
             </div>
           </section>
 
-          {/* ── CTA #1 — MID-ARTICLE (50% Mark) — Corrected (2026-08) ────────
-              Original copy invented a product name ("GlucoBliss") and a
-              3-ingredient formula that didn't match what's actually sold at
-              this link. Confirmed real listing: "Diabetes Offer: Berberine
-              Supplement" (Digistore24 category: Supplements - health) — a
-              plain berberine product, no confirmed multi-ingredient blend.
-              Copy below only states what's confirmed; no invented
-              certifications, brand name, or dose data. */}
+          {/* CTA #1 — Mid-Article */}
           <section className="mb-12">
             <div className="bg-gradient-to-br from-emerald-700 to-teal-600 text-white rounded-2xl p-8 text-center shadow-lg">
               <Zap className="w-12 h-12 text-emerald-200 mx-auto mb-4" />
@@ -516,23 +486,31 @@ const BerberineVsMetformin: React.FC = () => {
             </ul>
           </section>
 
-          {/* Lead Magnet */}
+          {/* Lead Magnet Section */}
           <section className="mb-16 bg-gradient-to-br from-purple-600 to-indigo-600 text-white rounded-xl p-10 text-center">
             <Mail className="w-12 h-12 text-purple-200 mx-auto mb-4" />
             <h2 className="text-3xl font-bold mb-4">Free 7‑Day Blood Sugar Reset Guide</h2>
             <p className="text-lg text-purple-100 mb-6">
               Get our proven plan to lower fasting glucose in one week – includes meal plans, supplement timing, and tracking sheets.
             </p>
-            <form className="max-w-md mx-auto flex flex-col sm:flex-row gap-4" onSubmit={handleLeadMagnet}>
-              <input 
-                type="email" 
-                name="email"
-                placeholder="Your email address" 
-                className="flex-1 px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300"
-                disabled={isLoading}
+            <form className="max-w-md mx-auto flex flex-col gap-3" onSubmit={handleLeadMagnet}>
+              <input
+                type="text"
+                name="name"
+                placeholder="First name"
                 required
+                disabled={isLoading}
+                className="px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300"
               />
-              <button 
+              <input
+                type="email"
+                name="email"
+                placeholder="Your email address"
+                required
+                disabled={isLoading}
+                className="px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300"
+              />
+              <button
                 type="submit"
                 disabled={isLoading}
                 className="bg-white text-purple-700 font-bold px-6 py-3 rounded-lg hover:bg-purple-50 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -545,8 +523,9 @@ const BerberineVsMetformin: React.FC = () => {
                 {message.type === 'success' ? '✓' : '✗'} {message.text}
               </p>
             )}
-            <p className="text-xs text-purple-200 mt-4">
-              We respect your privacy. Unsubscribe at any time.
+            <p className="text-xs text-purple-100 mt-4">
+              We'll email you the guide plus occasional health tips. Unsubscribe anytime.{' '}
+              <Link to="/privacy" className="underline">Privacy Policy</Link>
             </p>
           </section>
 
@@ -586,7 +565,7 @@ const BerberineVsMetformin: React.FC = () => {
             </div>
           </section>
 
-          {/* ── CTA #2 — END OF ARTICLE (100%) — Best Supplements Cross-Link ── */}
+          {/* CTA #2 — End of Article */}
           <section className="mb-16">
             <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-8">
               <div className="flex items-start gap-4">
@@ -666,7 +645,7 @@ const BerberineVsMetformin: React.FC = () => {
             </Link>
           </section>
 
-          {/* ==================== DYNAMIC RELATED ARTICLES (SILO-LINKED) ==================== */}
+          {/* Related Reading (Silo-Linked) */}
           {siloLinks && siloLinks.length > 0 && (
             <section className="mb-16">
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-8">

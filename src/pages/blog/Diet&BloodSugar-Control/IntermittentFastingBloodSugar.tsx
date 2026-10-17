@@ -4,8 +4,9 @@
 // Target: American seniors 40–75+ with prediabetes — AEO optimized for AI Overviews
 // Primary keyword: intermittent fasting guide for diabetics / can IF lower blood sugar
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { submitLeadMagnet, triggerDownload } from '@/api/leadMagnet';
 import {
   ArrowLeft,
   AlertCircle,
@@ -22,7 +23,6 @@ import { SEO } from "@/components/seo/SEO";
 import type { BlogArticleMeta } from "@/data/types";
 import { useSiloLinks } from '@/utils/siloLinker';
 import { FAQSection } from '@/components/FAQSection';
-import emailjs from '@emailjs/browser';
 
 // ─── Hero image (800×480px, 5:3, 72 DPI, webp) ──────────────────────────────
 const heroImage = '/images/blog/intermittent-fasting-blood-sugar-hero.webp';
@@ -52,10 +52,6 @@ const IntermittentFastingBloodSugar: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-
-  useEffect(() => {
-    emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
-  }, []);
 
   const siloLinks = useSiloLinks('intermittent-fasting-blood-sugar');
 
@@ -129,33 +125,33 @@ const IntermittentFastingBloodSugar: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     setMessage(null);
-    const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
+    const form = e.currentTarget;
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
+    const name = (form.elements.namedItem('name') as HTMLInputElement).value.trim();
+
     try {
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        { to_email: email, message: 'Your 7-Day Blood Sugar Reset Guide is ready!', from_name: 'ThriveHealth360' }
-      );
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('event', 'lead_magnet_download', {
-          source: 'intermittent-fasting-blood-sugar', email_domain: email.split('@')[1],
+      const { subscribed, emailed } = await submitLeadMagnet({
+        email,
+        name,
+        resourceName: '7-Day Blood Sugar Reset Guide',
+        source: 'blog-intermittent-fasting',
+      });
+
+      if (subscribed || emailed) {
+        triggerDownload('7-Day-Blood-Sugar-Reset.pdf');
+        setMessage({
+          type: 'success',
+          text: emailed
+            ? 'Check your email, and your guide is downloading now.'
+            : 'Your guide is downloading now.',
         });
+        form.reset();
+      } else {
+        setMessage({ type: 'error', text: 'Something went wrong. Please try again in a moment.' });
       }
-      try {
-        const leads = JSON.parse(localStorage.getItem('lead_magnet_captures') || '[]');
-        leads.push({ email: email.split('@')[0] + '@***', article: 'intermittent-fasting-blood-sugar', timestamp: new Date().toISOString() });
-        localStorage.setItem('lead_magnet_captures', JSON.stringify(leads));
-      } catch (_) {}
-      const link = document.createElement('a');
-      link.href = '/downloads/7-Day-Blood-Sugar-Reset.pdf';
-      link.download = '7-Day-Blood-Sugar-Reset.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setMessage({ type: 'success', text: 'Check your email for the guide!' });
-      e.currentTarget.reset();
-    } catch {
-      setMessage({ type: 'error', text: 'Please try again.' });
+    } catch (error) {
+      console.error('Lead magnet submission failed:', error);
+      setMessage({ type: 'error', text: 'Something went wrong. Please try again in a moment.' });
     } finally {
       setIsLoading(false);
     }
@@ -572,29 +568,40 @@ const IntermittentFastingBloodSugar: React.FC = () => {
             <p className="text-lg text-purple-100 mb-6 max-w-xl mx-auto">
               Includes a day-by-day IF schedule, meal plan for your eating window, supplement timing guide, and fasting glucose tracking sheet — written for adults 40+.
             </p>
-            <form className="max-w-md mx-auto flex flex-col sm:flex-row gap-4" onSubmit={handleLeadMagnet}>
+            <form className="max-w-md mx-auto flex flex-col gap-3" onSubmit={handleLeadMagnet}>
+              <input
+                type="text"
+                name="name"
+                placeholder="First name"
+                required
+                disabled={isLoading}
+                className="px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300 border border-gray-200"
+              />
               <input
                 type="email"
                 name="email"
                 placeholder="Your email address"
-                className="flex-1 px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300"
-                disabled={isLoading}
                 required
+                disabled={isLoading}
+                className="px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300 border border-gray-200"
               />
               <button
                 type="submit"
                 disabled={isLoading}
-                className="bg-white text-purple-700 font-bold px-6 py-3 rounded-lg hover:bg-purple-50 transition flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full bg-white text-purple-700 font-bold py-3 rounded-lg hover:bg-purple-50 transition flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 <Download className="w-5 h-5" /> {isLoading ? 'Loading...' : 'Get the Guide'}
               </button>
             </form>
+            <p className="text-xs text-purple-100 mt-4 text-center">
+              We'll email you the guide plus occasional health tips. Unsubscribe anytime.{' '}
+              <Link to="/privacy" className="underline">Privacy Policy</Link>
+            </p>
             {message && (
               <p className={`mt-4 font-semibold ${message.type === 'success' ? 'text-emerald-200' : 'text-red-200'}`}>
                 {message.type === 'success' ? '✓' : '✗'} {message.text}
               </p>
             )}
-            <p className="text-xs text-purple-300 mt-4">We respect your privacy. Unsubscribe anytime.</p>
           </section>
 
           {/* ── SECTION 4: HOW TO START ── */}
