@@ -30,6 +30,20 @@ export default function Footer() {
               <a href="#" aria-label="Instagram" className="bg-white p-2.5 rounded-full shadow-sm text-gray-400 hover:text-emerald-600 transition border border-gray-100">
                 <Instagram className="w-5 h-5" />
               </a>
+              {/* ── Pinterest Link ────────────────────────────────────────── */}
+              <a
+                href="https://pinterest.com/YOUR_PINTEREST_USERNAME"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Pinterest"
+                className="bg-white p-2.5 rounded-full shadow-sm hover:opacity-80 transition border border-gray-100 flex items-center justify-center"
+              >
+                <img
+                  src="/images/brand/Pinterest.svg"
+                  alt="Pinterest"
+                  className="w-5 h-5 object-contain"
+                />
+              </a>
             </div>
           </div>
 
