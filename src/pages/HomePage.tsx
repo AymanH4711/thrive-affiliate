@@ -9,7 +9,7 @@ import {
 
 import { SEO } from '@/components/seo/SEO';
 
-import { subscribeToNewsletter } from '@/api/subscribe';
+import { submitLeadMagnet, triggerDownload } from '@/api/leadMagnet';
 
 // ── Lead Magnet ───────────────────────────────────────────────────────────────
 const LeadMagnet: React.FC = () => {
@@ -23,49 +23,24 @@ const LeadMagnet: React.FC = () => {
     setIsSending(true);
 
     try {
-      // Same EmailJS service/template already proven working for the 7-Day
-      // guide in DownloadModal.tsx — reused here so both lead magnets send
-      // through the same verified, working configuration.
-      const templateParams = {
-        user_email: email,
-        name: name,
-        downloaded_resources: 'The Complete 12-Week Metabolic Reset Protocol',
-      };
+      // Deliver the free guide immediately; lead capture and email are best-effort.
+      triggerDownload('MetabolicReset_FullBook.pdf');
 
-      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          service_id: import.meta.env.VITE_EMAILJS_SERVICE_ID,
-          template_id: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-          user_id: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
-          template_params: templateParams,
-        }),
+      const { subscribed, emailed } = await submitLeadMagnet({
+        email,
+        name,
+        resourceName: 'The Complete 12-Week Metabolic Reset Protocol',
+        source: 'homepage-full-book',
       });
 
-      if (response.ok) {
-        setIsSubscribed(true);
+      setIsSubscribed(true);
 
-        const link = document.createElement('a');
-        link.href = '/downloads/MetabolicReset_FullBook.pdf';
-        link.download = 'MetabolicReset_FullBook.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        // Fire-and-forget — download/email already succeeded above; a
-        // failed list-add here shouldn't block the user's download.
-        subscribeToNewsletter(email, '12-week-protocol', name).then((result) => {
-          if (!result.success) {
-            console.warn('Newsletter subscribe failed (download still succeeded):', result.message);
-          }
-        });
-      } else {
-        alert('There was an error sending your guide. Please try again.');
+      if (!subscribed && !emailed) {
+        console.warn('Full-book lead was not saved and the email was not sent.');
       }
     } catch (error) {
-      console.error('Error sending email:', error);
-      alert('There was an error. Please try again.');
+      console.error('Error submitting full-book lead:', error);
+      setIsSubscribed(true);
     } finally {
       setIsSending(false);
     }

@@ -1,15 +1,14 @@
-// src/pages/blog/symptoms-guides/5WarningSignsPrediabetes.tsx
-import { useState } from 'react';
+// src/pages/blog/Featured-Article/5WarningSignsPrediabetes.tsx
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowLeft,
   CheckCircle2,
   AlertCircle,
-  Zap,
   ShieldCheck,
-  Microscope,
   Plus,
   Minus,
+  Printer,
   Droplets,
   Battery,
   Eye,
@@ -99,15 +98,15 @@ const faqs = [
   },
   {
     question: "How long does it take to reverse prediabetes?",
-    answer: "Most people see measurable improvement within 3-6 months of consistent lifestyle changes. A1C reductions of 0.3-1.0% are common within the first 3 months."
+    answer: "Many people see measurable improvement within 3-6 months of consistent lifestyle changes. The size of the change varies from person to person."
   },
   {
     question: "Do I need medication for prediabetes?",
-    answer: "Not necessarily. Lifestyle modifications (diet, exercise, sleep, stress management) are often more effective than medication for prediabetes reversal. Consult your doctor for personalized advice."
+    answer: "Not necessarily. For many people, lifestyle changes (diet, exercise, sleep, stress management) are at least as effective as medication for prediabetes. Consult your doctor for personalized advice."
   },
   {
     question: "What tests do I need for prediabetes?",
-    answer: "Three key tests: Fasting Glucose (100-125 mg/dL = prediabetes), A1C (5.7%-6.4% = prediabetes), and Fasting Insulin (>12 mIU/L = insulin resistance). Ask your doctor for all three."
+    answer: "The two standard screening tests are Fasting Glucose (100-125 mg/dL = prediabetes) and A1C (5.7%-6.4% = prediabetes). Fasting insulin is sometimes used as an insulin-resistance marker, but it is not used to diagnose prediabetes and reference ranges vary by lab."
   },
   {
     question: "Can I have prediabetes without symptoms?",
@@ -119,11 +118,11 @@ const faqs = [
   },
   {
     question: "Are supplements helpful for prediabetes?",
-    answer: "Certain science-backed supplements can support blood sugar control when combined with diet and exercise. See our supplement guide for evidence-based recommendations."
+    answer: "Some supplements have been studied for blood sugar support, but evidence varies and they can interact with medications. Talk to your healthcare provider before starting any supplement; diet, exercise, and sleep remain the foundation."
   },
   {
     question: "How often should I get tested?",
-    answer: "If you have prediabetes, test every 3-6 months to track progress. If you're at risk but haven't been diagnosed, annual testing is recommended, especially if over 45."
+    answer: "If you have prediabetes, test every 6-12 months, or more often if you're actively working on lifestyle changes and your doctor recommends closer monitoring. If you're at risk but haven't been diagnosed, annual testing is recommended, especially if over 45."
   }
 ];
 
@@ -136,98 +135,128 @@ const internalLinks = {
   silo: '/blog/prediabetes-vs-type2-diabetes'
 };
 
+// Canonical site URL. index.html and SEO.tsx both use the .org domain, so the
+// schema below does the same instead of pointing at a different host.
+const SITE_URL = 'https://thrivehealth360.org';
+const PUBLISHED_DATE = '2026-03-29';
+const LAST_UPDATED = '2026-10-20';
+
+type RiskLevel = {
+  level: 'Low' | 'Moderate' | 'High';
+  color: string;
+  bg: string;
+  border: string;
+};
+
+const getRiskLevel = (count: number): RiskLevel => {
+  if (count <= 1) {
+    return { level: 'Low', color: 'text-green-800', bg: 'bg-green-50', border: 'border-green-700' };
+  }
+  if (count <= 3) {
+    return { level: 'Moderate', color: 'text-yellow-800', bg: 'bg-yellow-50', border: 'border-yellow-700' };
+  }
+  return { level: 'High', color: 'text-red-800', bg: 'bg-red-50', border: 'border-red-700' };
+};
+
+// Static schema — kept out of the component so re-renders don't rewrite <head>.
+const schemaMarkup = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalWebPage',
+  name: '5 Warning Signs of Prediabetes (And What to Do About It)',
+  description: "Learn the 5 early warning signs of prediabetes you shouldn't ignore. Recognize fatigue, thirst, vision changes, slow healing & dark patches. Get tested today.",
+  datePublished: PUBLISHED_DATE,
+  dateModified: LAST_UPDATED,
+  author: {
+    '@type': 'Organization',
+    name: 'ThriveHealth360',
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/images/brand/logo.svg`
+    },
+    url: SITE_URL
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'ThriveHealth360',
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/images/brand/logo.svg`
+    }
+  },
+  mainEntity: {
+    '@type': 'MedicalCondition',
+    name: 'Prediabetes',
+    code: {
+      '@type': 'MedicalCode',
+      codeValue: 'R73.03',
+      codingSystem: 'ICD-10'
+    }
+  },
+  image: `${SITE_URL}${heroImage}`,
+  url: `${SITE_URL}/blog/5-warning-signs-of-prediabetes`
+};
+
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
 
 const FiveWarningSignsPrediabetes = () => {
-  // FAQ Accordion State
-  const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
-  
+  // FAQ Accordion State — keyed by question text so filtering can't desync it.
+  const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null);
+
   // Sign Checklist State
   const [checkedSigns, setCheckedSigns] = useState<boolean[]>([false, false, false, false, false]);
-  
+
   // Download Modal State
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
-  
+
   // Risk Assessment Animation State
-  const [previousRiskLevel, setPreviousRiskLevel] = useState<{ level: string; color: string; bg: string } | null>(null);
+  const [previousRiskLevel, setPreviousRiskLevel] = useState<RiskLevel | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
-  
+  const animationTimer = useRef<number | null>(null);
+
+  // Hero image fallback
+  const [heroSrc, setHeroSrc] = useState(heroImage);
+
   // FAQ Search State
   const [faqFilter, setFaqFilter] = useState('');
-  
+
+  // Clear the animation timer if the page unmounts mid-transition.
+  useEffect(() => {
+    return () => {
+      if (animationTimer.current !== null) {
+        window.clearTimeout(animationTimer.current);
+      }
+    };
+  }, []);
+
   // Filter FAQs based on search term
-  const filteredFAQs = faqs.filter(faq => 
+  const filteredFAQs = faqs.filter(faq =>
     faq.question.toLowerCase().includes(faqFilter.toLowerCase()) ||
     faq.answer.toLowerCase().includes(faqFilter.toLowerCase())
   );
-  
-  const toggleFAQ = (index: number) => {
-    setExpandedFAQ(expandedFAQ === index ? null : index);
+
+  const checkedCount = checkedSigns.filter(Boolean).length;
+  const riskLevel = getRiskLevel(checkedCount);
+
+  const toggleFAQ = (question: string) => {
+    setExpandedFAQ(prev => (prev === question ? null : question));
   };
 
   const toggleSign = (index: number) => {
-    // Store previous risk level before updating
-    const currentRisk = getRiskLevel();
-    setPreviousRiskLevel(currentRisk);
-    
-    const newChecked = [...checkedSigns];
-    newChecked[index] = !newChecked[index];
-    setCheckedSigns(newChecked);
-    
-    // Trigger animation
+    // Capture the level before this change so the UI can show the transition.
+    setPreviousRiskLevel(getRiskLevel(checkedCount));
+    setCheckedSigns(prev => prev.map((checked, i) => (i === index ? !checked : checked)));
     setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), 600); // Match transition duration
+
+    if (animationTimer.current !== null) {
+      window.clearTimeout(animationTimer.current);
+    }
+    animationTimer.current = window.setTimeout(() => setIsAnimating(false), 600);
   };
 
-  const getRiskLevel = () => {
-    const count = checkedSigns.filter(Boolean).length;
-    if (count <= 1) return { level: 'Low',      color: 'text-green-600',  bg: 'bg-green-50',  border: 'border-green-600'  };
-    if (count <= 3) return { level: 'Moderate', color: 'text-yellow-600', bg: 'bg-yellow-50', border: 'border-yellow-600' };
-    return              { level: 'High',     color: 'text-red-600',    bg: 'bg-red-50',    border: 'border-red-600'    };
-  };
-
-  const riskLevel = getRiskLevel();
-
-  // Schema Markup for SEO
-  const schemaMarkup = {
-    "@context": "https://schema.org",
-    "@type": "MedicalWebPage",
-    "name": "5 Warning Signs of Prediabetes (And What to Do About It)",
-    "description": "Learn the 5 early warning signs of prediabetes you shouldn't ignore. Recognize fatigue, thirst, vision changes, slow healing & dark patches. Get tested today.",
-    "datePublished": "2026-03-29",
-    "dateModified": "2026-03-29",
-    "author": {
-      "@type": "Organization",
-      "name": "ThriveHealth360",
-      "logo": "https://www.thrivehealth360.com/images/brand/logo.svg",
-      "url": "https://www.thrivehealth360.com"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "ThriveHealth360",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://www.thrivehealth360.com/images/brand/logo.svg"
-      }
-    },
-    "mainEntity": {
-      "@type": "MedicalCondition",
-      "name": "Prediabetes",
-      "code": {
-        "@type": "MedicalCode",
-        "codeValue": "R73.03",
-        "codingSystem": "ICD-10"
-      }
-    },
-    "image": heroImage,
-    "url": "/blog/5-warning-signs-of-prediabetes"
-  };
-
-  // Handle image error with fallback
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    e.currentTarget.src = '/images/prediabetes-support-hero.webp';
+  const handleImageError = () => {
+    setHeroSrc('/images/prediabetes-support-hero-thumb-og.webp');
   };
 
   return (
@@ -238,7 +267,6 @@ const FiveWarningSignsPrediabetes = () => {
         keywords="prediabetes warning signs, prediabetes symptoms, signs of prediabetes, early warning signs diabetes, prediabetes reversal"
         image={heroImage}
         url="/blog/5-warning-signs-of-prediabetes"
-        canonical="/prediabetes-signs"
         pillarId="prediabetes"
         schema={schemaMarkup}
       />
@@ -252,12 +280,14 @@ const FiveWarningSignsPrediabetes = () => {
                 <ArrowLeft className="w-4 h-4 mr-2" aria-hidden="true" /> Back to Blog
               </Link>
               
-              <button 
+              <button
+                type="button"
                 onClick={() => window.print()}
-                className="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg transition-colors duration-200 md:block hidden"
+                className="hidden md:inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg transition-colors duration-200"
                 title="Print this article"
               >
-                🖨️ Print Article
+                <Printer className="w-4 h-4 mr-2" aria-hidden="true" />
+                Print Article
               </button>
             </div>
           </div>
@@ -279,7 +309,7 @@ const FiveWarningSignsPrediabetes = () => {
               <span>•</span>
               <span>8 min read</span>
               <span>•</span>
-              <span>Last updated March 29, 2026</span>
+              <span>Last updated October 20, 2026</span>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-6">
@@ -316,7 +346,7 @@ const FiveWarningSignsPrediabetes = () => {
           {/* Hero Image */}
           <figure className="mb-12">
             <img
-              src={heroImage}
+              src={heroSrc}
               alt="5 warning signs of prediabetes infographic showing fatigue, thirst, vision changes, slow healing, and skin patches"
               className="w-full rounded-xl shadow-lg"
               width={1200}
@@ -332,16 +362,18 @@ const FiveWarningSignsPrediabetes = () => {
           {/* Opening Hook */}
           <section className="mb-12">
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              If you're struggling with persistent fatigue, increased thirst, or unexplained weight gain, you might be ignoring your body's warning signals. 
-              Over 96 million American adults have prediabetes, and most don't even know it. The tricky part? Many people have NO symptoms at all. 
+              If you're struggling with persistent fatigue, increased thirst, or other subtle changes in how you feel,
+              you might be ignoring your body's warning signals. Nearly 98 million American adults have prediabetes,
+              and most don't even know it. The tricky part? Many people have NO symptoms at all.
               This is why we call it the "silent" condition.
             </p>
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
               But your body IS sending signals. You just need to know what to listen for.
             </p>
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              In this article, you'll learn the 5 warning signs your body sends before prediabetes becomes Type 2 diabetes—and what those signs actually mean. 
-              More importantly, you'll discover that these signs are completely reversible with the right approach.
+              In this article, you'll learn the 5 warning signs your body may send before prediabetes becomes Type 2
+              diabetes—and what those signs actually mean. More importantly, you'll learn that prediabetes can often
+              be improved or reversed with the right approach.
             </p>
             <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-6 text-sm">
               Looking for the complete list? Our{' '}
@@ -353,11 +385,11 @@ const FiveWarningSignsPrediabetes = () => {
             {/* Pillar Link - First 2 Paragraphs */}
             <div className="bg-emerald-50 border-l-4 border-emerald-600 p-6 rounded-r-lg">
               <p className="text-emerald-800">
-                <strong>The good news?</strong> We've created a{' '}
-                <Link to={internalLinks.pillar} className="text-emerald-600 hover:text-emerald-800 font-semibold underline">
-                  proven 5-step approach to reverse prediabetes →
+                <strong>The good news?</strong> We've created an{' '}
+                <Link to={internalLinks.pillar} className="text-emerald-700 hover:text-emerald-800 font-semibold underline">
+                  evidence-informed 5-step approach to reverse prediabetes →
                 </Link>{' '}
-                that has helped many people bring their blood sugar back to normal. But first, let's identify whether YOU have these warning signs.
+                designed to help you bring your blood sugar back toward normal. But first, let's identify whether YOU have these warning signs.
               </p>
             </div>
           </section>
@@ -383,11 +415,11 @@ const FiveWarningSignsPrediabetes = () => {
                 <ul className="space-y-2 text-emerald-800">
                   <li>• Fasting glucose: 100-125 mg/dL = Prediabetes</li>
                   <li>• A1C: 5.7%-6.4% = Prediabetes</li>
-                  <li>• Fasting insulin: &gt;12 mIU/L = Insulin resistance</li>
+                  <li>• Fasting insulin: an insulin-resistance marker; ranges vary by lab</li>
                 </ul>
                 <div className="mt-4 pt-4 border-t border-emerald-200">
                   <p className="text-emerald-800 text-sm">
-                    <strong>CRITICAL:</strong> 96 million Americans have prediabetes—most don't know it
+                    <strong>CRITICAL:</strong> Nearly 98 million Americans have prediabetes—most don't know it
                   </p>
                   <p className="text-emerald-800 text-sm">
                     <strong>GOOD NEWS:</strong> Research shows many people can improve or reverse prediabetes with sustained lifestyle changes
@@ -398,7 +430,7 @@ const FiveWarningSignsPrediabetes = () => {
           </div>
 
           {/* Table of Contents */}
-          <nav className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg mb-12">
+          <nav aria-label="Table of contents" className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg mb-12">
             <h2 className="font-bold text-blue-900 mb-4">Quick Navigation</h2>
             <ul className="grid md:grid-cols-2 gap-2 text-sm text-blue-800">
               <li><a href="#understanding" className="hover:underline">↓ Understanding Prediabetes</a></li>
@@ -440,21 +472,20 @@ const FiveWarningSignsPrediabetes = () => {
             </div>
 
             <p className="text-gray-700 mb-6">
-              According to the American Diabetes Association (2024), approximately 96 million American 
-              adults aged 18 and older have prediabetes—that's about 1 in 3 adults. Even more concerning? Of those with 
-              prediabetes, more than 80% don't know they have it. This is precisely why understanding the warning signs 
+              According to the American Diabetes Association (2024), citing CDC data, approximately 98 million American
+              adults aged 18 and older have prediabetes—that's more than 1 in 3 adults. Even more concerning? Of those with
+              prediabetes, more than 80% don't know they have it. This is precisely why understanding the warning signs
               becomes your first line of defense.
             </p>
 
             <div className="bg-green-50 border-l-4 border-green-600 p-6 rounded-r-lg">
               <p className="text-green-800 mb-2">
-                <strong>The research is clear:</strong> early intervention dramatically improves outcomes. A landmark study 
-                published in the New England Journal of Medicine demonstrated that lifestyle modifications reduce the 
-                progression from prediabetes to Type 2 diabetes by 58%—far exceeding the results of medication interventions 
-                alone (Knowler et al., 2002).
+                <strong>The evidence is strong:</strong> early intervention dramatically improves outcomes. A landmark study
+                published in the New England Journal of Medicine demonstrated that lifestyle modifications reduce the
+                progression from prediabetes to Type 2 diabetes by 58%—far exceeding metformin alone (Knowler et al., 2002).
               </p>
               <p className="text-green-800 text-sm">
-                Follow-up studies of the Diabetes Prevention Program have shown that many participants maintain normal blood sugar levels for years with continued lifestyle changes (Knowler et al., 2002).
+                The DPP followed participants for about three years. Longer-term outcomes depend on maintaining those changes.
               </p>
             </div>
           </section>
@@ -511,10 +542,11 @@ const FiveWarningSignsPrediabetes = () => {
               <div className="bg-emerald-50 border-l-4 border-emerald-600 p-6 rounded-r-lg mt-6">
                 <h4 className="font-bold text-emerald-900 mb-3">Your Action Step</h4>
                 <p className="text-emerald-800">
-                  Track your water intake and bathroom frequency for one week. If you're drinking more than 3 liters per 
-                  day and urinating more than 7-8 times, mention this pattern to your doctor. Schedule a{' '}
-                  <strong>fasting glucose test</strong>—the cost is typically $20-50 at most labs, and it provides your 
-                  critical baseline numbers.
+                  Track your water intake and bathroom frequency for one week. If you notice a clear, persistent increase
+                  from your normal pattern, mention it to your doctor. Schedule a{' '}
+                  <strong>fasting glucose test</strong>—the cost is typically $20-50 at most labs, and it provides your
+                  critical baseline numbers. These symptoms have many possible causes, so this is a reason to get
+                  checked—not a diagnosis.
                 </p>
               </div>
             </div>
@@ -554,9 +586,10 @@ const FiveWarningSignsPrediabetes = () => {
               <div className="bg-green-50 border-l-4 border-green-600 p-6 rounded-r-lg mt-6">
                 <h4 className="font-bold text-green-900 mb-3">The Research Behind This Sign</h4>
                 <p className="text-green-800">
-                  A systematic review examining fatigue prevalence in metabolic conditions found that 50-70% of people with 
-                  prediabetes report significant afternoon energy crashes and persistent fatigue (Marta et al., 2025). This fatigue isn't "just being tired"—it's a metabolic signal that your body 
-                  is struggling to efficiently convert food into usable energy.
+                  Fatigue is increasingly recognized as a feature of prediabetes. A 2025 cross-sectional study of young
+                  adults found that fatigue, sleep problems, and mental health symptoms were associated with prediabetes
+                  (Marta et al., 2025). This doesn't prove that fatigue causes prediabetes—or vice versa—but it supports
+                  treating persistent exhaustion as a signal worth investigating.
                 </p>
               </div>
 
@@ -595,7 +628,7 @@ const FiveWarningSignsPrediabetes = () => {
                   <ul className="space-y-2 text-purple-800">
                     <li>• Subtle blurring, especially of distant objects</li>
                     <li>• Vision that fluctuates throughout the day (clearer in morning, blurrier after meals)</li>
-                    <li>• No eye pain—this distinguishes it from other eye conditions</li>
+                    <li>• Usually painless—which can make it easy to overlook</li>
                     <li>• You might need new glasses more frequently than expected</li>
                     <li>• Difficulty driving at night due to increased blur</li>
                   </ul>
@@ -605,7 +638,9 @@ const FiveWarningSignsPrediabetes = () => {
               <div className="bg-green-50 border-l-4 border-green-600 p-6 rounded-r-lg mt-6">
                 <h4 className="font-bold text-green-900 mb-3">The Research Behind This Sign</h4>
                 <p className="text-green-800">
-                  While diabetic retinopathy typically occurs in established diabetes, early visual disturbances are well‑documented in prediabetes populations. Elevated blood sugar can cause temporary swelling of the eye's lens, leading to blurry vision that often improves once glucose levels are normalised.
+                  While diabetic retinopathy typically occurs in established diabetes, temporary vision changes can also
+                  occur when blood sugar rises. Elevated glucose can cause the eye's lens to swell, leading to blurry
+                  vision that often improves once glucose levels return to normal.
                 </p>
               </div>
 
@@ -630,11 +665,11 @@ const FiveWarningSignsPrediabetes = () => {
                 <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg">
                   <h4 className="font-bold text-blue-900 mb-3">Why It Happens</h4>
                   <p className="text-blue-800 mb-3">
-                    High blood sugar impairs circulation and damages small blood vessels, reducing blood flow to wound sites. 
-                    It also impairs nerve function and slows your immune system's response.
+                    Elevated blood sugar over time can impair circulation and damage small blood vessels, reducing blood
+                    flow to wound sites. It can also impair nerve function and slow your immune system's response.
                   </p>
                   <p className="text-blue-800">
-                    Additionally, elevated glucose interferes with <strong>collagen production</strong>—the protein essential 
+                    Additionally, elevated glucose can interfere with <strong>collagen production</strong>—the protein essential
                     for wound healing. Think of collagen as the scaffolding your body builds to repair damaged tissue.
                   </p>
                 </div>
@@ -642,7 +677,7 @@ const FiveWarningSignsPrediabetes = () => {
                 <div className="bg-purple-50 border-l-4 border-purple-600 p-6 rounded-r-lg">
                   <h4 className="font-bold text-purple-900 mb-3">What This Means for You</h4>
                   <ul className="space-y-2 text-purple-800">
-                    <li>• Small cuts take 2-3 weeks to heal (when normal healing is 5-7 days)</li>
+                    <li>• Small cuts may take noticeably longer than usual to heal</li>
                     <li>• Increased frequency of infections</li>
                     <li>• Bruises that take much longer to fade than they used to</li>
                     <li>• Gum bleeding when flossing or brushing</li>
@@ -665,10 +700,9 @@ const FiveWarningSignsPrediabetes = () => {
               <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-lg mt-6">
                 <h4 className="font-bold text-red-900 mb-3">⚠️ Red Flag Warning</h4>
                 <p className="text-red-800">
-                  If you have a small cut or sore that hasn't begun healing within two weeks, or shows signs of infection 
-                  (increasing redness, swelling, warmth, or pus), this is a strong signal to get tested. Don't dismiss this 
-                  as "just getting older"—your body's healing capacity shouldn't decline significantly in a healthy individual 
-                  under 70.
+                  If you have a small cut or sore that hasn't begun healing within two weeks, or shows signs of infection
+                  (increasing redness, swelling, warmth, or pus), get it checked. Don't dismiss a wound that isn't healing
+                  as "just getting older"—bring it to a clinician's attention.
                 </p>
               </div>
             </div>
@@ -708,10 +742,9 @@ const FiveWarningSignsPrediabetes = () => {
               <div className="bg-green-50 border-l-4 border-green-600 p-6 rounded-r-lg mt-6">
                 <h4 className="font-bold text-green-900 mb-3">The Research Behind This Sign</h4>
                 <p className="text-green-800">
-                  Research published in the Journal of Clinical Endocrinology & Metabolism found that 80% of individuals 
-                  presenting with acanthosis nigricans have underlying insulin resistance, regardless of whether they've 
-                  been diagnosed with prediabetes (González-Saldivar &amp; Rodríguez-Gutiérrez, 2017; Radu et al., 2022). This makes it one of the most 
-                  reliable visual indicators of metabolic dysfunction.
+                  Research on skin manifestations of insulin resistance suggests that a large proportion of people with
+                  acanthosis nigricans have underlying insulin resistance (González-Saldivar &amp; Rodríguez-Gutiérrez, 2017;
+                  Radu et al., 2022). This makes it a strong visual clue to metabolic dysfunction.
                 </p>
               </div>
 
@@ -751,55 +784,60 @@ const FiveWarningSignsPrediabetes = () => {
               </p>
             </div>
 
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Three Tests Your Doctor Should Order:</h3>
-            
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Three Tests to Discuss With Your Doctor:</h3>
+
             <div className="overflow-x-auto mb-4">
               <table className="w-full border-collapse border border-gray-300">
+                <caption className="sr-only">
+                  Blood glucose and insulin test ranges, with approximate U.S. self-pay costs
+                </caption>
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="border border-gray-300 p-3 text-left font-bold">Test</th>
-                    <th className="border border-gray-300 p-3 text-left font-bold">Normal Range</th>
-                    <th className="border border-gray-300 p-3 text-left font-bold">Prediabetes Range</th>
-                    <th className="border border-gray-300 p-3 text-left font-bold">Diabetes Range</th>
-                    <th className="border border-gray-300 p-3 text-left font-bold">Approx. Cost</th>
+                    <th scope="col" className="border border-gray-300 p-3 text-left font-bold">Test</th>
+                    <th scope="col" className="border border-gray-300 p-3 text-left font-bold">Normal Range</th>
+                    <th scope="col" className="border border-gray-300 p-3 text-left font-bold">Prediabetes Range</th>
+                    <th scope="col" className="border border-gray-300 p-3 text-left font-bold">Diabetes Range</th>
+                    <th scope="col" className="border border-gray-300 p-3 text-left font-bold">Approx. Cost</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="border border-gray-300 p-3">
+                    <th scope="row" className="border border-gray-300 p-3 text-left font-normal">
                       <strong>Fasting Glucose</strong>
                       <p className="text-xs text-gray-600 mt-1">After 8-hour fast</p>
-                    </td>
+                    </th>
                     <td className="border border-gray-300 p-3">70-99 mg/dL</td>
-                    <td className="border border-gray-300 p-3 text-yellow-600 font-semibold">100-125 mg/dL</td>
-                    <td className="border border-gray-300 p-3 text-red-600 font-semibold">126+ mg/dL</td>
+                    <td className="border border-gray-300 p-3 text-yellow-800 font-semibold">100-125 mg/dL</td>
+                    <td className="border border-gray-300 p-3 text-red-700 font-semibold">126+ mg/dL</td>
                     <td className="border border-gray-300 p-3">$10-30</td>
                   </tr>
                   <tr className="bg-gray-50">
-                    <td className="border border-gray-300 p-3">
+                    <th scope="row" className="border border-gray-300 p-3 text-left font-normal">
                       <strong>A1C (HbA1c)</strong>
                       <p className="text-xs text-gray-600 mt-1">3-month average</p>
-                    </td>
+                    </th>
                     <td className="border border-gray-300 p-3">&lt;5.7%</td>
-                    <td className="border border-gray-300 p-3 text-yellow-600 font-semibold">5.7-6.4%</td>
-                    <td className="border border-gray-300 p-3 text-red-600 font-semibold">6.5%+</td>
+                    <td className="border border-gray-300 p-3 text-yellow-800 font-semibold">5.7-6.4%</td>
+                    <td className="border border-gray-300 p-3 text-red-700 font-semibold">6.5%+</td>
                     <td className="border border-gray-300 p-3">$10-30</td>
                   </tr>
                   <tr>
-                    <td className="border border-gray-300 p-3">
+                    <th scope="row" className="border border-gray-300 p-3 text-left font-normal">
                       <strong>Fasting Insulin</strong>
-                      <p className="text-xs text-gray-600 mt-1">Insulin resistance marker</p>
-                    </td>
-                    <td className="border border-gray-300 p-3">&lt;12 mIU/L</td>
-                    <td className="border border-gray-300 p-3 text-yellow-600 font-semibold">&gt;12 mIU/L</td>
-                    <td className="border border-gray-300 p-3">Varies</td>
+                      <p className="text-xs text-gray-600 mt-1">Insulin-resistance marker</p>
+                    </th>
+                    <td className="border border-gray-300 p-3">Lab-specific</td>
+                    <td className="border border-gray-300 p-3 text-gray-600">Not used to diagnose prediabetes</td>
+                    <td className="border border-gray-300 p-3 text-gray-600">Not used to diagnose diabetes</td>
                     <td className="border border-gray-300 p-3">$20-50</td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <p className="text-xs text-gray-500 mt-2">
-              Source: American Diabetes Association. Standards of Care in Diabetes—2024. <em>Diabetes Care</em>. 2024;47(Suppl 1).
+              Diagnostic thresholds: American Diabetes Association. Standards of Care in Diabetes—2024.{' '}
+              <em>Diabetes Care</em>. 2024;47(Suppl 1). Cost figures are approximate U.S. self-pay estimates and vary
+              by lab and location. Fasting insulin is not part of the ADA diagnostic criteria; reference ranges vary by lab.
             </p>
 
             <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg">
@@ -809,9 +847,10 @@ const FiveWarningSignsPrediabetes = () => {
                 glucose metabolism (how your body processes and uses sugar—the engine that keeps your cells running).
               </p>
               <p className="text-blue-800">
-                For comprehensive assessment, many functional medicine practitioners recommend all three tests, as they provide 
-                different pieces of the metabolic puzzle. Fasting glucose tells you your current state, A1C shows your trend 
-                over time, and fasting insulin reveals how hard your pancreas is working to manage glucose.
+                Some clinicians recommend all three tests because they provide different pieces of the metabolic picture.
+                Fasting glucose tells you your current state, A1C shows your average over time, and fasting insulin can
+                reveal how hard your pancreas is working to manage glucose. Fasting insulin is not used to diagnose
+                prediabetes, and its reference range varies by lab.
               </p>
             </div>
           </section>
@@ -824,7 +863,7 @@ const FiveWarningSignsPrediabetes = () => {
                 If you recognize ANY of these signs—or if you have a family history of diabetes—don't wait for a diagnosis to act.
               </p>
               
-              <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl mb-6">
+              <div className="bg-emerald-900/40 backdrop-blur-sm border border-white/20 p-6 rounded-xl mb-6">
                 <h3 className="text-xl font-bold mb-4">THE 7-DAY BLOOD SUGAR RESET GUIDE includes:</h3>
                 <div className="grid md:grid-cols-2 gap-3 text-left">
                   <p className="flex items-center gap-2">✓ Exact meal plan (no guessing, no restriction)</p>
@@ -839,7 +878,8 @@ const FiveWarningSignsPrediabetes = () => {
                 This free guide covers the key steps to help you take control of your blood sugar before it progresses further.
               </p>
               
-              <button 
+              <button
+                type="button"
                 onClick={() => setIsDownloadModalOpen(true)}
                 className="inline-block bg-white text-emerald-700 hover:bg-gray-100 font-bold py-4 px-10 rounded-xl transition shadow-md text-lg"
               >
@@ -861,29 +901,34 @@ const FiveWarningSignsPrediabetes = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Step 1: Recognize the Signs (You're doing this now!)</h3>
               <p className="text-gray-700 mb-4">Go back through the five warning signs above. Check off which ones you experience:</p>
               
-              <div className="space-y-3 mb-6">
-                {[
-                  'Increased thirst and frequent urination',
-                  'Unexplained fatigue and energy crashes',
-                  'Blurred vision or vision changes',
-                  'Slow-healing cuts or infections',
-                  'Dark patches of skin (acanthosis nigricans)'
-                ].map((sign, index) => (
-                  <label key={index} className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={checkedSigns[index]}
-                      onChange={() => toggleSign(index)}
-                      className="w-5 h-5 text-emerald-600 rounded focus:ring-emerald-500"
-                    />
-                    <span className="text-gray-700">{sign}</span>
-                  </label>
-                ))}
-              </div>
+              <fieldset className="mb-6">
+                <legend className="sr-only">Warning signs you are experiencing</legend>
+                <div className="space-y-3">
+                  {[
+                    'Increased thirst and frequent urination',
+                    'Unexplained fatigue and energy crashes',
+                    'Blurred vision or vision changes',
+                    'Slow-healing cuts or infections',
+                    'Dark patches of skin (acanthosis nigricans)'
+                  ].map((sign, index) => (
+                    <label key={sign} className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={checkedSigns[index]}
+                        onChange={() => toggleSign(index)}
+                        className="w-5 h-5 accent-emerald-600 rounded focus:ring-2 focus:ring-emerald-500"
+                      />
+                      <span className="text-gray-700">{sign}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
 
               <div className={`transition-all duration-500 ease-in-out ${isAnimating ? 'scale-105' : 'scale-100'} ${riskLevel.bg} border-l-4 ${riskLevel.border} p-4 rounded-r-lg`}>
-                <p className={`font-bold transition-colors duration-500 ${riskLevel.color}`}>
-                  Your risk assessment: {checkedSigns.filter(Boolean).length} signs checked = {riskLevel.level} Risk
+                <p aria-live="polite" className={`font-bold transition-colors duration-500 ${riskLevel.color}`}>
+                  {checkedCount === 0
+                    ? 'No signs checked yet.'
+                    : `${checkedCount} of 5 signs checked — ${riskLevel.level} symptom burden`}
                   {isAnimating && previousRiskLevel && previousRiskLevel.level !== riskLevel.level && (
                     <span className="ml-2 text-sm opacity-75">
                       (was {previousRiskLevel.level})
@@ -891,11 +936,12 @@ const FiveWarningSignsPrediabetes = () => {
                   )}
                 </p>
                 <p className="text-sm text-gray-600 mt-2">
-                  0-1 signs = Low risk | 2-3 signs = Moderate risk | 4-5 signs = High risk
+                  0–1 signs = Low | 2–3 signs = Moderate | 4–5 signs = High symptom burden
                 </p>
                 <p className="text-sm text-gray-600 mt-2">
-                  Regardless of your current risk level, if you have a family history of diabetes or are over 45, 
-                  proactive testing is still recommended.
+                  This checklist is not a validated risk score or a diagnosis. Many people with prediabetes have no
+                  symptoms at all, so only a blood test can confirm your blood sugar status. If you have a family
+                  history of diabetes or are over 45, proactive testing is still recommended.
                 </p>
               </div>
             </div>
@@ -918,10 +964,17 @@ const FiveWarningSignsPrediabetes = () => {
             {/* Step 3 */}
             <div className="bg-purple-50 border-l-4 border-purple-600 p-6 rounded-r-lg mb-6">
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Step 3: Download Your Reset Guide (Today)</h3>
-              <p className="text-gray-700">
-                Get the free 7-Day Blood Sugar Reset. This shows you what works IMMEDIATELY, and many users report seeing 
-                improved energy and sleep quality within just 7 days.
+              <p className="text-gray-700 mb-4">
+                Get the free 7-Day Blood Sugar Reset. It's designed to help you build momentum in the first week;
+                individual results vary.
               </p>
+              <button
+                type="button"
+                onClick={() => setIsDownloadModalOpen(true)}
+                className="inline-flex items-center bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-3 rounded-xl transition shadow-md"
+              >
+                Download the Free Guide
+              </button>
             </div>
 
             {/* Step 4 */}
@@ -933,11 +986,11 @@ const FiveWarningSignsPrediabetes = () => {
                 <li>Optimize your diet (reduce processed carbohydrates, increase fiber intake)</li>
                 <li>Add movement (even 10-minute walks after meals make a significant difference)</li>
                 <li>Monitor glucose (know your numbers through regular testing)</li>
-                <li>Consider supplements (natural metabolic support)</li>
+                <li>Consider supplements (discuss any supplement with your healthcare provider first)</li>
                 <li>Improve sleep and stress management (both significantly impact glucose metabolism)</li>
               </ol>
               <p className="text-gray-700 mt-3">
-                <strong>Timeline:</strong> Most people see measurable improvement within 3-6 months of consistent implementation.
+                <strong>Timeline:</strong> Many people see measurable improvement within 3-6 months of consistent implementation.
               </p>
             </div>
 
@@ -946,9 +999,9 @@ const FiveWarningSignsPrediabetes = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Step 5: Retest After 3 Months (See Your Progress)</h3>
               <p className="text-gray-700 mb-3">Schedule a follow-up A1C test at the 3-month mark:</p>
               <ul className="space-y-2 text-gray-700">
-                <li>• You should see measurable improvement</li>
-                <li>• Most people achieve 0.3-1.0% reduction in A1C</li>
-                <li>• This proves your approach is working</li>
+                <li>• You may see measurable improvement</li>
+                <li>• The amount of change varies from person to person</li>
+                <li>• A stable or improving result is a useful signal about whether your approach is working</li>
                 <li>• Adjust your strategy based on results</li>
               </ul>
             </div>
@@ -959,7 +1012,7 @@ const FiveWarningSignsPrediabetes = () => {
             <div className="bg-emerald-50 border-l-4 border-emerald-600 p-8 rounded-r-lg">
               <h2 className="text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <ShieldCheck className="w-8 h-8 text-emerald-600" aria-hidden="true" />
-                You Have the Power to Reverse This
+                You Have the Power to Change This
               </h2>
               
               <p className="text-lg text-gray-700 mb-6 leading-relaxed">
@@ -968,14 +1021,14 @@ const FiveWarningSignsPrediabetes = () => {
 
               <div className="bg-white p-6 rounded-lg mb-6 border-l-4 border-emerald-600">
                 <p className="text-gray-700 mb-4">
-                  <strong>But here's the great news:</strong> Prediabetes is one of the most reversible metabolic conditions. 
-                  Research consistently shows that people who follow a comprehensive lifestyle approach can achieve meaningful 
-                  improvements in blood sugar markers — though timelines vary and most clinical evidence reflects results over 
+                  <strong>But here's the encouraging news:</strong> Prediabetes is often reversible.
+                  Research suggests that people who follow a comprehensive lifestyle approach can achieve meaningful
+                  improvements in blood sugar markers — though timelines vary and most clinical evidence reflects results over
                   3–6 months of sustained effort.
                 </p>
                 <p className="text-gray-700">
-                  The key? Take action NOW, before prediabetes becomes Type 2 diabetes. Once Type 2 diabetes develops, reversal 
-                  becomes significantly more challenging, though still possible with intensive intervention.
+                  The key? Take action now, before prediabetes becomes Type 2 diabetes. Once Type 2 diabetes develops,
+                  remission becomes more challenging, though it is still possible with intensive intervention.
                 </p>
               </div>
 
@@ -988,9 +1041,9 @@ const FiveWarningSignsPrediabetes = () => {
                   Start the 5-Step Reversal Plan →
                 </Link>
                 <p className="text-gray-700 mt-4">
-                  This is your complete roadmap—from recognizing the signs to seeing your A1C drop. Every day you wait is a 
-                  day your body continues down the path toward full diabetes. But every day you take action is a day your 
-                  body begins healing.
+                  This is your complete roadmap—from recognizing the signs to tracking your A1C. Prediabetes doesn't
+                  inevitably progress to diabetes, and taking action can improve your numbers. The earlier you start,
+                  the more room you have to intervene.
                 </p>
               </div>
             </div>
@@ -1005,8 +1058,9 @@ const FiveWarningSignsPrediabetes = () => {
             <div className="mb-6">
               <div className="relative max-w-md">
                 <input
-                  type="text"
+                  type="search"
                   aria-label="Search frequently asked questions"
+                  aria-controls="faq-list"
                   placeholder="Search FAQs..."
                   value={faqFilter}
                   onChange={(e) => setFaqFilter(e.target.value)}
@@ -1019,30 +1073,37 @@ const FiveWarningSignsPrediabetes = () => {
                 </div>
               </div>
               {faqFilter && (
-                <p className="text-sm text-gray-600 mt-2">
+                <p aria-live="polite" className="text-sm text-gray-600 mt-2">
                   Showing {filteredFAQs.length} of {faqs.length} FAQs
                 </p>
               )}
             </div>
             
-            <div className="space-y-4">
+            <div id="faq-list" className="space-y-4">
               {filteredFAQs.length > 0 ? (
                 filteredFAQs.map((faq, idx) => (
-                  <div key={idx} className="border border-gray-300 rounded-lg overflow-hidden">
+                  <div key={faq.question} className="border border-gray-300 rounded-lg overflow-hidden">
                     <button
-                      onClick={() => toggleFAQ(idx)}
-                      aria-expanded={expandedFAQ === idx}
+                      type="button"
+                      onClick={() => toggleFAQ(faq.question)}
+                      aria-expanded={expandedFAQ === faq.question}
+                      aria-controls={`faq-answer-${idx}`}
                       className="w-full bg-emerald-50 hover:bg-emerald-100 p-4 text-left flex items-center justify-between font-semibold text-gray-900 transition"
                     >
                       <span>{faq.question}</span>
-                      {expandedFAQ === idx ? (
+                      {expandedFAQ === faq.question ? (
                         <Minus className="w-5 h-5 text-emerald-600" aria-hidden="true" />
                       ) : (
                         <Plus className="w-5 h-5 text-emerald-600" aria-hidden="true" />
                       )}
                     </button>
-                    {expandedFAQ === idx && (
-                      <div className="bg-white p-4 border-t border-gray-300">
+                    {expandedFAQ === faq.question && (
+                      <div
+                        id={`faq-answer-${idx}`}
+                        role="region"
+                        aria-label={faq.question}
+                        className="bg-white p-4 border-t border-gray-300"
+                      >
                         <p className="text-gray-700">{faq.answer}</p>
                       </div>
                     )}
@@ -1052,8 +1113,9 @@ const FiveWarningSignsPrediabetes = () => {
                 <div className="text-center py-8">
                   <p className="text-gray-600 mb-2">No FAQs found matching "{faqFilter}"</p>
                   <button
+                    type="button"
                     onClick={() => setFaqFilter('')}
-                    className="text-emerald-600 hover:text-emerald-700 font-medium"
+                    className="text-emerald-700 hover:text-emerald-800 font-medium"
                   >
                     Clear search
                   </button>
@@ -1064,7 +1126,7 @@ const FiveWarningSignsPrediabetes = () => {
 
           {/* Clinical References Section */}
           <section className="mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">Full Clinical References</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">References</h2>
             <p className="text-gray-700 mb-6">
               Studies are sourced from peer-reviewed journals, PubMed, and publisher websites. Click the links to view each source directly.
             </p>
@@ -1109,11 +1171,12 @@ const FiveWarningSignsPrediabetes = () => {
               <p className="font-bold text-amber-900 mb-2">Medical Disclaimer</p>
               <p className="text-sm text-amber-800 leading-relaxed">
                 The information on this page is for educational purposes only and does not constitute medical advice.
+                These statements have not been evaluated by the U.S. Food and Drug Administration (FDA).
                 No content here is intended to diagnose, treat, cure, or prevent any disease.
                 Insulin resistance is a serious metabolic condition — always consult a qualified healthcare provider
-                before making significant dietary changes or beginning a new exercise
-                protocol, especially if you are taking medications or have an existing health condition.
-                Individual results may vary and reversal is not guaranteed.
+                before making significant dietary changes or beginning a new exercise protocol, especially if you are
+                taking medications or have an existing health condition. Individual results may vary and reversal is
+                not guaranteed.
               </p>
             </div>
           </div>

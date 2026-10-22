@@ -2,7 +2,7 @@ import { Clock, AlertCircle, ShieldCheck, ArrowLeft, CheckCircle2, FileText, Lea
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
-import { CONTACT_CONFIG } from '../config/contact';
+import { CONTACT_CONFIG } from '@/config/contact';
 import { SEO } from "@/components/seo/SEO";
 
 const TOPIC_TAGS = [
@@ -48,16 +48,34 @@ export default function ContactPage() {
     setIsLoading(true);
     setError('');
 
-    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const serviceId =
+      import.meta.env.VITE_EMAILJS_SERVICE_ID_CONTACT ||
+      import.meta.env.VITE_EMAILJS_SERVICE_ID;
     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID_CONTACT;
 
+    if (!serviceId || !templateId || !formRef.current) {
+      console.error('Contact form is missing its EmailJS service, template, or form reference.');
+      setError(
+        `Failed to send message. Please try again later, or email us directly at ${CONTACT_CONFIG.email}.`
+      );
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      await emailjs.sendForm(serviceId!, templateId!, formRef.current!);
+      await emailjs.sendForm(serviceId, templateId, formRef.current);
       setSubmitted(true);
       setFormData({ name: '', email: '', subject: '', message: '' });
       setTimeout(() => setSubmitted(false), 5000);
     } catch (err: any) {
-      setError(`Failed to send message. Please try again later, or email us directly at support@thrivehealth360.com.`);
+      console.error('Contact form EmailJS error:', {
+        status: err?.status,
+        text: err?.text,
+        message: err?.message,
+      });
+      setError(
+        `Failed to send message. Please try again later, or email us directly at ${CONTACT_CONFIG.email}.`
+      );
     } finally {
       setIsLoading(false);
     }

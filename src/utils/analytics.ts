@@ -26,7 +26,9 @@ class AnalyticsTracker {
 
     const gaId = import.meta.env.VITE_GA_ID;
     if (!gaId) {
-      console.warn('Google Analytics ID not configured');
+      if (import.meta.env.DEV) {
+        console.info('Google Analytics ID not configured');
+      }
       return;
     }
 

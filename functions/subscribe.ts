@@ -49,7 +49,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   }
 
   const apiKey = env.BREVO_API_KEY;
-  const listId = Number(env.BREVO_LIST_ID || 2);
+  const parsedListId = Number(env.BREVO_LIST_ID || 2);
+  const listIds =
+    Number.isInteger(parsedListId) && parsedListId > 0 ? [parsedListId] : [];
 
   if (!apiKey) {
     console.error('subscribe function: BREVO_API_KEY is not set');
@@ -59,8 +61,18 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     );
   }
 
-  try {
-    const response = await fetch('https://api.brevo.com/v3/contacts', {
+  const baseAttributes: Record<string, string> = firstName
+    ? { FIRSTNAME: firstName }
+    : {};
+  const fullAttributes: Record<string, string> = {
+    ...baseAttributes,
+    SOURCE: source,
+    // Brevo date attributes expect YYYY-MM-DD, not a full ISO timestamp.
+    CAPTURED_DATE: new Date().toISOString().slice(0, 10),
+  };
+
+  const createContact = (attributes: Record<string, string>, ids: number[]) =>
+    fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -68,19 +80,37 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       },
       body: JSON.stringify({
         email,
-        attributes: {
-          SOURCE: source,
-          CAPTURED_DATE: new Date().toISOString(),
-          ...(firstName ? { FIRSTNAME: firstName } : {}),
-        },
-        listIds: [listId],
+        attributes,
+        ...(ids.length ? { listIds: ids } : {}),
         updateEnabled: true, // don't error if the contact already exists — just update it
       }),
     });
 
+  try {
+    // First attempt: full attribution + configured list.
+    let response = await createContact(fullAttributes, listIds);
+
     if (!response.ok) {
-      const errText = await response.text();
-      console.error('Brevo subscribe error:', response.status, errText);
+      const firstError = await response.text();
+      console.error('Brevo subscribe error (full payload):', response.status, firstError);
+
+      // Retry without custom attributes. This keeps contacts flowing even if
+      // SOURCE/CAPTURED_DATE have not been created in the Brevo account yet.
+      response = await createContact(baseAttributes, listIds);
+    }
+
+    if (!response.ok) {
+      const secondError = await response.text();
+      console.error('Brevo subscribe error (base attributes):', response.status, secondError);
+
+      // Last resort: a wrong or deleted list ID should not block the contact
+      // from being saved in All Contacts.
+      response = await createContact(baseAttributes, []);
+    }
+
+    if (!response.ok) {
+      const thirdError = await response.text();
+      console.error('Brevo subscribe error (no list):', response.status, thirdError);
       return new Response(
         JSON.stringify({ success: false, message: 'Subscription failed. Please try again.' }),
         { status: 502, headers: { 'Content-Type': 'application/json' } }

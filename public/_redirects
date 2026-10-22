@@ -1,0 +1,4 @@
+# Permanent redirects for the old title-case PDF link and the alternate
+# full-book filename. Keep the canonical files lowercase where applicable.
+/downloads/7-Day-Blood-Sugar-Reset.pdf /downloads/7-day-blood-sugar-reset.pdf 301
+/downloads/FullMetabolicResetBook.pdf /downloads/MetabolicReset_FullBook.pdf 301

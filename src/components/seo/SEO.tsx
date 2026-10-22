@@ -8,6 +8,10 @@ interface SEOProps {
   description: string;
   keywords?: string;
   image?: string;
+  /** Pixel dimensions of the Open Graph image. Defaults preserve the legacy
+      1200×630 assumption for existing call sites. */
+  imageWidth?: number;
+  imageHeight?: number;
   url?: string;
   type?: string;
   author?: string;
@@ -106,6 +110,8 @@ export function SEO({
   description,
   keywords,
   image,
+  imageWidth = 1200,
+  imageHeight = 630,
   url,
   type = 'website',
   author = 'ThriveHealth360',
@@ -276,8 +282,8 @@ export function SEO({
       { property: 'og:title', content: title },
       { property: 'og:description', content: description },
       { property: 'og:image', content: imageUrl },
-      { property: 'og:image:width', content: '1200' },
-      { property: 'og:image:height', content: '630' },
+      { property: 'og:image:width', content: String(imageWidth) },
+      { property: 'og:image:height', content: String(imageHeight) },
       { property: 'og:url', content: fullUrl },
       { property: 'og:site_name', content: 'ThriveHealth360' },
       { property: 'og:locale', content: 'en_US' }
@@ -329,17 +335,22 @@ export function SEO({
     }
     canonical.setAttribute('href', fullUrl);
 
-    // Set Medical Schema Markup
+    // Set page-level schema in its own script. Using the first
+    // application/ld+json element would overwrite the global Organization
+    // schema that is rendered in index.html.
     const finalSchema = schema || generateMedicalSchema();
-    let schemaScript = document.querySelector('script[type="application/ld+json"]');
+    let schemaScript = document.querySelector<HTMLScriptElement>(
+      'script[data-seo-page-schema="true"]'
+    );
     if (!schemaScript) {
       schemaScript = document.createElement('script');
       schemaScript.setAttribute('type', 'application/ld+json');
+      schemaScript.setAttribute('data-seo-page-schema', 'true');
       document.head.appendChild(schemaScript);
     }
     schemaScript.textContent = JSON.stringify(finalSchema);
 
-  }, [title, description, keywords, imageUrl, fullUrl, type, author, pillarId, authorityPack, schema, medicallyReviewed, reviewedByName, lastUpdated, factChecked, factCheckedBy, factCheckedDate, sourcesVerified, schemaType]);
+  }, [title, description, keywords, imageUrl, imageWidth, imageHeight, fullUrl, type, author, pillarId, authorityPack, schema, medicallyReviewed, reviewedByName, lastUpdated, factChecked, factCheckedBy, factCheckedDate, sourcesVerified, schemaType]);
 
   return <></>;
 }

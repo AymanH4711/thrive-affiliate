@@ -390,6 +390,9 @@ const LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle: React.FC = () =
     const name = (form.elements.namedItem("name") as HTMLInputElement).value.trim();
 
     try {
+      // Start the file immediately; lead capture and email delivery are best-effort.
+      triggerDownload('7-day-blood-sugar-reset.pdf');
+
       const { subscribed, emailed } = await submitLeadMagnet({
         email,
         name,
@@ -398,7 +401,6 @@ const LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle: React.FC = () =
       });
 
       if (subscribed || emailed) {
-        triggerDownload("7-Day-Blood-Sugar-Reset.pdf");
         setMessage({
           type: "success",
           text: emailed
@@ -407,11 +409,11 @@ const LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle: React.FC = () =
         });
         form.reset();
       } else {
-        setMessage({ type: "error", text: "Something went wrong. Please try again in a moment." });
+        setMessage({ type: "error", text: "Your guide downloaded, but we could not save your email. Please try again." });
       }
     } catch (error) {
       console.error("Lead magnet submission failed:", error);
-      setMessage({ type: "error", text: "Something went wrong. Please try again in a moment." });
+      setMessage({ type: "error", text: "Your guide downloaded, but we could not save your email. Please try again." });
     } finally {
       setIsLoading(false);
     }

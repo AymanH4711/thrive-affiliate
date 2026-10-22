@@ -17,6 +17,7 @@ export async function subscribeToNewsletter(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, source, name }), // <-- 2. Added 'name' to the body here
+      signal: AbortSignal.timeout(8000),
     });
 
     const data = await response.json().catch(() => ({}));

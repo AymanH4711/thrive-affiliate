@@ -32,7 +32,7 @@ export default function Footer() {
               </a>
               {/* ── Pinterest Link ────────────────────────────────────────── */}
               <a
-                href="https://pinterest.com/YOUR_PINTEREST_USERNAME"
+                href="https://www.pinterest.com/thrivehealth360/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Pinterest"
