@@ -1,4 +1,5 @@
 import { subscribeToNewsletter } from '@/api/subscribe';
+import { getTurnstileToken } from '@/lib/turnstile';
 import analytics from '@/utils/analytics';
 
 interface LeadMagnetInput {
@@ -8,7 +9,15 @@ interface LeadMagnetInput {
   source: string;
 }
 
-async function sendLeadMagnetEmail(
+/**
+ * Legacy client-side email path.
+ *
+ * New deployments send this email from functions/subscribe.ts after verifying
+ * the Turnstile token. This fallback is used only when the server explicitly
+ * reports that its EmailJS environment variables are missing, so a deployment
+ * that has not finished its security configuration does not lose the email.
+ */
+async function sendLeadMagnetEmailFallback(
   email: string,
   name: string,
   resourceName: string
@@ -22,7 +31,7 @@ async function sendLeadMagnetEmail(
   const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
   if (!serviceId || !templateId || !publicKey) {
-    console.warn('Lead-magnet email is not configured (service, template, or public key missing).');
+    console.warn('Lead-magnet email fallback is not configured.');
     return false;
   }
 
@@ -39,9 +48,6 @@ async function sendLeadMagnetEmail(
           user_email: email,
           email,
           name,
-          // Prefer {{downloaded_resources}} in the EmailJS template heading:
-          // older deployed bundles already send that variable. resource_name
-          // and resource_title are also supplied for newer templates.
           resource_name: resourceName,
           resource_title: resourceName,
           subject: `Your guide is ready: ${resourceName}`,
@@ -51,34 +57,47 @@ async function sendLeadMagnetEmail(
     });
 
     if (!res.ok) {
-      console.warn('EmailJS lead-magnet send failed:', res.status, await res.text());
+      console.warn('EmailJS lead-magnet fallback failed:', res.status, await res.text());
     }
 
     return res.ok;
   } catch (error) {
-    console.warn('EmailJS lead-magnet send failed:', error);
+    console.warn('EmailJS lead-magnet fallback failed:', error);
     return false;
   }
 }
 
 export async function submitLeadMagnet({ email, name, resourceName, source }: LeadMagnetInput) {
-  // Run both channels in parallel. Either one succeeding is useful, and a
-  // failure in one must never block the free download.
-  const [subResult, emailResult] = await Promise.allSettled([
-    subscribeToNewsletter(email, source, name),
-    sendLeadMagnetEmail(email, name, resourceName),
-  ]);
+  let turnstileToken: string | null = null;
 
-  const subscribed =
-    subResult.status === 'fulfilled' && subResult.value.success;
-  const emailed = emailResult.status === 'fulfilled' && emailResult.value;
+  try {
+    turnstileToken = await getTurnstileToken('lead_magnet');
+  } catch (error) {
+    // The download must still work. The server will reject the lead capture if
+    // it has Turnstile enforcement enabled, so we surface a warning below.
+    console.warn('Turnstile challenge could not be completed:', error);
+  }
+
+  const subResult = await subscribeToNewsletter(
+    email,
+    source,
+    name,
+    resourceName,
+    turnstileToken
+  );
+
+  const subscribed = subResult.success;
+  let emailed = subResult.emailed;
+
+  if (
+    !emailed &&
+    (subResult.emailConfigured === false || subResult.emailClientFallback === true)
+  ) {
+    emailed = await sendLeadMagnetEmailFallback(email, name, resourceName);
+  }
 
   if (!subscribed) {
-    const message =
-      subResult.status === 'fulfilled'
-        ? subResult.value.message
-        : 'Brevo request failed';
-    console.warn('Lead-magnet subscription failed:', message);
+    console.warn('Lead-magnet subscription failed:', subResult.message);
   }
 
   if (!emailed) {

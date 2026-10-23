@@ -125,9 +125,10 @@ export default function PrivacyPolicy() {
             </p>
             <p>Third-party services we may use include:</p>
             <ul className="list-disc pl-6 space-y-1 text-gray-700">
+              <li><strong>Cloudflare</strong> — website hosting, serverless form handling, and Turnstile bot protection. <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">Cloudflare Privacy Policy</a>.</li>
+              <li><strong>Brevo</strong> — email contact list and newsletter delivery. <a href="https://www.brevo.com/legal/privacypolicy/" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">Brevo Privacy Policy</a>.</li>
+              <li><strong>EmailJS</strong> — delivery of requested guides and contact-form messages. <a href="https://www.emailjs.com/legal/privacy-policy/" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">EmailJS Privacy Policy</a>.</li>
               <li><strong>Google Analytics</strong> — anonymised usage analytics. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">Google Privacy Policy</a>.</li>
-              <li><strong>Email service provider</strong> (e.g. Mailchimp / ConvertKit) — for newsletter delivery.</li>
-              <li><strong>Netlify</strong> — website hosting and form handling.</li>
             </ul>
             <p>
               Each third party has its own privacy policy. We encourage you to review them.

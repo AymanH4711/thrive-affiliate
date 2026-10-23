@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
 import { CONTACT_CONFIG } from '@/config/contact';
 import { SEO } from "@/components/seo/SEO";
+import { getTurnstileToken } from '@/lib/turnstile';
 
 const TOPIC_TAGS = [
   { icon: Leaf, label: 'Supplement Article Enquiries' },
@@ -25,6 +26,8 @@ export default function ContactPage() {
     email: '',
     subject: '',
     message: '',
+    // Hidden honeypot field. Real visitors never see or fill this.
+    company: '',
   });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
@@ -45,40 +48,100 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setError('');
 
-    const serviceId =
-      import.meta.env.VITE_EMAILJS_SERVICE_ID_CONTACT ||
-      import.meta.env.VITE_EMAILJS_SERVICE_ID;
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID_CONTACT;
+    // Honeypot: silently accept, but never send, anything a bot fills in.
+    if (formData.company.trim()) {
+      setSubmitted(true);
+      setFormData({ name: '', email: '', subject: '', message: '', company: '' });
+      setTimeout(() => setSubmitted(false), 5000);
+      return;
+    }
 
-    if (!serviceId || !templateId || !formRef.current) {
-      console.error('Contact form is missing its EmailJS service, template, or form reference.');
+    setIsLoading(true);
+
+    let turnstileToken: string | null = null;
+    try {
+      turnstileToken = await getTurnstileToken('contact');
+    } catch (tokenError) {
+      console.warn('Contact Turnstile challenge failed:', tokenError);
       setError(
-        `Failed to send message. Please try again later, or email us directly at ${CONTACT_CONFIG.email}.`
+        'The security check could not be completed. Please refresh the page and try again.'
       );
       setIsLoading(false);
       return;
     }
 
     try {
-      await emailjs.sendForm(serviceId, templateId, formRef.current);
-      setSubmitted(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setTimeout(() => setSubmitted(false), 5000);
-    } catch (err: any) {
-      console.error('Contact form EmailJS error:', {
-        status: err?.status,
-        text: err?.text,
-        message: err?.message,
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          turnstileToken: turnstileToken || undefined,
+        }),
+        signal: AbortSignal.timeout(15000),
       });
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok && data.success) {
+        setSubmitted(true);
+        setFormData({ name: '', email: '', subject: '', message: '', company: '' });
+        setTimeout(() => setSubmitted(false), 5000);
+        return;
+      }
+
+      // A 403 means Turnstile rejected the request. Never bypass it with the
+      // legacy client path.
+      if (response.status === 403) {
+        throw new Error('SECURITY_CHECK_FAILED');
+      }
+
+      // The server is reachable but has no EmailJS environment variables yet.
+      // Keep the working client path during that transition.
+      if (
+        response.status === 404 ||
+        data.emailConfigured === false ||
+        data.emailClientFallback === true
+      ) {
+        await sendWithEmailJsFallback();
+        return;
+      }
+
+      throw new Error(
+        typeof data.message === 'string'
+          ? data.message
+          : 'Message could not be sent.'
+      );
+    } catch (err: any) {
+      console.error('Contact form error:', err);
       setError(
-        `Failed to send message. Please try again later, or email us directly at ${CONTACT_CONFIG.email}.`
+        err?.message === 'SECURITY_CHECK_FAILED'
+          ? 'The security check failed. Please refresh the page and try again.'
+          : `Failed to send message. Please try again later, or email us directly at ${CONTACT_CONFIG.email}.`
       );
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const sendWithEmailJsFallback = async () => {
+    const serviceId =
+      import.meta.env.VITE_EMAILJS_SERVICE_ID_CONTACT ||
+      import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId =
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID_CONTACT ||
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+
+    if (!serviceId || !templateId || !formRef.current) {
+      console.error('Contact form fallback is missing its EmailJS configuration.');
+      throw new Error('EmailJS fallback is not configured.');
+    }
+
+    await emailjs.sendForm(serviceId, templateId, formRef.current);
+    setSubmitted(true);
+    setFormData({ name: '', email: '', subject: '', message: '', company: '' });
+    setTimeout(() => setSubmitted(false), 5000);
   };
 
   return (
@@ -261,9 +324,23 @@ export default function ContactPage() {
                   />
                 </div>
 
+                {/* Honeypot: hidden from people, tempting to simple bots. */}
+                <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+                  <label htmlFor="contact-company">Company</label>
+                  <input
+                    id="contact-company"
+                    type="text"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleChange}
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
+
                 {/* GDPR / Privacy consent notice — required for UK/EU/AU/CA readers */}
                 <p className="text-xs text-gray-500 leading-relaxed border border-gray-100 bg-gray-50 rounded-xl px-4 py-3">
-                  By submitting this form, you agree that your name, email address, and message will be processed by ThriveHealth360 and our email delivery provider (<strong>EmailJS</strong>) solely for the purpose of responding to your enquiry. We do not sell or share your data with third parties for marketing. Data is retained only as long as necessary to resolve your enquiry. For full details, see our{' '}
+                  By submitting this form, you agree that your name, email address, and message will be processed by ThriveHealth360 and our email delivery provider (<strong>EmailJS</strong>) solely for the purpose of responding to your enquiry. We do not sell or share your data with third parties for marketing. Data is retained only as long as necessary to resolve your enquiry. This form is protected by <strong>Cloudflare Turnstile</strong>, which may process limited technical data to distinguish people from automated traffic. For full details, see our{' '}
                   <Link to="/privacy" className="underline text-emerald-700 font-semibold hover:text-emerald-600">Privacy Policy</Link>.
                   {' '}UK/EU residents have the right to access, correct, or request deletion of their data under GDPR.
                 </p>

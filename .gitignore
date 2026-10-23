@@ -25,3 +25,7 @@ dist-ssr
 
 .vercel
 .env*.local
+
+# Cloudflare Wrangler local state
+.wrangler/
+.dev.vars

@@ -102,7 +102,7 @@ const LeadMagnet: React.FC = () => {
                 <Download className="w-5 h-5" /> {isSending ? 'Sending...' : 'Send My Free Guide'}
               </button>
               <div className="flex items-center justify-center gap-2 text-[10px] text-gray-400 uppercase tracking-widest font-medium">
-                <Lock className="w-3 h-3" /> Secure & Spam-Free
+                <Lock className="w-3 h-3" /> Secure & Spam-Free · Cloudflare Protected
               </div>
             </form>
           ) : (

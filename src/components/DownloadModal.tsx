@@ -171,6 +171,8 @@ export const DownloadModal = ({
                 {/* Privacy Note */}
                 <p className="text-xs text-gray-500 text-center">
                   We'll send you the guides + occasional health tips. You can unsubscribe anytime.
+                  <br />
+                  Protected by Cloudflare Turnstile.
                 </p>
               </form>
             </>
