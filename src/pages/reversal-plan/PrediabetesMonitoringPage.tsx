@@ -1,9 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { SEO } from '@/components/seo/SEO';
 
 export const PrediabetesMonitoringPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+    <>
+      <SEO
+        title="Prediabetes Monitoring & Tracking | ThriveHealth360"
+        description="Learn which glucose and lifestyle markers to track and how to discuss monitoring with your healthcare provider."
+        url="/prediabetes-monitoring"
+      />
+      <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         {/* Hero Header */}
         <div className="bg-gradient-to-r from-teal-600 to-emerald-600 p-8 md:p-12 text-white">
@@ -62,7 +69,8 @@ export const PrediabetesMonitoringPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

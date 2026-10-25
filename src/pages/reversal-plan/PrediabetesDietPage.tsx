@@ -39,7 +39,7 @@ export default function PrediabetesDietPage() {
         {/* HERO SECTION */}
         <section className="bg-gradient-to-br from-emerald-600 to-teal-700 text-white py-16">
           <div className="container mx-auto px-4 max-w-4xl">
-            <Link to="/reverse-prediabetes" className="inline-flex items-center text-emerald-100 hover:text-white mb-6 transition">
+            <Link to="/prediabetes-plan" className="inline-flex items-center text-emerald-100 hover:text-white mb-6 transition">
               <ArrowLeft className="w-4 h-4 mr-2" /> Back to Plan
             </Link>
             <span className="bg-emerald-500/20 text-emerald-100 border border-emerald-500/30 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase mb-4 inline-block">

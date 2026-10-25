@@ -82,7 +82,7 @@ export default function InsulinResistanceManagement() {
                     <ArrowRight className="w-5 h-5" aria-hidden="true" />
                   </button>
                   <Link 
-                    to="/reverse-prediabetes"
+                    to="/prediabetes-plan"
                     className="inline-flex items-center justify-center gap-2 border-2 border-emerald-600 text-emerald-600 font-semibold px-6 py-3 rounded-lg hover:bg-emerald-50 transition"
                   >
                     How to Reverse It

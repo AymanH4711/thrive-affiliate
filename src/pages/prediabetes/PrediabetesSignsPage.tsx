@@ -433,7 +433,7 @@ export default function PrediabetesSignsPage() {
               ))}
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
-              <Link to="/reverse-prediabetes"
+              <Link to="/prediabetes-plan"
                 className="flex items-center justify-between bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-4 rounded-xl transition shadow-lg shadow-emerald-200">
                 <span>Start the 5-Step Reversal Plan</span>
                 <ArrowRight className="w-5 h-5 flex-shrink-0" />

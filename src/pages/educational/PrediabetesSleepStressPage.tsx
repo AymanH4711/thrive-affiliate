@@ -37,7 +37,7 @@ export default function PrediabetesSleepStressPage() {
         {/* 1. HERO SECTION */}
         <header className="bg-gradient-to-br from-indigo-900 to-indigo-800 text-white py-16 relative overflow-hidden">
           <div className="container mx-auto px-4 max-w-4xl relative z-10">
-            <Link to="/reverse-prediabetes" className="inline-flex items-center text-indigo-200 hover:text-white mb-6 transition">
+            <Link to="/prediabetes-plan" className="inline-flex items-center text-indigo-200 hover:text-white mb-6 transition">
               <ArrowLeft className="w-4 h-4 mr-2" /> Back to Plan
             </Link>
             <span className="bg-indigo-500/20 text-indigo-100 border border-indigo-500/30 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase mb-4 inline-block">

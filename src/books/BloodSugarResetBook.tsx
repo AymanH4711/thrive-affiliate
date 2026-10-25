@@ -1,9 +1,17 @@
 import React from 'react';
 import './book.css';
+import { SEO } from '@/components/seo/SEO';
 
 const BloodSugarResetBook: React.FC = () => {
   return (
-    <div className="book-container">
+    <>
+      <SEO
+        title="The Blood Sugar Reset Book | ThriveHealth360"
+        description="Read a practical 7-day guide to blood sugar monitoring, nutrition, exercise, and sustainable lifestyle habits."
+        url="/blood-sugar-reset-book"
+        schemaType="WebPage"
+      />
+      <div className="book-container">
       <div className="book-header">
         <h1>The Blood Sugar Reset Book</h1>
         <p className="subtitle">A Complete 7-Day Guide to Stabilizing Blood Sugar and Reversing Prediabetes</p>
@@ -38,7 +46,8 @@ const BloodSugarResetBook: React.FC = () => {
       <div className="book-footer">
         <p>&copy; 2026 Thrive Health. All rights reserved.</p>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

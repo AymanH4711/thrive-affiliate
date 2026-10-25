@@ -1,24 +1,26 @@
 // src/pages/utility/PrivacyPolicy.tsx
-// NOTE: App.tsx routes /privacy to src/pages/PrivacyPage.tsx
-// Copy this content into PrivacyPage.tsx and delete the empty duplicate,
-// OR update App.tsx to import from this file instead.
-
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { SEO } from '@/components/seo/SEO';
 
 const LAST_UPDATED = 'May 2026';
 const SITE_NAME    = 'ThriveHealth360';
-const SITE_URL     = 'https://www.thrivehealth360.com';
-const CONTACT_EMAIL = 'privacy@thrivehealth360.com';
+const SITE_URL     = 'https://thrivehealth360.org';
+const CONTACT_EMAIL = 'privacy@thrivehealth360.org';
 
 export default function PrivacyPolicy() {
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = `Privacy Policy | ${SITE_NAME}`;
   }, []);
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO
+        title={`Privacy Policy | ${SITE_NAME}`}
+        description="Learn how ThriveHealth360 collects, uses, and protects information when you use our website."
+        url="/privacy"
+        schemaType="WebPage"
+      />
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <div className="bg-emerald-50 border-b border-emerald-100 py-14">

@@ -42,7 +42,7 @@ export default function PrediabetesExercisePage() {
         {/* 1. HERO SECTION */}
         <header className="bg-gradient-to-br from-blue-900 to-blue-800 text-white py-16 relative overflow-hidden">
           <div className="container mx-auto px-4 max-w-4xl relative z-10">
-            <Link to="/reverse-prediabetes" className="inline-flex items-center text-blue-200 hover:text-white mb-6 transition">
+            <Link to="/prediabetes-plan" className="inline-flex items-center text-blue-200 hover:text-white mb-6 transition">
               <ArrowLeft className="w-4 h-4 mr-2" /> Back to Plan
             </Link>
             <span className="bg-blue-500/20 text-blue-100 border border-blue-500/30 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase mb-4 inline-block">

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SEO } from '@/components/seo/SEO';
 
 interface Supplement {
   name: string;
@@ -38,7 +39,14 @@ export const SupplementComparison: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+    <>
+      <SEO
+        title="Metabolic Supplement Comparison | ThriveHealth360"
+        description="Compare commonly discussed supplements, their proposed uses, and general dosage information."
+        url="/tools/supplement-comparison"
+        schemaType="WebPage"
+      />
+      <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-10">
@@ -83,7 +91,8 @@ export const SupplementComparison: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

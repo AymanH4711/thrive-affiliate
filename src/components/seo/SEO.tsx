@@ -53,32 +53,6 @@ interface SEOProps {
   schemaType?: string;
 }
 
-// FAQ Schema Types
-interface FAQItem {
-  question: string;
-  answer: string;
-  searchIntent?: string;
-  difficulty?: 'beginner' | 'high' | 'critical';
-}
-
-/**
- * Generate FAQ Schema Markup for structured data
- */
-export const getFAQSchema = (faqs: FAQItem[]) => {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer
-      }
-    }))
-  };
-};
-
 /**
  * SEO Component for managing meta tags across all pages
  * 
@@ -139,8 +113,9 @@ export function SEO({
   const defaultOgImage = '/images/og-default.png';
 
   // Build full URLs
-  const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
-  const imageUrl = image ? `${siteUrl}${image}` : `${siteUrl}${defaultOgImage}`;
+  const siteBaseUrl = siteUrl.endsWith('/') ? siteUrl : `${siteUrl}/`;
+  const fullUrl = new URL(url ?? window.location.pathname, siteBaseUrl).toString();
+  const imageUrl = new URL(image ?? defaultOgImage, siteBaseUrl).toString();
 
   // Validate meta description length
   if (description.length > 160) {
@@ -153,7 +128,7 @@ export function SEO({
   }
 
   // Generate Medical Schema Markup
-  const generateMedicalSchema = () => {
+  const generateMedicalSchema = React.useCallback(() => {
     const baseSchema = {
       "@context": "https://schema.org",
       "@type": schemaType,
@@ -250,7 +225,23 @@ export function SEO({
     }
 
     return baseSchema;
-  };
+  }, [
+    schemaType,
+    title,
+    description,
+    fullUrl,
+    imageUrl,
+    author,
+    siteUrl,
+    medicallyReviewed,
+    reviewedByName,
+    lastUpdated,
+    factChecked,
+    factCheckedBy,
+    factCheckedDate,
+    sourcesVerified,
+    authorityPack
+  ]);
 
   React.useEffect(() => {
     // Set page title
@@ -350,7 +341,7 @@ export function SEO({
     }
     schemaScript.textContent = JSON.stringify(finalSchema);
 
-  }, [title, description, keywords, imageUrl, imageWidth, imageHeight, fullUrl, type, author, pillarId, authorityPack, schema, medicallyReviewed, reviewedByName, lastUpdated, factChecked, factCheckedBy, factCheckedDate, sourcesVerified, schemaType]);
+  }, [title, description, keywords, imageUrl, imageWidth, imageHeight, fullUrl, type, author, pillarId, authorityPack, schema, medicallyReviewed, reviewedByName, lastUpdated, factChecked, factCheckedBy, factCheckedDate, sourcesVerified, schemaType, generateMedicalSchema]);
 
   return <></>;
 }

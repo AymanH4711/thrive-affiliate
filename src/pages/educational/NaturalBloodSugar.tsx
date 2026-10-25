@@ -42,7 +42,7 @@ export default function NaturalBloodSugar() {
 
               {/* Left — text */}
               <div className="text-left">
-                <Link to="/reverse-prediabetes"
+                <Link to="/prediabetes-plan"
                   className="inline-flex items-center text-rose-200 hover:text-white mb-6 transition text-sm">
                   <ArrowLeft className="w-4 h-4 mr-2" aria-hidden="true" /> Back to Plan
                 </Link>

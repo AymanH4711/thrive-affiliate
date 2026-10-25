@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
+import { SEO } from '@/components/seo/SEO';
 
 export const BloodSugarQuiz: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+    <>
+      <SEO
+        title="Blood Sugar & Metabolic Health Quiz | ThriveHealth360"
+        description="Explore lifestyle factors related to blood sugar and metabolic health with the ThriveHealth360 assessment."
+        url="/tools/blood-sugar-quiz"
+        schemaType="WebPage"
+      />
+      <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         {/* Header */}
         <div className="bg-emerald-600 p-8 text-white text-center">
@@ -36,7 +44,8 @@ export const BloodSugarQuiz: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

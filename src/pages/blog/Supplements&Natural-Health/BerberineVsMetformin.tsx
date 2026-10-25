@@ -38,7 +38,7 @@ const BerberineVsMetformin: React.FC = () => {
   // ==================== SILO LINKING ====================
   const siloLinks = useSiloLinks('berberine-vs-metformin');
   
-  const schemaMarkup = {
+  const schemaMarkup = React.useMemo(() => ({
     '@context': 'https://schema.org',
     '@type': 'MedicalWebPage',
     name: 'Berberine: The Natural Alternative to Metformin (Evidence-Based)',
@@ -73,7 +73,7 @@ const BerberineVsMetformin: React.FC = () => {
       }
     },
     lastReviewed: '2026-02-15'
-  };
+  }), []);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -83,7 +83,7 @@ const BerberineVsMetformin: React.FC = () => {
     return () => {
       document.head.removeChild(script);
     };
-  }, []);
+  }, [schemaMarkup]);
 
   // ==================== LEAD MAGNET HANDLER ====================
   const handleLeadMagnet = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -170,7 +170,7 @@ const BerberineVsMetformin: React.FC = () => {
         description="Complete evidence-based comparison of Berberine and Metformin for prediabetes. Learn how berberine works, efficacy rates, safety, side effects, and dosing recommendations."
         keywords="berberine, metformin, blood sugar control, metformin alternative, natural berberine, AMPK activation, insulin resistance"
         image={berberineImage}
-        url="/blog/berberine-metformin"
+        url="/blog/berberine-vs-metformin"
         schema={schemaMarkup}
       />
 
@@ -728,6 +728,6 @@ export const blogMeta: BlogArticleMeta = {
   excerpt: "Complete evidence-based comparison of Berberine and Metformin for prediabetes. Learn how berberine works, efficacy rates, safety, side effects, and dosing recommendations.",
   readTime: "10 min read",
   image: "/images/blog/berberine-vs-metformin-comparison.webp",
-  path: "/blog/berberine-metformin",
+  path: "/blog/berberine-vs-metformin",
   category: "supplements",
 };

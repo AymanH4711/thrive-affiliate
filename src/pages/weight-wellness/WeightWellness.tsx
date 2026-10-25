@@ -10,8 +10,8 @@ export default function WeightWellness() {
     "@type": "MedicalWebPage",
     "headline": "Weight & Metabolic Wellness for Blood Sugar Control",
     "description": "Complete guide to sustainable weight management and metabolic health for better blood sugar control. 12-week reset plan, nutrition strategy, and exercise guide.",
-    "url": "https://www.thrivehealth360.com/weight-wellness",
-    "image": "https://www.thrivehealth360.com/images/weight-wellness-hero-og.webp",
+    "url": "https://thrivehealth360.org/weight-wellness",
+    "image": "https://thrivehealth360.org/images/weight-wellness-hero-og.webp",
     "dateModified": "2026-01-01",
     "author": {
       "@type": "Organization",
@@ -494,7 +494,7 @@ export default function WeightWellness() {
                 <p className="text-xl mb-8 leading-relaxed">
                   Focus on health markers, not just the scale. When metabolism improves, sustainable weight loss follows naturally.
                 </p>
-                <Link to="/reverse-prediabetes" className="inline-flex items-center gap-2 bg-white text-emerald-600 font-bold px-8 py-3 rounded-lg hover:bg-emerald-50 transition text-lg">
+                <Link to="/prediabetes-plan" className="inline-flex items-center gap-2 bg-white text-emerald-600 font-bold px-8 py-3 rounded-lg hover:bg-emerald-50 transition text-lg">
                   Start Your Journey
                   <ArrowRight className="w-5 h-5" aria-hidden="true" />
                 </Link>

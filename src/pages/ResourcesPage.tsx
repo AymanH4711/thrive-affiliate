@@ -1,4 +1,5 @@
 import React from 'react';
+import { SEO } from '@/components/seo/SEO';
 
 export const ResourcesPage: React.FC = () => {
   const categories = [
@@ -21,7 +22,14 @@ export const ResourcesPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+    <>
+      <SEO
+        title="Vetted Tools & Resources | ThriveHealth360"
+        description="Explore glucose monitoring tools and evidence-based nutrition resources selected to support metabolic health."
+        url="/resources"
+        schemaType="WebPage"
+      />
+      <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
@@ -56,7 +64,8 @@ export const ResourcesPage: React.FC = () => {
           ))}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

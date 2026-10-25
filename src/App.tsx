@@ -88,7 +88,6 @@ const SeniorsGlucoseMonitoring = lazy(() => import("./pages/seniors/SeniorsGluco
 
 // ── Supplements / Shop ────────────────────────────────────────────────────────
 const SupplementsPage           = lazy(() => import("./pages/SupplementsPage"));
-const SupplementsHub            = lazy(() => import("./pages/products/SupplementsHub"));
 const BloodSugarSupportCategory = lazy(() => import("./pages/supplements/BloodSugarSupportCategory"));
 const InsulinSensitivityCategory = lazy(() => import("./pages/supplements/InsulinSensitivityCategory"));
 const DiabetesSolutionKitGuide = lazy(() => import("./pages/supplements/DiabetesSolutionKitGuide"));
@@ -220,7 +219,7 @@ function App() {
 
               {/* ── Supplements / Shop ────────────────────────────────────── */}
               <Route path="/supplements"                    element={<SupplementsPage />} />
-              <Route path="/supplements/hub"                element={<SupplementsHub />} />
+              <Route path="/supplements/hub"                element={<Navigate to="/supplements" replace />} />
               <Route path="/supplements/blood-sugar-support" element={<BloodSugarSupportCategory />} />
               <Route path="/guides/diabetes-solution-kit"    element={<DiabetesSolutionKitGuide />} />
               <Route path="/supplements/insulin-sensitivity"  element={<InsulinSensitivityCategory />} />

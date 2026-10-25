@@ -45,7 +45,7 @@ export default function GlucoseMonitoringTools() {
 
             {/* Left — text */}
             <div className="text-left">
-              <Link to="/reverse-prediabetes"
+              <Link to="/prediabetes-plan"
                 className="inline-flex items-center text-purple-200 hover:text-white mb-6 transition text-sm">
                 <ArrowRight className="w-4 h-4 mr-2 rotate-180" aria-hidden="true" /> Back to Plan
               </Link>
