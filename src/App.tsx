@@ -219,7 +219,6 @@ function App() {
 
               {/* ── Supplements / Shop ────────────────────────────────────── */}
               <Route path="/supplements"                    element={<SupplementsPage />} />
-              <Route path="/supplements/hub"                element={<Navigate to="/supplements" replace />} />
               <Route path="/supplements/blood-sugar-support" element={<BloodSugarSupportCategory />} />
               <Route path="/guides/diabetes-solution-kit"    element={<DiabetesSolutionKitGuide />} />
               <Route path="/supplements/insulin-sensitivity"  element={<InsulinSensitivityCategory />} />
