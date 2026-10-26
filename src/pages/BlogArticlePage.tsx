@@ -210,7 +210,7 @@ const articles: Record<string, any> = {
     hasAffiliateLinks: true,
     lastReviewed: 'April 2026',
     image: '/images/blog/berberine-vs-metformin-comparison.webp',
-    url: '/blog/berberine-metformin',
+    url: '/blog/berberine-vs-metformin',
     keywords: 'berberine, blood sugar supplement, berberine research, natural blood sugar support',
     author: 'Thrive Health Editorial Team',
     evidenceLevel: 'high',
