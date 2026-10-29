@@ -10,8 +10,8 @@ export default function SeniorsGlucoseMonitoring() {
     "@type": "MedicalWebPage",
     "headline": "Glucose Monitoring for Seniors: Complete Guide",
     "description": "Senior-friendly guide to blood sugar monitoring: target ranges for 60+, device comparisons, 7-day action plan, medication safety, and caregiver tips.",
-    "url": "https://thrive-health.com/seniors-glucose-monitoring",
-    "image": "https://thrive-health.com/images/seniors-glucose-og.png",
+    "url": "https://thrivehealth360.org/seniors-glucose-monitoring",
+    "image": "https://thrivehealth360.org/images/seniors-monitoring-hero-thumb-og.webp",
     "dateModified": "2026-01-01",
     "author": {
       "@type": "Organization",
@@ -35,7 +35,7 @@ export default function SeniorsGlucoseMonitoring() {
         title="Glucose Monitoring for Seniors | Easy Guide + Tips"
         description="Senior-friendly glucose monitoring guide. Target ranges for 60+, device recommendations, 7-day action plan, caregiver tips, and medication safety considerations."
         keywords="diabetes in seniors, glucose monitoring seniors, diabetes management older adults, senior health"
-        image="/images/seniors-glucose-og.png"
+        image="/images/og-default.png"
         url="/seniors-glucose-monitoring"
         schema={schema}
       />

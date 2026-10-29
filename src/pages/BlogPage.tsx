@@ -93,11 +93,11 @@ const CATEGORY_CONFIG: Record<BlogCategoryKey, CategoryConfig> = {
 // separated from real articles instead of mixed into the same array.
 const COMING_SOON: Record<BlogCategoryKey, Article[]> = {
   prediabetes: [
-    { title: 'Coming Soon: Managing Prediabetes at Work', excerpt: 'Strategies for maintaining healthy habits in a busy work environment.', readTime: 'Coming soon', path: '#', image: '/images/placeholder-emerald.png', isPublished: false },
-    { title: 'Coming Soon: Family Support & Accountability', excerpt: 'How to involve your loved ones in your reversal journey.', readTime: 'Coming soon', path: '#', image: '/images/placeholder-emerald.png', isPublished: false },
+    { title: 'Coming Soon: Managing Prediabetes at Work', excerpt: 'Strategies for maintaining healthy habits in a busy work environment.', readTime: 'Coming soon', path: '#', image: '/images/og-default.png', isPublished: false },
+    { title: 'Coming Soon: Family Support & Accountability', excerpt: 'How to involve your loved ones in your reversal journey.', readTime: 'Coming soon', path: '#', image: '/images/og-default.png', isPublished: false },
   ],
   diet: [
-    { title: 'Coming Soon: Meal Prep for Blood Sugar Success', excerpt: 'Easy meal prep strategies to stay consistent with your diet plan.', readTime: 'Coming soon', path: '#', image: '/images/placeholder-emerald.png', isPublished: false },
+    { title: 'Coming Soon: Meal Prep for Blood Sugar Success', excerpt: 'Easy meal prep strategies to stay consistent with your diet plan.', readTime: 'Coming soon', path: '#', image: '/images/og-default.png', isPublished: false },
   ],
   exercise: [
     // PostMealWalks.tsx is a real placeholder file discovered dynamically
@@ -110,7 +110,7 @@ const COMING_SOON: Record<BlogCategoryKey, Article[]> = {
     // placeholder (isPublished: false), not an invented stand-in.
   ],
   supplements: [
-    { title: 'Coming Soon: Supplement Stacking for Maximum Results', excerpt: 'How to combine supplements safely for enhanced glucose control.', readTime: 'Coming soon', path: '#', image: '/images/placeholder-rose.png', isPublished: false },
+    { title: 'Coming Soon: Supplement Stacking for Maximum Results', excerpt: 'How to combine supplements safely for enhanced glucose control.', readTime: 'Coming soon', path: '#', image: '/images/og-default.png', isPublished: false },
   ],
   sleep: [
     // Same — SleepBloodSugar.tsx is now a real discovered placeholder
@@ -219,7 +219,7 @@ const BlogPage = (): JSX.Element => {
         title="Blood Sugar & Prediabetes Blog | ThriveHealth360"
         description="ThriveHealth360 blog: Evidence-based guides on prediabetes, blood sugar management, nutrition, exercise, and lifestyle strategies. For informational purposes only — not medical advice."
         keywords="blood sugar blog, prediabetes blog, health tips, diabetes prevention, wellness articles"
-        image="/images/blog-og.png"
+        image="/images/og-default.png"
         url="/blog"
       />
 

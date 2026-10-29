@@ -12,6 +12,14 @@
   * {
     @apply box-border;
   }
+
+  /* Visible keyboard focus for links, buttons, summaries, and other
+     interactive elements. Uses currentColor so it works on both light and
+     dark backgrounds. */
+  :where(a, button, summary, [tabindex]):focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
 }
 
 @layer utilities {

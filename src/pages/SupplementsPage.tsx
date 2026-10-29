@@ -83,7 +83,7 @@ export default function SupplementsPage() {
         title="Natural Supplements for Blood Sugar | Shop Now"
         description="Shop science-backed supplements for blood sugar support, metabolic health & insulin sensitivity. Compare products, read reviews, and find the best for your needs."
         keywords="blood sugar supplements, prediabetes supplements, berberine, cinnamon supplement, natural blood sugar support"
-        image="/images/supplements-og.png"
+        image="/images/og-default.png"
         url="/supplements"
         schema={schema}
       />

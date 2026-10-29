@@ -29,7 +29,7 @@ export default function PrediabetesSleepStressPage() {
         title="Sleep & Stress Management for Prediabetes | Thrive"
         description="Complete guide to sleep optimization and stress reduction for prediabetes reversal. Learn how poor sleep raises blood sugar and simple fixes to improve both."
         keywords="prediabetes sleep, stress and blood sugar, cortisol and insulin, sleep optimization"
-        image="/images/sleep-stress-og.png"
+        image="/images/og-default.png"
         url="/prediabetes-sleep-stress"
       />
       <div className="bg-white min-h-screen font-sans text-gray-800">

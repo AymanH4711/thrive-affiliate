@@ -31,7 +31,7 @@ export default function PrediabetesDietPage() {
         title="Prediabetes Diet Plan: What to Eat & Avoid | Thrive"
         description="Complete prediabetes diet guide. Learn which foods stabilize blood sugar, meal timing strategies, and a 7-day meal plan to reverse prediabetes naturally."
         keywords="prediabetes diet, blood sugar diet, foods for blood sugar, what to eat with prediabetes, diabetes diet"
-        image="/images/prediabetes-diet-og.png"
+        image="/images/og-default.png"
         url="/prediabetes-diet"
       />
       <main className="min-h-screen bg-white font-sans text-gray-800">

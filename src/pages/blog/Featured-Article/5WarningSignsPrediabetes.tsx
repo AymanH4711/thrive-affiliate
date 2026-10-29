@@ -171,7 +171,7 @@ const schemaMarkup = {
     name: 'ThriveHealth360',
     logo: {
       '@type': 'ImageObject',
-      url: `${SITE_URL}/images/brand/logo.svg`
+      url: `${SITE_URL}/images/logo.png`
     },
     url: SITE_URL
   },
@@ -180,7 +180,7 @@ const schemaMarkup = {
     name: 'ThriveHealth360',
     logo: {
       '@type': 'ImageObject',
-      url: `${SITE_URL}/images/brand/logo.svg`
+      url: `${SITE_URL}/images/logo.png`
     }
   },
   mainEntity: {

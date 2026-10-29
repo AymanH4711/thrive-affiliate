@@ -31,8 +31,8 @@ export default function InsulinResistanceManagement() {
     "@type": "MedicalWebPage",
     "headline": "Insulin Resistance Management Guide",
     "description": "Complete guide to understanding and managing insulin resistance: root causes, warning signs, and a 3-pillar reversal protocol.",
-    "url": "https://thrive-health.com/insulin-resistance-management",
-    "image": "https://thrive-health.com/images/insulin-resistance-og.png",
+    "url": "https://thrivehealth360.org/insulin-resistance-management",
+    "image": "https://thrivehealth360.org/images/insulin-resistance-hero-thumb-og.webp",
     "dateModified": "2026-01-01",
     "author": {
       "@type": "Organization",

@@ -16,7 +16,7 @@
 //   import { ArticleLayout } from '@/components/layout/ArticleLayout';
 //
 //   <ArticleLayout
-//     seo={{ title: '...', description: '...', image: '/images/blog/....webp', url: '/blog/...' }}
+//     seo={{ title: '...', description: '...', image: '/images/og-default.png', url: '/blog/...' }}
 //     category="supplement"
 //     title="How Sleep Affects Blood Sugar Levels in Type 2 Diabetes"
 //     readTime="9 min read"

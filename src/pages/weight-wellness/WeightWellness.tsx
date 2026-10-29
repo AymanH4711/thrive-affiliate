@@ -11,7 +11,7 @@ export default function WeightWellness() {
     "headline": "Weight & Metabolic Wellness for Blood Sugar Control",
     "description": "Complete guide to sustainable weight management and metabolic health for better blood sugar control. 12-week reset plan, nutrition strategy, and exercise guide.",
     "url": "https://thrivehealth360.org/weight-wellness",
-    "image": "https://thrivehealth360.org/images/weight-wellness-hero-og.webp",
+    "image": "https://thrivehealth360.org/images/weight-wellness-hero-thumb-og.webp",
     "dateModified": "2026-01-01",
     "author": {
       "@type": "Organization",
@@ -25,7 +25,7 @@ export default function WeightWellness() {
         title="Weight & Metabolic Wellness for Blood Sugar Control"
         description="Complete guide to sustainable weight management and metabolic health for better blood sugar control. 12-week reset plan, nutrition strategy, and exercise guide."
         keywords="weight loss and blood sugar, metabolic health, sustainable weight loss, metabolism, weight management"
-        image="/images/weight-wellness-hero-og.webp"
+        image="/images/og-default.png"
         url="/weight-wellness"
         schema={schema}
       />
@@ -60,8 +60,8 @@ export default function WeightWellness() {
                     className="w-full h-[350px] md:h-[450px] object-contain bg-emerald-950"
                     onError={(e) => {
                       const img = e.currentTarget;
-                      if (!img.src.includes('natural-blood-sugar-hero.webp')) {
-                        img.src = '/images/natural-blood-sugar-hero.webp';
+                      if (!img.src.includes('natural-blood-sugar-hero-thumb-og.webp')) {
+                        img.src = '/images/natural-blood-sugar-hero-thumb-og.webp';
                       }
                     }}
                   />

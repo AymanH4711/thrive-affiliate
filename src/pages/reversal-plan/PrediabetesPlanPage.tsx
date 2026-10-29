@@ -160,7 +160,7 @@ export default function PrediabetesPlanPage() {
               {/* Hero Image */}
               <div className="hidden md:block">
                 <img 
-                  src="/images/reverse-prediabetes-hero-thumb-og.webp" 
+                  src="/images/reverse-prediabetes-hero-thumb-og.webp"
                   alt="Woman preparing a healthy meal as part of a prediabetes lifestyle plan"
                   className="rounded-xl shadow-2xl w-full h-auto object-cover"
                 />
@@ -172,7 +172,7 @@ export default function PrediabetesPlanPage() {
         {/* Mobile Hero Image */}
         <div className="md:hidden bg-white px-4 py-6">
           <img 
-            src="/images/reverse-prediabetes-hero.webp" 
+            src="/images/reverse-prediabetes-hero-thumb-og.webp"
             alt="Woman preparing a healthy meal as part of a prediabetes lifestyle plan"
             className="rounded-xl shadow-lg w-full h-auto object-cover"
           />

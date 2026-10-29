@@ -162,13 +162,6 @@ export default function PrediabetesSupportHub() {
                     height={400}
                     className="relative rounded-2xl shadow-2xl border border-emerald-700/40 w-full max-w-md object-cover"
                     loading="eager"
-                    onError={(e) => {
-                      // Fallback to original hero if thumb-og variant not present
-                      const img = e.currentTarget;
-                      if (!img.src.includes('prediabetes-support-hero.webp')) {
-                        img.src = '/images/prediabetes-support-hero.webp';
-                      }
-                    }}
                   />
                 </div>
               </div>

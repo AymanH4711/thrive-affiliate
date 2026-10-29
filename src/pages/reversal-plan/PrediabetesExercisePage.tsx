@@ -34,7 +34,7 @@ export default function PrediabetesExercisePage() {
         title="Best Exercises for Prediabetes | Thrive Health Guide"
         description="Complete guide to exercise for prediabetes: strength training, walking routines, HIIT workouts. See how regular movement improves insulin sensitivity and supports blood sugar control."
         keywords="prediabetes exercise, best exercises for blood sugar, strength training, walking for blood sugar control"
-        image="/images/prediabetes-exercise-og.png"
+        image="/images/og-default.png"
         url="/prediabetes-exercise"
       />
       <div className="bg-white min-h-screen font-sans text-gray-800">

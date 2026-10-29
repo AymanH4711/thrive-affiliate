@@ -95,12 +95,6 @@ export default function GlucoseMonitoringTools() {
                   height={400}
                   className="relative rounded-2xl shadow-2xl border border-purple-700/40 object-cover w-full max-w-sm"
                   loading="eager"
-                  onError={(e) => {
-                    const img = e.currentTarget;
-                    if (!img.src.includes('glucose-monitoring-hero.webp')) {
-                      img.src = '/images/glucose-monitoring-hero.webp';
-                    }
-                  }}
                 />
               </div>
             </div>

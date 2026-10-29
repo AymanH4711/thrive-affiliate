@@ -150,7 +150,7 @@ export default function ContactPage() {
         title="Contact ThriveHealth360 | Editorial & Content Enquiries"
         description="Have questions about our prediabetes content? Contact our editorial team. We typically respond within 2 business days. For medical concerns, always consult a qualified healthcare provider."
         keywords="contact thrive health, diabetes support, prediabetes help, health guide contact"
-        image="/images/contact-og.png"
+        image="/images/og-default.png"
         url="/contact"
       />
 

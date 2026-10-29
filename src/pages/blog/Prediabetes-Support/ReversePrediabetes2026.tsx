@@ -117,12 +117,12 @@ const ReversePrediabetes2026: React.FC = () => {
     author: {
       '@type': 'Organization',
       name: 'ThriveHealth Editorial Team',
-      url: 'https://thrivehealth.com',
+      url: 'https://thrivehealth360.org',
     },
     publisher: {
       '@type': 'Organization',
       name: 'ThriveHealth',
-      logo: { '@type': 'ImageObject', url: 'https://thrivehealth.com/logo.png' },
+      logo: { '@type': 'ImageObject', url: 'https://thrivehealth360.org/images/logo.png' },
     },
     reviewedBy: {
       '@type': 'Organization',

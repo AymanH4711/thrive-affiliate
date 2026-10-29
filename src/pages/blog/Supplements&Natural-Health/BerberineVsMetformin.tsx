@@ -48,14 +48,14 @@ const BerberineVsMetformin: React.FC = () => {
     author: {
       '@type': 'Organization',
       name: 'ThriveHealth Editorial Team',
-      url: 'https://thrive-health.com'
+      url: 'https://thrivehealth360.org'
     },
     publisher: {
       '@type': 'Organization',
       name: 'ThriveHealth',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://thrive-health.com/logo.png'
+        url: 'https://thrivehealth360.org/images/logo.png'
       }
     },
     reviewedBy: {

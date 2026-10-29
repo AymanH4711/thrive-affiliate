@@ -70,7 +70,7 @@ export const blogMeta: BlogArticleMeta = {
   title: "CGM vs Blood Glucose Meter: Which Should You Use?",
   excerpt: "A comprehensive comparison between Continuous Glucose Monitors and traditional blood glucose meters — accuracy, cost, and which is right for you. Coming soon.",
   readTime: "Coming soon",
-  image: "/images/placeholder-purple.png",
+  image: "/images/og-default.png",
   path: "/blog/cgm-vs-blood-glucose-meter",
   category: "monitoring",
   isPublished: false,

@@ -70,7 +70,7 @@ export const blogMeta: BlogArticleMeta = {
   title: "The Power of Post-Meal Walks for Blood Sugar",
   excerpt: "How post-meal walks help regulate blood sugar levels — the science, optimal timing, and how to make it a habit. Coming soon.",
   readTime: "Coming soon",
-  image: "/images/placeholder-blue.png",
+  image: "/images/og-default.png",
   path: "/blog/post-meal-walks",
   category: "exercise",
   isPublished: false,

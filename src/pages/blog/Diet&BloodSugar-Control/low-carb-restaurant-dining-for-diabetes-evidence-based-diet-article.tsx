@@ -454,7 +454,7 @@ const LowcarbRestaurantDiningForDiabetesEvidenceBasedDieArticle: React.FC = () =
       name: "ThriveHealth360",
       logo: {
         "@type": "ImageObject",
-        url: "https://thrivehealth360.org/images/brand/logo.svg",
+        url: "https://thrivehealth360.org/images/logo.png",
       },
     },
     mainEntity: {

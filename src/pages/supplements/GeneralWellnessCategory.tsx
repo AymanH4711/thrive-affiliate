@@ -73,7 +73,7 @@ export default function GeneralWellnessCategory() {
         title="General Wellness Resources | Blood Sugar Guides & Support"
         description="Educational guides and resources for readers looking for a structured, self-directed starting point for blood sugar management alongside professional care."
         keywords="blood sugar guide, diabetes ebook, general wellness resources, blood sugar management guide"
-        image="/images/general-wellness-og.png"
+        image="/images/og-default.png"
         url="/supplements/general-wellness"
         schema={schema}
       />

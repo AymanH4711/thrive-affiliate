@@ -83,7 +83,7 @@ const IntermittentFastingBloodSugar: React.FC = () => {
     publisher: {
       '@type': 'Organization',
       name: 'ThriveHealth360',
-      logo: { '@type': 'ImageObject', url: 'https://thrivehealth360.org/images/brand/logo.svg' },
+      logo: { '@type': 'ImageObject', url: 'https://thrivehealth360.org/images/logo.png' },
     },
     // reviewedBy removed: there is no real "Medical Advisory Board" — that
     // was a fabricated claim, the same category of problem fixed sitewide

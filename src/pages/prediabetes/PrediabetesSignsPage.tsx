@@ -2,193 +2,261 @@
 // Route: /prediabetes-signs
 // REWRITTEN — previously contained the exercise guide (wrong content)
 
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  AlertTriangle, CheckCircle, ArrowRight,
+  AlertTriangle, ArrowRight,
   Eye, Droplets, Zap, Waves, ShieldAlert,
   Thermometer, Hand, Layers, ChevronRight,
-  Brain, Tag
+  Brain, Tag, Info, type LucideIcon
 } from 'lucide-react';
 import { SEO } from '@/components/seo/SEO';
+
+const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://thrivehealth360.org').replace(/\/$/, '');
 
 // Full literal class names per color, so Tailwind's JIT scanner can see and
 // generate them. Interpolated strings like `bg-${card.color}-50` are
 // invisible to the scanner — only classes it sees as complete literals in
 // source get generated. Same fix pattern applied in IntermittentFastingBloodSugar.tsx.
-const colorClasses: Record<string, { bg50: string; border200: string; bg600: string }> = {
+const colorClasses = {
   emerald: { bg50: 'bg-emerald-50', border200: 'border-emerald-200', bg600: 'bg-emerald-600' },
   blue:    { bg50: 'bg-blue-50',    border200: 'border-blue-200',    bg600: 'bg-blue-600' },
   purple:  { bg50: 'bg-purple-50',  border200: 'border-purple-200',  bg600: 'bg-purple-600' },
+} as const;
+
+type CardColor = keyof typeof colorClasses;
+
+type Sign = {
+  icon: LucideIcon;
+  title: string;
+  body: string;
+  note: string;
+  /** The two signs that can be seen on the skin — foreground these. */
+  visible?: boolean;
 };
 
+// Ordered deliberately: the two visible insulin-resistance signs come first,
+// then the symptoms that may appear as blood sugar rises. Most people with
+// prediabetes have no symptoms at all, which the section intro makes explicit.
+const signs: Sign[] = [
+  {
+    icon: Layers,
+    title: 'Darkened Skin Patches',
+    body: 'Acanthosis nigricans — patches of dark, velvety skin in body folds such as the neck, armpits, or groin — is strongly linked to insulin resistance. It is one of the few visible signs of prediabetes.',
+    note: 'Acanthosis nigricans is one of the most distinctive visible signs of insulin resistance.',
+    visible: true,
+  },
+  {
+    icon: Tag,
+    title: 'Skin Tags',
+    body: 'Small, soft skin growths that appear in body folds — neck, armpits, groin — are commonly seen alongside insulin resistance, though the exact mechanism is not fully understood.',
+    note: 'Skin tags alone are not diagnostic, but they are worth mentioning to your doctor, especially alongside other signs.',
+    visible: true,
+  },
+  {
+    icon: Droplets,
+    title: 'Increased Thirst',
+    body: 'Excess glucose in your blood draws fluid from tissues, leaving you persistently thirsty — even after drinking. This is called polydipsia.',
+    note: 'Persistent thirst has many causes; mention it to your doctor, especially if it occurs alongside other signs.',
+  },
+  {
+    icon: Waves,
+    title: 'Frequent Urination',
+    body: 'When blood sugar is high, the kidneys work harder to filter excess glucose, producing more urine than usual (polyuria).',
+    note: 'Waking at night to urinate is common and often unrelated to blood sugar, but it is worth discussing if it is new or persistent.',
+  },
+  {
+    icon: Zap,
+    title: 'Unexplained Fatigue',
+    body: 'When glucose cannot enter cells efficiently due to insulin resistance, your body may lack energy despite eating. The result can be persistent tiredness — especially after meals.',
+    note: 'An energy crash after a high-carbohydrate meal can happen for many reasons and is not specific to prediabetes.',
+  },
+  {
+    icon: Eye,
+    title: 'Blurred Vision',
+    body: 'High blood sugar causes fluid shifts in the lens of the eye, temporarily altering its shape and affecting focus. Vision may fluctuate throughout the day.',
+    note: 'Blood sugar-related blurring often improves when glucose normalizes, but sudden vision changes need prompt medical care.',
+  },
+  {
+    icon: Thermometer,
+    title: 'Slow-Healing Wounds',
+    body: 'Elevated blood sugar impairs circulation and the immune response needed to repair tissue. Cuts and bruises that take longer than usual to heal can indicate metabolic dysfunction.',
+    note: 'This is more typical after blood sugar has been elevated for some time. Watch healing on the lower legs and feet.',
+  },
+  {
+    icon: ShieldAlert,
+    title: 'Frequent Infections',
+    body: 'High blood sugar can impair immune function, and glucose-rich blood can feed bacteria and fungi. Recurring skin, gum, bladder, or yeast infections may reflect prediabetes.',
+    note: 'Recurring infections have many causes; persistent or unusual infections should be evaluated.',
+  },
+  {
+    icon: Hand,
+    title: 'Tingling or Numbness',
+    body: 'Elevated glucose over time can begin to affect nerve fibers, causing tingling, burning, or numbness — particularly in the hands and feet (peripheral neuropathy).',
+    note: 'Numbness or tingling has many causes; tell your doctor if it is persistent or spreading.',
+  },
+  {
+    icon: Brain,
+    title: 'Mood Changes & Brain Fog',
+    body: 'Blood sugar fluctuations can affect mood, concentration, and energy. Some people with insulin resistance report irritability, anxiety, poor concentration, and mental fatigue — particularly after meals rich in refined carbohydrates.',
+    note: 'Mood and concentration changes are nonspecific and can have many causes; tracking them alongside meals may help your doctor.',
+  },
+];
+
+// ADA criteria. mg/dL and mmol/L are combined into one row per test so readers
+// do not have to map two rows together. WHO 2006 and NICE/NHS differ — see the
+// regional note under the table.
+const ranges = [
+  {
+    test: 'A1C',
+    normal: 'Below 5.7% (39 mmol/mol)',
+    prediabetes: '5.7% – 6.4% (39–47 mmol/mol)',
+    diabetes: '6.5% or above (48 mmol/mol)',
+  },
+  {
+    test: 'Fasting Glucose',
+    normal: 'Below 100 mg/dL (5.6 mmol/L)',
+    prediabetes: '100 – 125 mg/dL (5.6 – 6.9 mmol/L)',
+    diabetes: '126 mg/dL or above (7.0 mmol/L)',
+  },
+  {
+    test: '2-Hour Glucose (OGTT)',
+    normal: 'Below 140 mg/dL (7.8 mmol/L)',
+    prediabetes: '140 – 199 mg/dL (7.8 – 11.0 mmol/L)',
+    diabetes: '200 mg/dL or above (11.1 mmol/L)',
+  },
+];
+
+const riskFactors = [
+  'Overweight or obesity (BMI ≥ 25; or ≥ 23 for some Asian populations)',
+  'Aged 35 or older (ADA screening threshold)',
+  'Family history of type 2 diabetes (parent or sibling)',
+  'High-risk race or ethnicity (e.g., African American, Latino, Native American, Asian American, Pacific Islander)',
+  'Physically inactive (less than 3 sessions of moderate activity per week)',
+  'History of gestational diabetes or baby over 9 lbs at birth',
+  'Polycystic ovary syndrome (PCOS)',
+  'High blood pressure (130/80 mmHg or higher, or on treatment for hypertension)',
+  'Low HDL cholesterol or high triglycerides',
+  'History of cardiovascular disease',
+  'History of prediabetes (previous A1C 5.7–6.4% or fasting glucose 100–125 mg/dL)',
+  'Other conditions linked to insulin resistance (e.g., severe obesity, acanthosis nigricans)',
+];
+
+// Grounded in facts already stated and sourced on this page — ADA ranges from
+// the table, the DPP figures below, and the no-fasting-required note. Same
+// array drives both the visible FAQ section and FAQPage schema, so the two
+// can't drift apart.
+const faqs = [
+  {
+    q: 'What are the first signs of prediabetes?',
+    a: 'Most people with prediabetes have no symptoms. If blood sugar rises further, increased thirst, fatigue, and frequent urination may occur. No single symptom confirms prediabetes; a blood test is the only way to know.',
+  },
+  {
+    q: 'What A1C level is considered prediabetes?',
+    a: 'An A1C between 5.7% and 6.4% is classified as prediabetes by the ADA. WHO’s 2006 criteria do not define prediabetes by A1C, and NICE/NHS uses 6.0–6.4% (42–47 mmol/mol).',
+  },
+  {
+    q: 'Can prediabetes be reversed?',
+    a: 'Often. The Diabetes Prevention Program found that diet, activity, and modest weight loss reduced progression to type 2 diabetes by 58% over about 2.8 years — and by 71% in adults over 60 (CDC).',
+  },
+  {
+    q: 'Do I need to fast before an A1C test?',
+    a: 'No. Unlike a fasting glucose test, the A1C blood draw does not require fasting and can be done at any time of day.',
+  },
+  {
+    q: 'At what age should I get screened for prediabetes?',
+    a: 'The ADA recommends routine screening from age 35, or earlier if you have risk factors such as overweight, a family history of type 2 diabetes, or high blood pressure. The CDC recommends starting at 45 for adults at average risk. Guidelines vary by country, so ask your clinician.',
+  },
+  {
+    q: 'What is acanthosis nigricans?',
+    a: 'Acanthosis nigricans is dark, velvety skin in body folds such as the neck, armpits, or groin. It is strongly associated with insulin resistance and is one of the few visible signs of prediabetes.',
+  },
+];
+
+// MedicalWebPage + FAQPage structured data. reviewedBy is deliberately
+// omitted — no fabricated reviewers (sitewide policy).
+const schemaMarkup = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'MedicalWebPage',
+      name: '10 Warning Signs of Prediabetes',
+      description: 'Most people with prediabetes have no symptoms. Learn the possible signs of high blood sugar, ADA blood sugar ranges, and when to get tested.',
+      url: `${SITE_URL}/prediabetes-signs`,
+      dateModified: '2026-10-29',
+      author: { '@type': 'Organization', name: 'ThriveHealth360', url: SITE_URL },
+      publisher: {
+        '@type': 'Organization',
+        name: 'ThriveHealth360',
+        logo: { '@type': 'ImageObject', url: `${SITE_URL}/images/logo.png` },
+      },
+      mainEntity: {
+        '@type': 'MedicalCondition',
+        name: 'Prediabetes',
+        code: { '@type': 'MedicalCode', codeValue: 'R73.03', codingSystem: 'ICD-10' },
+        signOrSymptom: signs.map((s) => ({ '@type': 'MedicalSignOrSymptom', name: s.title })),
+        riskFactor: riskFactors.map((r) => ({ '@type': 'MedicalRiskFactor', description: r })),
+      },
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    },
+  ],
+};
+
+const nextSteps: Array<{ step: string; title: string; desc: string; color: CardColor }> = [
+  {
+    step: '1',
+    title: 'Get Tested',
+    desc: 'Ask your doctor for a fasting glucose or A1C test. This is the only way to confirm prediabetes. Some pharmacies offer free or low-cost screening.',
+    color: 'emerald',
+  },
+  {
+    step: '2',
+    title: 'Start the 5-Step Plan',
+    desc: 'Diet, exercise, and weight loss are the interventions tested in the DPP, which reduced progression by 58% over about 2.8 years. Monitoring, sleep, and evidence-based natural support are supportive steps — not DPP-tested interventions.',
+    color: 'blue',
+  },
+  {
+    step: '3',
+    title: 'Track Your Progress',
+    desc: 'Monitor glucose at home if your clinician recommends it. Repeat A1C at least annually, or as advised by your clinician. Your numbers show whether the changes are working.',
+    color: 'purple',
+  },
+];
+
 export default function PrediabetesSignsPage() {
+  useEffect(() => {
+    const root = document.documentElement;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  const scrollTo = (id: string) => {
-    if (typeof document === 'undefined') return;
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  };
+    const applyScrollBehavior = () => {
+      root.style.scrollBehavior = reducedMotion.matches ? 'auto' : 'smooth';
+    };
 
-  const signs = [
-    {
-      icon: Droplets,
-      title: 'Increased Thirst',
-      body: 'Excess glucose in your blood draws fluid from tissues, leaving you persistently thirsty — even after drinking. This is called polydipsia.',
-      note: 'Not every thirsty person has prediabetes, but combined with other signs it is a key flag.',
-    },
-    {
-      icon: Waves,
-      title: 'Frequent Urination',
-      body: 'Your kidneys work harder to filter excess glucose, producing more urine than normal (polyuria). Needing to urinate more than 7–8 times per day warrants attention.',
-      note: 'Often noticed at night (nocturia) — waking once or more to urinate.',
-    },
-    {
-      icon: Zap,
-      title: 'Unexplained Fatigue',
-      body: 'When glucose cannot enter cells efficiently due to insulin resistance, your body lacks energy despite eating. The result is persistent tiredness — especially after meals.',
-      note: 'A spike followed by a sudden energy crash 1–2 hours after eating is a reliable signal.',
-    },
-    {
-      icon: Eye,
-      title: 'Blurred Vision',
-      body: 'High blood sugar causes fluid shifts in the lens of the eye, temporarily altering its shape and affecting focus. Vision may fluctuate throughout the day.',
-      note: 'This symptom often resolves when blood sugar normalizes — but prompt evaluation is important.',
-    },
-    {
-      icon: Thermometer,
-      title: 'Slow-Healing Wounds',
-      body: 'Elevated blood sugar impairs circulation and the immune response needed to repair tissue. Cuts and bruises that take longer than usual to heal can indicate metabolic dysfunction.',
-      note: 'Particularly watch healing times on the lower legs and feet.',
-    },
-    {
-      icon: ShieldAlert,
-      title: 'Frequent Infections',
-      body: 'Glucose-rich blood can feed bacteria and fungi, while insulin resistance weakens the immune system. Recurring skin, gum, bladder, or yeast infections may reflect prediabetes.',
-      note: 'Recurring infections that do not respond quickly to treatment are worth investigating.',
-    },
-    {
-      icon: Hand,
-      title: 'Tingling or Numbness',
-      body: 'Elevated glucose over time can begin to affect nerve fibers, causing tingling, burning, or numbness — particularly in the hands and feet (peripheral neuropathy).',
-      note: 'Even in prediabetes — before full diabetes — early nerve changes can occur.',
-    },
-    {
-      icon: Layers,
-      title: 'Darkened Skin Patches',
-      body: 'Acanthosis nigricans — patches of dark, velvety skin in body folds (neck, armpits, groin) — is strongly linked to insulin resistance and is considered a visible metabolic warning sign.',
-      note: 'This is one of the most distinctive and visible signs of insulin resistance.',
-    },
-    {
-      icon: Brain,
-      title: 'Mood Changes & Brain Fog',
-      body: 'Blood sugar fluctuations directly affect brain function and neurotransmitter balance. Insulin resistance can cause irritability, anxiety, poor concentration, and mental fatigue — particularly after meals rich in refined carbohydrates.',
-      note: 'Mood swings that track with meal timing — better before eating, worse 1–2 hours after — are a notable pattern worth discussing with your doctor.',
-    },
-    {
-      icon: Tag,
-      title: 'Skin Tags',
-      body: 'Small, soft skin growths appearing in body folds — neck, armpits, groin — are strongly associated with insulin resistance. Research suggests elevated insulin promotes tissue growth through IGF-1 receptor activation.',
-      note: 'Skin tags alone are not diagnostic, but their presence alongside other signs significantly raises the probability of insulin resistance.',
-    },
-  ];
+    applyScrollBehavior();
+    reducedMotion.addEventListener('change', applyScrollBehavior);
 
-  const ranges = [
-    { test: 'A1C', normal: 'Below 5.7%',       prediabetes: '5.7% – 6.4%',    diabetes: '6.5% or above' },
-    { test: 'Fasting Glucose (mg/dL)', normal: 'Below 100', prediabetes: '100 – 125', diabetes: '126 or above' },
-    { test: 'Fasting Glucose (mmol/L)', normal: 'Below 5.6', prediabetes: '5.6 – 6.9', diabetes: '7.0 or above' },
-    { test: '2-hr Glucose (mg/dL)', normal: 'Below 140',   prediabetes: '140 – 199',   diabetes: '200 or above' },
-    { test: '2-hr Glucose (mmol/L)', normal: 'Below 7.8',  prediabetes: '7.8 – 11.0',  diabetes: '11.1 or above' },
-  ];
-
-  const riskFactors = [
-    'Overweight or obesity (BMI ≥ 25; or ≥ 23 for some Asian populations)',
-    'Aged 35 or older',
-    'Family history of type 2 diabetes (parent or sibling)',
-    'Physically inactive (less than 3 sessions of moderate activity per week)',
-    'History of gestational diabetes or baby over 9 lbs at birth',
-    'Polycystic ovary syndrome (PCOS)',
-    'Sleep apnea or chronically poor sleep',
-    'High blood pressure (above 140/90 mmHg)',
-    'Low HDL cholesterol or high triglycerides',
-    'History of cardiovascular disease',
-  ];
-
-  // Grounded in facts already stated and sourced elsewhere on this page —
-  // A1C range from the table (ADA/WHO), the 58%/71% DPP figures below, and
-  // the "no fasting required for A1C" line from the risk section. Same
-  // array drives both the visible FAQ section and FAQPage schema, so the
-  // two can't drift apart.
-  const faqs = [
-    {
-      q: 'What are the first signs of prediabetes?',
-      a: 'The earliest and most common signs include increased thirst, unexplained fatigue, and frequent urination — caused by rising blood glucose before it reaches diabetic levels. No single sign confirms prediabetes on its own; a blood test is the only way to know for sure.',
-    },
-    {
-      q: 'What A1C level is considered prediabetes?',
-      a: 'An A1C between 5.7% and 6.4% is classified as prediabetes by the ADA and WHO. Below 5.7% is normal; 6.5% or above is type 2 diabetes.',
-    },
-    {
-      q: 'Can prediabetes be reversed?',
-      a: 'Yes. The Diabetes Prevention Program found that lifestyle changes — diet, activity, and modest weight loss — reduced progression to type 2 diabetes by 58% overall, and by 71% in adults over 60 (CDC).',
-    },
-    {
-      q: 'Do I need to fast before an A1C test?',
-      a: 'No. Unlike a fasting glucose test, the A1C blood draw does not require fasting and can be done at any time of day.',
-    },
-    {
-      q: 'At what age should I get screened for prediabetes?',
-      a: 'The ADA recommends routine screening for all adults 35 and older, or earlier if you have one or more risk factors such as obesity, a family history of type 2 diabetes, or high blood pressure.',
-    },
-  ];
-
-  // MedicalWebPage + FAQPage structured data. reviewedBy is deliberately
-  // omitted — no fabricated reviewers (sitewide policy).
-  //
-  // datePublished / dateModified are intentionally left out below rather
-  // than filled with a placeholder — this page had no existing date
-  // anywhere to draw from, and inventing one would be exactly the kind of
-  // unverifiable claim this site has been stripping out elsewhere. Add both
-  // as real ISO dates ('YYYY-MM-DD') once known; Google treats their
-  // absence as a missed optional field, not an error.
-  const schemaMarkup = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'MedicalWebPage',
-        name: '10 Warning Signs of Prediabetes',
-        description: 'Learn the 10 key warning signs of prediabetes — including fatigue, mood changes, skin tags, tingling, and darkened skin. Understand your blood sugar ranges and when to act.',
-        url: 'https://thrivehealth360.org/prediabetes-signs',
-        author: { '@type': 'Organization', name: 'ThriveHealth360', url: 'https://thrivehealth360.org' },
-        publisher: {
-          '@type': 'Organization',
-          name: 'ThriveHealth360',
-          logo: { '@type': 'ImageObject', url: 'https://thrivehealth360.org/images/logo.png' },
-        },
-        mainEntity: {
-          '@type': 'MedicalCondition',
-          name: 'Prediabetes',
-          code: { '@type': 'MedicalCode', codeValue: 'R73.03', codingSystem: 'ICD-10' },
-          signOrSymptom: signs.map((s) => ({ '@type': 'MedicalSignOrSymptom', name: s.title })),
-          riskFactor: riskFactors.map((r) => ({ '@type': 'MedicalRiskFactor', description: r })),
-        },
-      },
-      {
-        '@type': 'FAQPage',
-        mainEntity: faqs.map((f) => ({
-          '@type': 'Question',
-          name: f.q,
-          acceptedAnswer: { '@type': 'Answer', text: f.a },
-        })),
-      },
-    ],
-  };
+    return () => {
+      root.style.scrollBehavior = '';
+      reducedMotion.removeEventListener('change', applyScrollBehavior);
+    };
+  }, []);
 
   return (
     <>
       <SEO
         title="10 Warning Signs of Prediabetes | ThriveHealth360"
-        description="Learn the 10 key warning signs of prediabetes — including fatigue, mood changes, skin tags, tingling, and darkened skin. Understand your blood sugar ranges and when to act."
-        keywords="signs of prediabetes, prediabetes symptoms, warning signs high blood sugar, acanthosis nigricans, skin tags insulin resistance, mood changes blood sugar, prediabetes A1C range"
-        image="/images/prediabetes-support-hero.webp"
+        description="Learn the possible signs of prediabetes and high blood sugar — including darkened skin and skin tags — plus ADA ranges and when to get tested."
+        keywords="signs of prediabetes, prediabetes symptoms, high blood sugar signs, acanthosis nigricans, skin tags insulin resistance, prediabetes A1C range, prediabetes no symptoms"
+        image="/images/prediabetes-signs-og.webp"
+        imageWidth={1200}
+        imageHeight={630}
         url="/prediabetes-signs"
         schema={schemaMarkup}
       />
@@ -213,24 +281,28 @@ export default function PrediabetesSignsPage() {
               <span className="text-emerald-400">Most People Miss</span>
             </h1>
             <p className="text-lg text-emerald-100 leading-relaxed max-w-2xl mb-8">
-              Prediabetes rarely announces itself loudly. Most symptoms are subtle, gradual, and easy to dismiss.
-              Knowing what to look for gives you the chance to act before type 2 diabetes develops.
+              Prediabetes rarely announces itself.{' '}
+              <strong className="text-white">Most people with prediabetes have no symptoms at all.</strong>{' '}
+              The most visible signs — darkened skin patches and skin tags — are linked to insulin
+              resistance. When blood sugar rises, possible signs include increased thirst, frequent
+              urination, fatigue, and blurred vision. These signs do not confirm prediabetes — only a
+              blood test can.
             </p>
             <div className="flex flex-wrap gap-4">
-              <button onClick={() => scrollTo('signs')}
-                className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-7 rounded-xl transition flex items-center gap-2">
-                See the 10 Signs <ArrowRight className="w-4 h-4" />
-              </button>
-              <button onClick={() => scrollTo('ranges')}
+              <a href="#signs"
+                className="bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-3 px-7 rounded-xl transition flex items-center gap-2">
+                See the 10 Signs <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              </a>
+              <a href="#ranges"
                 className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold py-3 px-7 rounded-xl transition">
                 Check Your Numbers
-              </button>
+              </a>
             </div>
           </div>
         </header>
 
         {/* ── STICKY NAV ───────────────────────────────────────────────── */}
-        <div className="bg-emerald-50 border-b border-emerald-100 sticky top-0 z-20 shadow-sm">
+        <nav aria-label="On this page" className="bg-emerald-50 border-b border-emerald-100 sticky top-[72px] z-30 shadow-sm">
           <div className="container mx-auto px-4 overflow-x-auto">
             <div className="flex space-x-6 py-3.5 text-sm font-semibold text-emerald-800 whitespace-nowrap">
               {[
@@ -238,12 +310,13 @@ export default function PrediabetesSignsPage() {
                 ['ranges',   'Blood Sugar Ranges'],
                 ['risk',     'Risk Factors'],
                 ['nextStep', 'What to Do Next'],
+                ['faq',      'FAQ'],
               ].map(([id, label]) => (
-                <button key={id} onClick={() => scrollTo(id)} className="hover:text-emerald-600 transition">{label}</button>
+                <a key={id} href={`#${id}`} className="hover:text-emerald-700 transition">{label}</a>
               ))}
             </div>
           </div>
-        </div>
+        </nav>
 
         {/* ── MEDICAL DISCLAIMER ───────────────────────────────────────── */}
         <div className="bg-amber-50 border-b border-amber-200">
@@ -271,11 +344,23 @@ export default function PrediabetesSignsPage() {
           <div className="container mx-auto px-4 max-w-4xl">
             <div className="grid md:grid-cols-3 gap-6 mb-12">
               {[
-                { stat: '98M+',  label: 'US adults with prediabetes',       sub: '(CDC, 2024)' },
-                { stat: '80%',   label: 'Don\'t know they have it',          sub: 'It is often asymptomatic' },
-                { stat: '70%',   label: 'Risk of progression without action', sub: 'Lifestyle change can cut this by 58% (CDC)' },
-              ].map((c, i) => (
-                <div key={i} className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center">
+                {
+                  stat: '115.2M',
+                  label: 'US adults with prediabetes',
+                  sub: 'CDC, 2026 · 8 in 10 don’t know they have it',
+                },
+                {
+                  stat: 'Up to 70%',
+                  label: 'Lifetime risk of progression',
+                  sub: 'CDC estimate; 15–30% progress within 5 years without action',
+                },
+                {
+                  stat: '58%',
+                  label: 'Lower progression with lifestyle change',
+                  sub: 'Over ~2.8 years in the Diabetes Prevention Program (CDC)',
+                },
+              ].map((c) => (
+                <div key={c.label} className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center">
                   <p className="text-3xl font-bold text-emerald-700 mb-1">{c.stat}</p>
                   <p className="font-semibold text-gray-800 text-sm mb-1">{c.label}</p>
                   <p className="text-xs text-gray-500">{c.sub}</p>
@@ -288,21 +373,21 @@ export default function PrediabetesSignsPage() {
                 Prediabetes is a metabolic condition where blood glucose levels are higher than normal — but not yet high enough to be classified as type 2 diabetes. It reflects underlying <strong>insulin resistance</strong>: your cells have become less responsive to insulin, so glucose builds up in the bloodstream.
               </p>
               <p className="text-gray-700 leading-relaxed">
-                The encouraging reality is that prediabetes is <strong>reversible</strong>. The Diabetes Prevention Program (DPP) showed that lifestyle changes reduce progression to type 2 diabetes by 58% overall — and by 71% in adults over 60 (CDC). But the window for action requires recognizing the signs early.
+                Prediabetes is <strong>often reversible</strong>. In the Diabetes Prevention Program (DPP), diet, activity, and modest weight loss reduced progression to type 2 diabetes by 58% over about 2.8 years — and by 71% in adults over 60 (CDC). Because most people have no symptoms, a blood test is the only reliable way to find it early.
               </p>
             </div>
           </div>
         </section>
 
         {/* ── 10 SIGNS ─────────────────────────────────────────────────── */}
-        <section id="signs" className="py-16 bg-emerald-50 scroll-mt-16">
+        <section id="signs" className="py-16 bg-emerald-50 scroll-mt-[128px]">
           <div className="container mx-auto px-4 max-w-4xl">
-            <p className="text-sm font-bold tracking-widest text-emerald-600 uppercase mb-2">Know Your Body</p>
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">The 10 Warning Signs</h2>
+            <p className="text-sm font-bold tracking-widest text-emerald-700 uppercase mb-2">Know Your Body</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">10 Signs of High Blood Sugar to Watch For</h2>
             <p className="text-gray-600 mb-10 max-w-2xl">
-              These signs do not confirm prediabetes on their own — but if several apply to you,
-              it is worth asking your doctor for a blood sugar test. For more on recognizing these
-              signs early, see our{' '}
+              Most people with prediabetes have no symptoms at all. The signs below can appear as
+              blood sugar rises — they do not confirm prediabetes on their own. If several apply to
+              you, ask your doctor for a blood test. For a shorter overview, see our{' '}
               <Link to="/blog/5-warning-signs-of-prediabetes"
                 className="text-emerald-700 underline font-semibold hover:text-emerald-900">
                 companion blog article
@@ -310,14 +395,17 @@ export default function PrediabetesSignsPage() {
             </p>
             <div className="grid md:grid-cols-2 gap-6">
               {signs.map((sign, i) => (
-                <div key={i} className="bg-white border border-gray-200 rounded-2xl p-6 hover:border-emerald-400 hover:shadow-md transition-all">
+                <div key={sign.title} className="bg-white border border-gray-200 rounded-2xl p-6 hover:border-emerald-400 hover:shadow-md transition-all">
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <sign.icon className="w-5 h-5 text-emerald-700" />
+                      <sign.icon className="w-5 h-5 text-emerald-700" aria-hidden="true" />
                     </div>
                     <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Sign {i + 1}</span>
+                      <div className="flex flex-wrap items-center gap-2 mb-1">
+                        <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Sign {i + 1}</span>
+                        {sign.visible && (
+                          <span className="text-xs font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">Visible sign</span>
+                        )}
                       </div>
                       <h3 className="font-bold text-gray-900 mb-2">{sign.title}</h3>
                       <p className="text-sm text-gray-700 leading-relaxed mb-3">{sign.body}</p>
@@ -334,15 +422,24 @@ export default function PrediabetesSignsPage() {
         </section>
 
         {/* ── BLOOD SUGAR RANGES ───────────────────────────────────────── */}
-        <section id="ranges" className="py-16 bg-white scroll-mt-16">
+        <section id="ranges" className="py-16 bg-white scroll-mt-[128px]">
           <div className="container mx-auto px-4 max-w-4xl">
-            <p className="text-sm font-bold tracking-widest text-emerald-600 uppercase mb-2">Know Your Numbers</p>
+            <p className="text-sm font-bold tracking-widest text-emerald-700 uppercase mb-2">Know Your Numbers</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-3">Blood Sugar Reference Ranges</h2>
             <p className="text-gray-600 mb-8">
-              These are the diagnostic thresholds used by the ADA, NHS, and equivalent bodies globally. Both mg/dL (US) and mmol/L (UK, CA, AU) values are shown.
+              This table follows <strong>American Diabetes Association (ADA)</strong> criteria used
+              in the US. Both mg/dL and mmol/L values are shown.
             </p>
-            <div className="overflow-x-auto rounded-2xl border border-gray-200 shadow-sm">
+            <div
+              className="overflow-x-auto rounded-2xl border border-gray-200 shadow-sm"
+              role="region"
+              aria-label="ADA blood sugar reference ranges"
+              tabIndex={0}
+            >
               <table className="w-full text-sm">
+                <caption className="sr-only">
+                  ADA blood sugar reference ranges for normal, prediabetes, and diabetes
+                </caption>
                 <thead>
                   <tr className="bg-gray-50">
                     <th scope="col" className="text-left p-4 font-bold text-gray-700 border-b border-gray-200">Test</th>
@@ -353,8 +450,8 @@ export default function PrediabetesSignsPage() {
                 </thead>
                 <tbody>
                   {ranges.map((row, i) => (
-                    <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                      <td className="p-4 font-semibold text-gray-800 border-b border-gray-100">{row.test}</td>
+                    <tr key={row.test} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                      <th scope="row" className="p-4 text-left font-semibold text-gray-800 border-b border-gray-100">{row.test}</th>
                       <td className="p-4 text-center text-emerald-700 font-medium border-b border-gray-100">{row.normal}</td>
                       <td className="p-4 text-center text-amber-700 font-bold border-b border-gray-100 bg-amber-50/50">{row.prediabetes}</td>
                       <td className="p-4 text-center text-red-700 font-medium border-b border-gray-100">{row.diabetes}</td>
@@ -364,23 +461,42 @@ export default function PrediabetesSignsPage() {
               </table>
             </div>
             <p className="text-xs text-gray-500 mt-4">
-              Sources: American Diabetes Association (ADA) Standards of Medical Care in Diabetes 2024; WHO Diagnostic Criteria for Diabetes Mellitus.
+              This table follows ADA criteria (US). WHO’s 2006 diagnostic criteria use a fasting
+              glucose lower limit of 6.1 mmol/L and do not define prediabetes by A1C; NICE/NHS uses
+              A1C 6.0–6.4% (42–47 mmol/mol).
+            </p>
+            <p className="text-xs text-gray-500 mt-2">
+              Sources:{' '}
+              <a href="https://diabetesjournals.org/care/article/48/Supplement_1/S27/157566/2-Diagnosis-and-Classification-of-Diabetes"
+                target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-700">
+                ADA Standards of Care in Diabetes—2025
+              </a>;{' '}
+              <a href="https://www.who.int/publications/i/item/definition-and-diagnosis-of-diabetes-mellitus-and-intermediate-hyperglycaemia"
+                target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-700">
+                WHO 2006
+              </a>;{' '}
+              <a href="https://www.nice.org.uk/guidance/ph38/chapter/recommendations"
+                target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-700">
+                NICE PH38
+              </a>. Sources last checked October 29, 2026.
             </p>
           </div>
         </section>
 
         {/* ── RISK FACTORS ─────────────────────────────────────────────── */}
-        <section id="risk" className="py-16 bg-emerald-50 scroll-mt-16">
+        <section id="risk" className="py-16 bg-emerald-50 scroll-mt-[128px]">
           <div className="container mx-auto px-4 max-w-4xl">
-            <p className="text-sm font-bold tracking-widest text-emerald-600 uppercase mb-2">Am I at Risk?</p>
+            <p className="text-sm font-bold tracking-widest text-emerald-700 uppercase mb-2">Am I at Risk?</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-3">Risk Factors for Prediabetes</h2>
             <p className="text-gray-600 mb-8">
-              Having one or more of these factors does not mean you have prediabetes — but they significantly increase the probability and warrant a blood test.
+              Having one or more of these factors does not mean you have prediabetes — but they
+              increase the probability and warrant a blood test. This list follows ADA screening
+              guidance.
             </p>
             <div className="grid md:grid-cols-2 gap-3">
-              {riskFactors.map((factor, i) => (
-                <div key={i} className="flex gap-3 bg-white border border-gray-200 rounded-xl p-4">
-                  <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              {riskFactors.map((factor) => (
+                <div key={factor} className="flex gap-3 bg-white border border-gray-200 rounded-xl p-4">
+                  <Info className="w-4 h-4 text-emerald-700 flex-shrink-0 mt-0.5" aria-hidden="true" />
                   <p className="text-sm text-gray-700">{factor}</p>
                 </div>
               ))}
@@ -388,42 +504,28 @@ export default function PrediabetesSignsPage() {
             <div className="mt-8 bg-blue-50 border border-blue-200 rounded-2xl p-6">
               <h3 className="font-bold text-gray-900 mb-2">When to Ask for a Test</h3>
               <p className="text-sm text-gray-700 leading-relaxed">
-                The ADA recommends routine blood sugar screening for all adults aged 35+, or earlier if you have one or more risk factors above. A simple fasting glucose test or A1C blood draw is all that is needed — no fasting required for A1C. Ask your GP, primary care physician, or pharmacist.
+                The ADA recommends routine blood sugar screening for all adults aged 35 and older,
+                or earlier if you have one or more risk factors above. The CDC recommends starting
+                at 45 for adults at average risk, so guidance varies. A fasting glucose or A1C test
+                can screen for prediabetes; A1C does not require fasting. An abnormal result may
+                need confirmation with a repeat test. Ask your GP, primary care physician, or
+                pharmacist.
               </p>
             </div>
           </div>
         </section>
 
         {/* ── WHAT TO DO NEXT ──────────────────────────────────────────── */}
-        <section id="nextStep" className="py-16 bg-white scroll-mt-16">
+        <section id="nextStep" className="py-16 bg-white scroll-mt-[128px]">
           <div className="container mx-auto px-4 max-w-4xl">
-            <p className="text-sm font-bold tracking-widest text-emerald-600 uppercase mb-2">Take Action</p>
+            <p className="text-sm font-bold tracking-widest text-emerald-700 uppercase mb-2">Take Action</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-3">What to Do If You Recognize These Signs</h2>
             <p className="text-gray-600 mb-10">
-              Prediabetes is not a life sentence. These are your next steps.
+              Prediabetes is often reversible. These are your next steps.
             </p>
-            <div className="grid md:grid-cols-3 gap-6 mb-10">
-              {[
-                {
-                  step: '1',
-                  title: 'Get Tested',
-                  desc: 'Ask your doctor for a fasting glucose or A1C test. This is the only way to confirm prediabetes. Some pharmacies offer free or low-cost screening.',
-                  color: 'emerald',
-                },
-                {
-                  step: '2',
-                  title: 'Start the 5-Step Plan',
-                  desc: 'Diet, exercise, monitoring, supplements, and sleep optimization — the DPP showed a 58% reduction in progression overall, rising to almost 80% among participants with the best adherence (Diabetes Care, 2023).',
-                  color: 'blue',
-                },
-                {
-                  step: '3',
-                  title: 'Track Your Progress',
-                  desc: 'Monitor your fasting glucose at home. Repeat A1C every 3–6 months. Your numbers will show if the changes are working.',
-                  color: 'purple',
-                },
-              ].map((card, i) => (
-                <div key={i} className={`${colorClasses[card.color].bg50} border ${colorClasses[card.color].border200} rounded-2xl p-6`}>
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              {nextSteps.map((card) => (
+                <div key={card.step} className={`${colorClasses[card.color].bg50} border ${colorClasses[card.color].border200} rounded-2xl p-6`}>
                   <div className={`w-9 h-9 ${colorClasses[card.color].bg600} text-white rounded-full flex items-center justify-center font-bold mb-4 text-sm`}>
                     {card.step}
                   </div>
@@ -432,32 +534,46 @@ export default function PrediabetesSignsPage() {
                 </div>
               ))}
             </div>
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-8 flex gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <p className="text-sm text-amber-900 leading-relaxed">
+                <strong>Seek prompt medical care</strong> for sudden vision changes, a wound that is
+                not healing, or signs of infection such as fever, spreading redness, or swelling.
+              </p>
+            </div>
             <div className="grid sm:grid-cols-2 gap-4">
               <Link to="/prediabetes-plan"
-                className="flex items-center justify-between bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-4 rounded-xl transition shadow-lg shadow-emerald-200">
-                <span>Start the 5-Step Reversal Plan</span>
-                <ArrowRight className="w-5 h-5 flex-shrink-0" />
+                className="flex items-center justify-between bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-4 rounded-xl transition shadow-lg shadow-emerald-200">
+                <span>Start the 5-Step Prediabetes Plan</span>
+                <ArrowRight className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
               </Link>
               <Link to="/prediabetes-support"
                 className="flex items-center justify-between bg-white hover:bg-gray-50 border-2 border-gray-200 hover:border-emerald-400 text-gray-800 font-bold px-6 py-4 rounded-xl transition">
                 <span>Back to Support Hub</span>
-                <ChevronRight className="w-5 h-5 flex-shrink-0 text-emerald-600" />
+                <ChevronRight className="w-5 h-5 flex-shrink-0 text-emerald-600" aria-hidden="true" />
               </Link>
             </div>
+            <p className="text-xs text-gray-500 mt-4">
+              The 5-step plan includes optional supplement information and affiliate links; see its{' '}
+              <Link to="/prediabetes-plan#affiliate-disclosure" className="underline hover:text-gray-700">
+                affiliate disclosure
+              </Link>{' '}
+              for details.
+            </p>
           </div>
         </section>
 
         {/* ── FAQ ──────────────────────────────────────────────────────── */}
-        <section id="faq" className="py-16 bg-emerald-50 scroll-mt-16">
+        <section id="faq" className="py-16 bg-emerald-50 scroll-mt-[128px]">
           <div className="container mx-auto px-4 max-w-4xl">
-            <p className="text-sm font-bold tracking-widest text-emerald-600 uppercase mb-2">Common Questions</p>
+            <p className="text-sm font-bold tracking-widest text-emerald-700 uppercase mb-2">Common Questions</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
             <div className="space-y-3">
-              {faqs.map((item, i) => (
-                <details key={i} className="bg-white border border-gray-200 rounded-xl p-5 group">
+              {faqs.map((item) => (
+                <details key={item.q} className="bg-white border border-gray-200 rounded-xl p-5 group">
                   <summary className="font-bold text-gray-900 cursor-pointer list-none flex items-center justify-between">
                     {item.q}
-                    <ChevronRight className="w-4 h-4 text-emerald-600 flex-shrink-0 transition-transform group-open:rotate-90" />
+                    <ChevronRight className="w-4 h-4 text-emerald-600 flex-shrink-0 transition-transform group-open:rotate-90" aria-hidden="true" />
                   </summary>
                   <p className="text-sm text-gray-700 leading-relaxed mt-3">{item.a}</p>
                 </details>

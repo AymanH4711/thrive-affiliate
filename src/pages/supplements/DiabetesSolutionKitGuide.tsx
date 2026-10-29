@@ -57,7 +57,7 @@ export default function DiabetesSolutionKitGuide() {
         title="Diabetes Solution Kit | 3-Phase Digital Program by Barton Publishing"
         description="A 100+ page digital guide covering a 3-phase approach to blood sugar management, medically fronted by Scott Saunders, MD. Includes cookbook, carb-counting cheatsheet, and grocery list."
         keywords="diabetes solution kit, barton publishing blood sugar, 3 phase blood sugar plan, diabetes ebook guide"
-        image="/images/diabetes-solution-kit-og.png"
+        image="/images/og-default.png"
         url="/guides/diabetes-solution-kit"
         schema={schema}
       />

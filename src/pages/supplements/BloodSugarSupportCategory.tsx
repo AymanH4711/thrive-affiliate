@@ -90,7 +90,7 @@ export default function BloodSugarSupportCategory() {
         title="Blood Sugar Support Supplements | Berberine & More"
         description="Top blood sugar support supplements: Berberine (nature's metformin), Cinnamon Extract, Chromium. Clinical evidence, dosing, ratings, and buying guide included."
         keywords="berberine supplement, cinnamon supplement, chromium picolinate, blood sugar support, diabetes supplement"
-        image="/images/blood-sugar-supplements-og.png"
+        image="/images/og-default.png"
         url="/supplements/blood-sugar-support"
         schema={schema}
       />

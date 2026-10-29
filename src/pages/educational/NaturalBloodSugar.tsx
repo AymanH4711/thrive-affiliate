@@ -22,7 +22,7 @@ export default function NaturalBloodSugar() {
         title="Natural Blood Sugar Control | Foods & Supplements"
         description="Natural ways to control blood sugar: best foods, herbs with clinical evidence (cinnamon, berberine), supplements & lifestyle changes. Evidence-based guide."
         keywords="natural blood sugar control, lower blood sugar naturally, foods that lower blood sugar, blood sugar supplements"
-        image="/images/natural-blood-sugar-og.png"
+        image="/images/og-default.png"
         url="/natural-blood-sugar"
       />
       <main className="min-h-screen bg-white font-sans text-gray-800">
@@ -91,12 +91,6 @@ export default function NaturalBloodSugar() {
                     height={400}
                     className="relative rounded-2xl shadow-2xl border border-rose-700/40 object-cover w-full max-w-sm"
                     loading="eager"
-                    onError={(e) => {
-                      const img = e.currentTarget;
-                      if (!img.src.includes('natural-blood-sugar-hero.webp')) {
-                        img.src = '/images/natural-blood-sugar-hero.webp';
-                      }
-                    }}
                   />
                 </div>
               </div>

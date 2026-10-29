@@ -64,7 +64,7 @@ interface SEOProps {
  *   title="Berberine vs Metformin | Thrive"
  *   description="Science-backed comparison..."
  *   keywords="berberine, metformin, blood sugar"
- *   image="/images/berberine-og.png"
+ *   image="/images/og-default.png"
  *   url="/blog/berberine-vs-metformin"
  *   pillarId="insulin-resistance"
  *   articleType="comparison"
