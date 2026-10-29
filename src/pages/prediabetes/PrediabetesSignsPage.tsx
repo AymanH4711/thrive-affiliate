@@ -14,6 +14,13 @@ import { SEO } from '@/components/seo/SEO';
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://thrivehealth360.org').replace(/\/$/, '');
 
+// The site header is sticky and its height can change when the desktop menu
+// wraps or the mobile menu opens. Use a measured CSS variable so the section
+// nav always sits directly below it instead of overlapping.
+const sectionScrollStyle = {
+  scrollMarginTop: 'calc(var(--site-header-height, 72px) + 64px)',
+};
+
 // Full literal class names per color, so Tailwind's JIT scanner can see and
 // generate them. Interpolated strings like `bg-${card.color}-50` are
 // invisible to the scanner — only classes it sees as complete literals in
@@ -234,17 +241,35 @@ export default function PrediabetesSignsPage() {
   useEffect(() => {
     const root = document.documentElement;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const siteHeader = document.querySelector<HTMLElement>('[data-site-header]');
 
     const applyScrollBehavior = () => {
       root.style.scrollBehavior = reducedMotion.matches ? 'auto' : 'smooth';
     };
 
+    const updateHeaderHeight = () => {
+      if (!siteHeader) return;
+      const height = Math.ceil(siteHeader.getBoundingClientRect().height);
+      root.style.setProperty('--site-header-height', `${height}px`);
+    };
+
     applyScrollBehavior();
+    updateHeaderHeight();
     reducedMotion.addEventListener('change', applyScrollBehavior);
+    window.addEventListener('resize', updateHeaderHeight);
+
+    const observer =
+      siteHeader && typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(updateHeaderHeight)
+        : null;
+    if (siteHeader) observer?.observe(siteHeader);
 
     return () => {
       root.style.scrollBehavior = '';
+      root.style.removeProperty('--site-header-height');
       reducedMotion.removeEventListener('change', applyScrollBehavior);
+      window.removeEventListener('resize', updateHeaderHeight);
+      observer?.disconnect();
     };
   }, []);
 
@@ -302,7 +327,11 @@ export default function PrediabetesSignsPage() {
         </header>
 
         {/* ── STICKY NAV ───────────────────────────────────────────────── */}
-        <nav aria-label="On this page" className="bg-emerald-50 border-b border-emerald-100 sticky top-[72px] z-30 shadow-sm">
+        <nav
+          aria-label="On this page"
+          className="bg-emerald-50 border-b border-emerald-100 sticky z-30 shadow-sm"
+          style={{ top: 'var(--site-header-height, 72px)' }}
+        >
           <div className="container mx-auto px-4 overflow-x-auto">
             <div className="flex space-x-6 py-3.5 text-sm font-semibold text-emerald-800 whitespace-nowrap">
               {[
@@ -380,7 +409,7 @@ export default function PrediabetesSignsPage() {
         </section>
 
         {/* ── 10 SIGNS ─────────────────────────────────────────────────── */}
-        <section id="signs" className="py-16 bg-emerald-50 scroll-mt-[128px]">
+        <section id="signs" className="py-16 bg-emerald-50" style={sectionScrollStyle}>
           <div className="container mx-auto px-4 max-w-4xl">
             <p className="text-sm font-bold tracking-widest text-emerald-700 uppercase mb-2">Know Your Body</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-3">10 Signs of High Blood Sugar to Watch For</h2>
@@ -422,7 +451,7 @@ export default function PrediabetesSignsPage() {
         </section>
 
         {/* ── BLOOD SUGAR RANGES ───────────────────────────────────────── */}
-        <section id="ranges" className="py-16 bg-white scroll-mt-[128px]">
+        <section id="ranges" className="py-16 bg-white" style={sectionScrollStyle}>
           <div className="container mx-auto px-4 max-w-4xl">
             <p className="text-sm font-bold tracking-widest text-emerald-700 uppercase mb-2">Know Your Numbers</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-3">Blood Sugar Reference Ranges</h2>
@@ -484,7 +513,7 @@ export default function PrediabetesSignsPage() {
         </section>
 
         {/* ── RISK FACTORS ─────────────────────────────────────────────── */}
-        <section id="risk" className="py-16 bg-emerald-50 scroll-mt-[128px]">
+        <section id="risk" className="py-16 bg-emerald-50" style={sectionScrollStyle}>
           <div className="container mx-auto px-4 max-w-4xl">
             <p className="text-sm font-bold tracking-widest text-emerald-700 uppercase mb-2">Am I at Risk?</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-3">Risk Factors for Prediabetes</h2>
@@ -516,7 +545,7 @@ export default function PrediabetesSignsPage() {
         </section>
 
         {/* ── WHAT TO DO NEXT ──────────────────────────────────────────── */}
-        <section id="nextStep" className="py-16 bg-white scroll-mt-[128px]">
+        <section id="nextStep" className="py-16 bg-white" style={sectionScrollStyle}>
           <div className="container mx-auto px-4 max-w-4xl">
             <p className="text-sm font-bold tracking-widest text-emerald-700 uppercase mb-2">Take Action</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-3">What to Do If You Recognize These Signs</h2>
@@ -564,7 +593,7 @@ export default function PrediabetesSignsPage() {
         </section>
 
         {/* ── FAQ ──────────────────────────────────────────────────────── */}
-        <section id="faq" className="py-16 bg-emerald-50 scroll-mt-[128px]">
+        <section id="faq" className="py-16 bg-emerald-50" style={sectionScrollStyle}>
           <div className="container mx-auto px-4 max-w-4xl">
             <p className="text-sm font-bold tracking-widest text-emerald-700 uppercase mb-2">Common Questions</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
