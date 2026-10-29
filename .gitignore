@@ -26,6 +26,14 @@ dist-ssr
 .vercel
 .env*.local
 
+# Stray editor/backup copies. This repo deploys, and src/pages/blog/**/*.tsx
+# is auto-discovered by import.meta.glob in BlogPage.tsx — a backup file that
+# kept a clean .tsx name would be built and listed on /blog as a real article.
+*.bak
+*.bak-*
+*.orig
+*~
+
 # Cloudflare Wrangler local state
 .wrangler/
 .dev.vars
