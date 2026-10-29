@@ -23,12 +23,12 @@ export const Header = () => {
     <header data-site-header className="bg-white shadow-sm sticky top-0 z-50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
         {/* Logo */}
-        <Link to="/" className="flex items-center">
+        <Link to="/" className="flex items-center shrink-0">
           <Logo variant="light" className="h-10" />
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-8">
           <Link to="/" className="text-gray-700 hover:text-emerald-600 transition">
             Home
           </Link>
@@ -39,7 +39,7 @@ export const Header = () => {
             onMouseEnter={() => setOpenDropdown('blood-sugar')}
             onMouseLeave={() => setOpenDropdown(null)}
           >
-            <button className={`flex items-center gap-1 ${isBloodSugarActive ? 'text-emerald-600' : 'text-gray-700'} hover:text-emerald-600 transition`}>
+            <button className={`flex items-center gap-1 whitespace-nowrap ${isBloodSugarActive ? 'text-emerald-600' : 'text-gray-700'} hover:text-emerald-600 transition`}>
               Blood Sugar Support
               <ChevronDown size={18} />
             </button>
@@ -75,7 +75,7 @@ export const Header = () => {
           <Link to="/contact" className="text-gray-700 hover:text-emerald-600 transition">
             Contact
           </Link>
-          <Link to="/supplements" className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition">
+          <Link to="/supplements" className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition whitespace-nowrap">
             🛍️ Shop Supplements
           </Link>
         </div>
@@ -83,7 +83,7 @@ export const Header = () => {
         {/* Mobile Menu Button */}
         <button 
           onClick={() => setIsOpen(!isOpen)} 
-          className="md:hidden text-gray-700 hover:text-emerald-600"
+          className="lg:hidden text-gray-700 hover:text-emerald-600"
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -91,7 +91,7 @@ export const Header = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white border-t px-4 py-4 space-y-3">
+        <div className="lg:hidden bg-white border-t px-4 py-4 space-y-3">
           <Link to="/" onClick={handleNavClick} className="block text-gray-700 hover:text-emerald-600">
             Home
           </Link>
