@@ -63,7 +63,11 @@ async function verifyTurnstile(
   remoteIp: string | null,
   expectedAction: string
 ): Promise<boolean> {
-  if (!token) return false;
+  if (!secret || !secret.trim()) {
+    console.error('Contact Turnstile secret is not configured; rejecting request.');
+    return false;
+  }
+  if (!token || !token.trim()) return false;
 
   try {
     const formData = new URLSearchParams({
@@ -117,6 +121,28 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   const email = typeof body.email === 'string' ? body.email.trim().slice(0, 320) : '';
   const subject = typeof body.subject === 'string' ? body.subject.trim().slice(0, 200) : '';
   const message = typeof body.message === 'string' ? body.message.trim().slice(0, 5000) : '';
+  // Fail closed: every submission must pass Turnstile before any other
+  // processing. verifyTurnstile rejects a missing/empty secret without making
+  // a siteverify request, so a misconfigured deployment cannot accept mail.
+  const token =
+    typeof body.turnstileToken === 'string' ? body.turnstileToken : '';
+  const valid = await verifyTurnstile(
+    env.TURNSTILE_SECRET_KEY || '',
+    token,
+    request.headers.get('CF-Connecting-IP'),
+    'contact'
+  );
+
+  if (!valid) {
+    return jsonResponse(
+      {
+        success: false,
+        message: 'Security check failed. Please refresh the page and try again.',
+      },
+      403
+    );
+  }
+
   const honeypot = typeof body.company === 'string' ? body.company.trim() : '';
 
   if (honeypot) {
@@ -136,27 +162,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       { success: false, message: 'A valid email is required.' },
       400
     );
-  }
-
-  if (env.TURNSTILE_SECRET_KEY) {
-    const token =
-      typeof body.turnstileToken === 'string' ? body.turnstileToken : '';
-    const valid = await verifyTurnstile(
-      env.TURNSTILE_SECRET_KEY,
-      token,
-      request.headers.get('CF-Connecting-IP'),
-      'contact'
-    );
-
-    if (!valid) {
-      return jsonResponse(
-        {
-          success: false,
-          message: 'Security check failed. Please refresh the page and try again.',
-        },
-        403
-      );
-    }
   }
 
   const serviceId =

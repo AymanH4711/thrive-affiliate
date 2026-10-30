@@ -6,7 +6,8 @@
 //
 // Security:
 //   BREVO_API_KEY          server-side Brevo key (never VITE_-prefixed)
-//   TURNSTILE_SECRET_KEY   Cloudflare Turnstile secret (never VITE_-prefixed)
+//   TURNSTILE_SECRET_KEY   Cloudflare Turnstile secret (never VITE_-prefixed).
+//                          Required: requests fail closed when it is missing.
 //
 // Optional EmailJS server-side configuration. VITE_ names are accepted as
 // fallbacks because Cloudflare Pages exposes project variables to Functions:
@@ -79,7 +80,11 @@ async function verifyTurnstile(
   remoteIp: string | null,
   expectedAction: string
 ): Promise<boolean> {
-  if (!token) return false;
+  if (!secret || !secret.trim()) {
+    console.error('Turnstile secret is not configured; rejecting request.');
+    return false;
+  }
+  if (!token || !token.trim()) return false;
 
   try {
     const formData = new URLSearchParams({
@@ -194,6 +199,28 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     return jsonResponse({ success: false, message: 'Invalid request body' }, 400);
   }
 
+  // Fail closed: every subscription must pass Turnstile before any other
+  // processing. verifyTurnstile rejects a missing/empty secret without making
+  // a siteverify request, so a misconfigured deployment cannot write contacts.
+  const token =
+    typeof body.turnstileToken === 'string' ? body.turnstileToken : '';
+  const valid = await verifyTurnstile(
+    env.TURNSTILE_SECRET_KEY || '',
+    token,
+    request.headers.get('CF-Connecting-IP'),
+    'lead_magnet'
+  );
+
+  if (!valid) {
+    return jsonResponse(
+      {
+        success: false,
+        message: 'Security check failed. Please refresh the page and try again.',
+      },
+      403
+    );
+  }
+
   const honeypot =
     typeof body.company === 'string' ? body.company.trim() : '';
 
@@ -227,29 +254,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       { success: false, message: 'A valid email is required' },
       400
     );
-  }
-
-  // Turnstile is optional only until the secret is configured. Once it is set,
-  // every write must include a valid, single-use token.
-  if (env.TURNSTILE_SECRET_KEY) {
-    const token =
-      typeof body.turnstileToken === 'string' ? body.turnstileToken : '';
-    const valid = await verifyTurnstile(
-      env.TURNSTILE_SECRET_KEY,
-      token,
-      request.headers.get('CF-Connecting-IP'),
-      'lead_magnet'
-    );
-
-    if (!valid) {
-      return jsonResponse(
-        {
-          success: false,
-          message: 'Security check failed. Please refresh the page and try again.',
-        },
-        403
-      );
-    }
   }
 
   const apiKey = env.BREVO_API_KEY;
