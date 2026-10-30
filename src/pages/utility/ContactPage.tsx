@@ -324,19 +324,24 @@ export default function ContactPage() {
                   />
                 </div>
 
-                {/* Honeypot: hidden from people, tempting to simple bots. */}
-                <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
-                  <label htmlFor="contact-company">Company</label>
-                  <input
-                    id="contact-company"
-                    type="text"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleChange}
-                    tabIndex={-1}
-                    autoComplete="off"
-                  />
-                </div>
+                {/* Honeypot: off-screen for people, tempting to simple bots. */}
+                <input
+                  type="text"
+                  name="company"
+                  value={formData.company}
+                  onChange={handleChange}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  tabIndex={-1}
+                  style={{
+                    position: 'absolute',
+                    left: '-9999px',
+                    top: 'auto',
+                    width: '1px',
+                    height: '1px',
+                    overflow: 'hidden',
+                  }}
+                />
 
                 {/* GDPR / Privacy consent notice — required for UK/EU/AU/CA readers */}
                 <p className="text-xs text-gray-500 leading-relaxed border border-gray-100 bg-gray-50 rounded-xl px-4 py-3">

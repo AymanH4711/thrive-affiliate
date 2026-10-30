@@ -44,6 +44,8 @@ interface SubscribeRequestBody {
   name?: string;
   resourceName?: string;
   turnstileToken?: string;
+  /** Honeypot; real visitors never fill this. */
+  company?: string;
 }
 
 interface TurnstileVerifyResponse {
@@ -190,6 +192,22 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     body = await request.json();
   } catch {
     return jsonResponse({ success: false, message: 'Invalid request body' }, 400);
+  }
+
+  const honeypot =
+    typeof body.company === 'string' ? body.company.trim() : '';
+
+  if (honeypot) {
+    // Pretend the subscription succeeded so simple bots do not learn what
+    // failed. The response flags suppress the browser's legacy EmailJS
+    // fallback, so no Brevo contact or email is created for these requests.
+    return jsonResponse({
+      success: true,
+      message: 'Successfully subscribed!',
+      emailed: false,
+      emailConfigured: true,
+      emailClientFallback: false,
+    });
   }
 
   const { email } = body;
