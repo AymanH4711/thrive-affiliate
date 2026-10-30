@@ -51,7 +51,7 @@ export default function PrediabetesSupportHub() {
       icon: Moon,
       step: '5',
       title: 'Sleep & Stress',
-      desc: 'Poor sleep raises blood sugar by 15–20%. Chronic stress elevates cortisol. This section explains the link and what to do.',
+      desc: 'Poor sleep can measurably raise blood sugar and insulin resistance. Chronic stress elevates cortisol. This section explains the link and what to do.',
       href: '/prediabetes-sleep-stress',
       colour: 'indigo',
     },
@@ -218,7 +218,7 @@ export default function PrediabetesSupportHub() {
                   Prediabetes is a condition in which blood glucose levels are higher than normal — but not yet high enough to be diagnosed as type 2 diabetes. The underlying cause is <strong>insulin resistance</strong>: your body's cells no longer respond efficiently to insulin, so glucose accumulates in the bloodstream.
                 </p>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  Unlike type 2 diabetes, prediabetes carries no permanent damage — yet. The metabolic changes that drive it are <strong>reversible</strong> through evidence-based lifestyle interventions. The challenge is that most people have no obvious symptoms and are never told they have it.
+                  Unlike type 2 diabetes, prediabetes hasn't crossed the line into a formal diagnosis — and the underlying metabolic changes are <strong>largely reversible</strong> through evidence-based lifestyle interventions. But "reversible" doesn't mean "harmless": research links prediabetes to early changes in the kidneys, nerves, and blood vessels, which is exactly why catching it early matters. The challenge is that most people have no obvious symptoms and are never told they have it.
                 </p>
                 <p className="text-gray-700 leading-relaxed">
                   The Diabetes Prevention Program — the largest lifestyle intervention trial ever conducted — demonstrated that diet and exercise reduced progression to diabetes by <strong>58%</strong>, outperforming even medication for most participants.
@@ -226,7 +226,7 @@ export default function PrediabetesSupportHub() {
               </div>
               <div className="space-y-4">
                 {[
-                  { icon: Heart,       title: 'It Is Common',    desc: 'Nearly 1 in 3 US adults has prediabetes. Globally, an estimated 720 million people are affected (IDF, 2021).' },
+                  { icon: Heart,       title: 'It Is Common',    desc: 'Nearly 1 in 3 US adults has prediabetes. Globally, an estimated 541 million adults have impaired glucose tolerance (IDF Diabetes Atlas, 2021).' },
                   { icon: TrendingDown,title: 'It Is Reversible', desc: 'Diet, exercise, sleep, and stress management can normalise blood sugar and restore insulin sensitivity — even without medication.' },
                   { icon: Shield,      title: 'It Is Time-Sensitive', desc: 'Without action, 15–30% of people with prediabetes develop type 2 diabetes within 5 years. Early action dramatically reduces that risk.' },
                   { icon: Users,       title: 'It Is Often Silent', desc: 'Most people have no obvious symptoms. A simple blood test — fasting glucose or A1C — is the only way to know for certain.' },
