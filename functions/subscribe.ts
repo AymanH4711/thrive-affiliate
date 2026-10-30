@@ -67,11 +67,19 @@ const JSON_HEADERS = {
   'Cache-Control': 'no-store',
 };
 
+const TURNSTILE_TIMEOUT_MS = 8000;
+
 function jsonResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: JSON_HEADERS,
   });
+}
+
+function isTimeoutError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+  const name = (error as { name?: unknown }).name;
+  return name === 'TimeoutError' || name === 'AbortError';
 }
 
 async function verifyTurnstile(
@@ -81,10 +89,18 @@ async function verifyTurnstile(
   expectedAction: string
 ): Promise<boolean> {
   if (!secret || !secret.trim()) {
-    console.error('Turnstile secret is not configured; rejecting request.');
+    console.error(
+      '[subscribe] Turnstile configuration error: TURNSTILE_SECRET_KEY is missing or empty. Rejecting request.'
+    );
     return false;
   }
-  if (!token || !token.trim()) return false;
+
+  if (!token || !token.trim()) {
+    console.warn(
+      '[subscribe] Turnstile token missing from request. Rejecting request.'
+    );
+    return false;
+  }
 
   try {
     const formData = new URLSearchParams({
@@ -101,25 +117,62 @@ async function verifyTurnstile(
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: formData.toString(),
-        signal: AbortSignal.timeout(8000),
+        signal: AbortSignal.timeout(TURNSTILE_TIMEOUT_MS),
       }
     );
 
-    const data = (await response.json().catch(() => ({}))) as TurnstileVerifyResponse;
+    let data: TurnstileVerifyResponse;
+    try {
+      data = (await response.json()) as TurnstileVerifyResponse;
+    } catch {
+      console.error(
+        `[subscribe] Turnstile siteverify returned malformed JSON (HTTP ${response.status}). Rejecting request.`
+      );
+      return false;
+    }
 
-    if (!response.ok || data.success !== true) {
-      console.warn('Turnstile verification failed:', response.status, data['error-codes']);
+    if (!data || typeof data !== 'object') {
+      console.error(
+        `[subscribe] Turnstile siteverify returned an unexpected response body (HTTP ${response.status}). Rejecting request.`
+      );
+      return false;
+    }
+
+    if (!response.ok) {
+      console.error(
+        `[subscribe] Turnstile siteverify HTTP ${response.status}. Rejecting request.`,
+        data['error-codes']
+      );
+      return false;
+    }
+
+    if (data.success !== true) {
+      console.warn(
+        '[subscribe] Turnstile siteverify rejected the token. Rejecting request.',
+        data['error-codes']
+      );
       return false;
     }
 
     if (expectedAction && data.action && data.action !== expectedAction) {
-      console.warn('Turnstile action mismatch:', data.action, 'expected:', expectedAction);
+      console.warn(
+        `[subscribe] Turnstile action mismatch: received "${data.action}", expected "${expectedAction}". Rejecting request.`
+      );
       return false;
     }
 
     return true;
   } catch (error) {
-    console.error('Turnstile verification error:', error);
+    if (isTimeoutError(error)) {
+      console.error(
+        `[subscribe] Turnstile siteverify timed out after ${TURNSTILE_TIMEOUT_MS}ms. Rejecting request.`
+      );
+    } else {
+      console.error(
+        '[subscribe] Turnstile siteverify network/transport error. Rejecting request.',
+        error
+      );
+    }
     return false;
   }
 }
@@ -199,9 +252,29 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     return jsonResponse({ success: false, message: 'Invalid request body' }, 400);
   }
 
-  // Fail closed: every subscription must pass Turnstile before any other
-  // processing. verifyTurnstile rejects a missing/empty secret without making
-  // a siteverify request, so a misconfigured deployment cannot write contacts.
+  // Honeypot first: a filled field is obviously bot traffic. Return a silent
+  // 200 and skip Turnstile/Brevo/EmailJS entirely so bots learn nothing and we
+  // do not spend a siteverify call on them.
+  const honeypot =
+    typeof body.company === 'string' ? body.company.trim() : '';
+
+  if (honeypot) {
+    // Pretend the subscription succeeded so simple bots do not learn what
+    // failed. The response flags suppress the browser's legacy EmailJS
+    // fallback, so no Brevo contact or email is created for these requests.
+    return jsonResponse({
+      success: true,
+      message: 'Successfully subscribed!',
+      emailed: false,
+      emailConfigured: true,
+      emailClientFallback: false,
+    });
+  }
+
+  // Fail closed: after the honeypot, every subscription must pass Turnstile
+  // before any other processing. verifyTurnstile rejects a missing/empty
+  // secret without making a siteverify request, so a misconfigured deployment
+  // cannot write contacts.
   const token =
     typeof body.turnstileToken === 'string' ? body.turnstileToken : '';
   const valid = await verifyTurnstile(
@@ -219,22 +292,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       },
       403
     );
-  }
-
-  const honeypot =
-    typeof body.company === 'string' ? body.company.trim() : '';
-
-  if (honeypot) {
-    // Pretend the subscription succeeded so simple bots do not learn what
-    // failed. The response flags suppress the browser's legacy EmailJS
-    // fallback, so no Brevo contact or email is created for these requests.
-    return jsonResponse({
-      success: true,
-      message: 'Successfully subscribed!',
-      emailed: false,
-      emailConfigured: true,
-      emailClientFallback: false,
-    });
   }
 
   const { email } = body;
