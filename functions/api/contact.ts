@@ -65,6 +65,51 @@ function isTimeoutError(error: unknown): boolean {
   return name === 'TimeoutError' || name === 'AbortError';
 }
 
+type BotRejectionReason =
+  | 'honeypot_hit'
+  | 'turnstile_secret_missing'
+  | 'turnstile_token_invalid'
+  | 'turnstile_siteverify_error'
+  | 'turnstile_rejected'
+  | 'turnstile_action_mismatch';
+
+function formatErrorCodes(codes: unknown): string | undefined {
+  if (Array.isArray(codes)) {
+    const values = codes.filter(
+      (code): code is string => typeof code === 'string' && code.length > 0
+    );
+    return values.length ? values.join(',') : undefined;
+  }
+  if (typeof codes === 'string' && codes) return codes;
+  return undefined;
+}
+
+function logBotRejection(
+  reason: BotRejectionReason,
+  details: Record<string, string | number | undefined> = {},
+  level: 'warn' | 'error' = 'warn'
+): void {
+  const fields = Object.entries(details)
+    .filter(([, value]) => value !== undefined && value !== '')
+    .map(([key, value]) => {
+      const text = String(value);
+      const safe = /^[A-Za-z0-9_.:/-]+$/.test(text)
+        ? text
+        : JSON.stringify(text);
+      return `${key}=${safe}`;
+    })
+    .join(' ');
+  const line = `[contact] bot_rejection reason=${reason}${
+    fields ? ` ${fields}` : ''
+  }`;
+
+  if (level === 'error') {
+    console.error(line);
+  } else {
+    console.warn(line);
+  }
+}
+
 async function verifyTurnstile(
   secret: string,
   token: string,
@@ -72,16 +117,12 @@ async function verifyTurnstile(
   expectedAction: string
 ): Promise<boolean> {
   if (!secret || !secret.trim()) {
-    console.error(
-      '[contact] Turnstile configuration error: TURNSTILE_SECRET_KEY is missing or empty. Rejecting request.'
-    );
+    logBotRejection('turnstile_secret_missing', {}, 'error');
     return false;
   }
 
   if (!token || !token.trim()) {
-    console.warn(
-      '[contact] Turnstile token missing from request. Rejecting request.'
-    );
+    logBotRejection('turnstile_token_invalid', { detail: 'missing' });
     return false;
   }
 
@@ -108,52 +149,67 @@ async function verifyTurnstile(
     try {
       data = (await response.json()) as TurnstileVerifyResponse;
     } catch {
-      console.error(
-        `[contact] Turnstile siteverify returned malformed JSON (HTTP ${response.status}). Rejecting request.`
+      logBotRejection(
+        'turnstile_siteverify_error',
+        { detail: 'malformed_json', status: response.status },
+        'error'
       );
       return false;
     }
 
     if (!data || typeof data !== 'object') {
-      console.error(
-        `[contact] Turnstile siteverify returned an unexpected response body (HTTP ${response.status}). Rejecting request.`
+      logBotRejection(
+        'turnstile_siteverify_error',
+        { detail: 'unexpected_body', status: response.status },
+        'error'
       );
       return false;
     }
 
     if (!response.ok) {
-      console.error(
-        `[contact] Turnstile siteverify HTTP ${response.status}. Rejecting request.`,
-        data['error-codes']
+      logBotRejection(
+        'turnstile_siteverify_error',
+        {
+          detail: 'http_error',
+          status: response.status,
+          error_codes: formatErrorCodes(data['error-codes']),
+        },
+        'error'
       );
       return false;
     }
 
     if (data.success !== true) {
-      console.warn(
-        '[contact] Turnstile siteverify rejected the token. Rejecting request.',
-        data['error-codes']
-      );
+      logBotRejection('turnstile_rejected', {
+        error_codes: formatErrorCodes(data['error-codes']),
+      });
       return false;
     }
 
     if (expectedAction && data.action && data.action !== expectedAction) {
-      console.warn(
-        `[contact] Turnstile action mismatch: received "${data.action}", expected "${expectedAction}". Rejecting request.`
-      );
+      logBotRejection('turnstile_action_mismatch', {
+        expected: expectedAction,
+        actual: data.action,
+      });
       return false;
     }
 
     return true;
   } catch (error) {
     if (isTimeoutError(error)) {
-      console.error(
-        `[contact] Turnstile siteverify timed out after ${TURNSTILE_TIMEOUT_MS}ms. Rejecting request.`
+      logBotRejection(
+        'turnstile_siteverify_error',
+        { detail: 'timeout', timeout_ms: TURNSTILE_TIMEOUT_MS },
+        'error'
       );
     } else {
-      console.error(
-        '[contact] Turnstile siteverify network/transport error. Rejecting request.',
-        error
+      logBotRejection(
+        'turnstile_siteverify_error',
+        {
+          detail: 'network',
+          error_name: error instanceof Error ? error.name : 'unknown',
+        },
+        'error'
       );
     }
     return false;
@@ -176,6 +232,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   const honeypot = typeof body.company === 'string' ? body.company.trim() : '';
 
   if (honeypot) {
+    logBotRejection('honeypot_hit');
     // Pretend the message was accepted so simple bots do not learn what failed.
     return jsonResponse({ success: true, message: 'Message received.' });
   }

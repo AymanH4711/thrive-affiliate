@@ -65,14 +65,36 @@ function expectNoEmailOrBrevoCall(fetchMock: any) {
   expect(urls.some((url) => url.includes('brevo'))).toBe(false);
 }
 
-function logText(spy: any): string {
-  return spy.mock.calls
-    .map((args: unknown[]) =>
-      args
-        .map((arg) => (typeof arg === 'string' ? arg : String(arg)))
-        .join(' ')
-    )
-    .join('\n');
+function logCalls(spy: any): string[] {
+  return spy.mock.calls.map((args: unknown[]) =>
+    args
+      .map((arg) => (typeof arg === 'string' ? arg : String(arg)))
+      .join(' ')
+  );
+}
+
+function rejectionLogs(): string[] {
+  return [...logCalls(errorSpy), ...logCalls(warnSpy)].filter((line) =>
+    line.includes('bot_rejection')
+  );
+}
+
+function expectSingleRejectionLog(
+  endpoint: 'contact' | 'subscribe',
+  reason: string,
+  details: Record<string, string | number> = {}
+): string {
+  const lines = rejectionLogs();
+  expect(lines).toHaveLength(1);
+
+  const line = lines[0];
+  expect(line).toMatch(
+    new RegExp(`^\\[${endpoint}\\] bot_rejection reason=${reason}(?: |$)`)
+  );
+  for (const [key, value] of Object.entries(details)) {
+    expect(line).toContain(`${key}=${value}`);
+  }
+  return line;
 }
 
 function makeTimeoutError() {
@@ -457,96 +479,232 @@ describe('fail-closed Turnstile behavior', () => {
   });
 });
 
-describe('Turnstile failure logging', () => {
-  it('logs a missing contact secret as a configuration error', async () => {
+describe('structured bot-rejection logging', () => {
+  it('logs exactly one honeypot_hit for a contact honeypot hit', async () => {
     fetchMock.mockImplementation(() => {
       throw new Error('unexpected outbound call');
     });
 
-    await contactPost(makeContext('/api/contact', CONTACT_PAYLOAD, CONTACT_ENV));
-
-    const logs = logText(errorSpy);
-    expect(logs).toContain('[contact]');
-    expect(logs).toContain('TURNSTILE_SECRET_KEY');
-    expect(logs).toContain('configuration error');
-  });
-
-  it('logs a missing subscribe secret as a configuration error', async () => {
-    fetchMock.mockImplementation(() => {
-      throw new Error('unexpected outbound call');
-    });
-
-    await subscribePost(
-      makeContext('/subscribe', SUBSCRIBE_PAYLOAD, SUBSCRIBE_ENV)
+    const response = await contactPost(
+      makeContext(
+        '/api/contact',
+        { ...CONTACT_PAYLOAD, company: 'Acme Corp' },
+        { ...CONTACT_ENV, TURNSTILE_SECRET_KEY: 'test-secret' }
+      )
     );
 
-    const logs = logText(errorSpy);
-    expect(logs).toContain('[subscribe]');
-    expect(logs).toContain('TURNSTILE_SECRET_KEY');
-    expect(logs).toContain('configuration error');
+    expect(response.status).toBe(200);
+    expectSingleRejectionLog('contact', 'honeypot_hit');
   });
 
-  it('logs siteverify network failures separately from configuration errors', async () => {
+  it('logs exactly one honeypot_hit for a subscribe honeypot hit', async () => {
+    fetchMock.mockImplementation(() => {
+      throw new Error('unexpected outbound call');
+    });
+
+    const response = await subscribePost(
+      makeContext(
+        '/subscribe',
+        { ...SUBSCRIBE_PAYLOAD, company: 'Acme Corp' },
+        { ...SUBSCRIBE_ENV, TURNSTILE_SECRET_KEY: 'test-secret' }
+      )
+    );
+
+    expect(response.status).toBe(200);
+    expectSingleRejectionLog('subscribe', 'honeypot_hit');
+  });
+
+  it('logs turnstile_secret_missing for an unset contact secret', async () => {
+    fetchMock.mockImplementation(() => {
+      throw new Error('unexpected outbound call');
+    });
+
+    const response = await contactPost(
+      makeContext('/api/contact', CONTACT_PAYLOAD, CONTACT_ENV)
+    );
+
+    expect(response.status).toBe(403);
+    expectSingleRejectionLog('contact', 'turnstile_secret_missing');
+  });
+
+  it('logs turnstile_secret_missing for an empty subscribe secret', async () => {
+    fetchMock.mockImplementation(() => {
+      throw new Error('unexpected outbound call');
+    });
+
+    const response = await subscribePost(
+      makeContext('/subscribe', SUBSCRIBE_PAYLOAD, {
+        ...SUBSCRIBE_ENV,
+        TURNSTILE_SECRET_KEY: '',
+      })
+    );
+
+    expect(response.status).toBe(403);
+    expectSingleRejectionLog('subscribe', 'turnstile_secret_missing');
+  });
+
+  it('logs turnstile_token_invalid for a missing contact token', async () => {
+    fetchMock.mockImplementation(() => {
+      throw new Error('unexpected outbound call');
+    });
+
+    const response = await contactPost(
+      makeContext(
+        '/api/contact',
+        { ...CONTACT_PAYLOAD, turnstileToken: undefined },
+        { ...CONTACT_ENV, TURNSTILE_SECRET_KEY: 'test-secret' }
+      )
+    );
+
+    expect(response.status).toBe(403);
+    expectSingleRejectionLog('contact', 'turnstile_token_invalid', {
+      detail: 'missing',
+    });
+  });
+
+  it('logs turnstile_token_invalid for a missing subscribe token', async () => {
+    fetchMock.mockImplementation(() => {
+      throw new Error('unexpected outbound call');
+    });
+
+    const response = await subscribePost(
+      makeContext(
+        '/subscribe',
+        { ...SUBSCRIBE_PAYLOAD, turnstileToken: undefined },
+        { ...SUBSCRIBE_ENV, TURNSTILE_SECRET_KEY: 'test-secret' }
+      )
+    );
+
+    expect(response.status).toBe(403);
+    expectSingleRejectionLog('subscribe', 'turnstile_token_invalid', {
+      detail: 'missing',
+    });
+  });
+
+  it('logs turnstile_siteverify_error detail=network when siteverify throws', async () => {
     fetchMock.mockRejectedValue(new Error('network down'));
 
-    await contactPost(
+    const response = await contactPost(
       makeContext('/api/contact', CONTACT_PAYLOAD, {
         ...CONTACT_ENV,
         TURNSTILE_SECRET_KEY: 'test-secret',
       })
     );
 
-    const logs = logText(errorSpy);
-    expect(logs).toContain('network/transport error');
-    expect(logs).not.toContain('configuration error');
+    expect(response.status).toBe(403);
+    expectSingleRejectionLog('contact', 'turnstile_siteverify_error', {
+      detail: 'network',
+      error_name: 'Error',
+    });
   });
 
-  it('logs siteverify timeouts separately from network failures', async () => {
+  it('logs turnstile_siteverify_error detail=timeout when siteverify times out', async () => {
     fetchMock.mockRejectedValue(makeTimeoutError());
 
-    await contactPost(
+    const response = await contactPost(
       makeContext('/api/contact', CONTACT_PAYLOAD, {
         ...CONTACT_ENV,
         TURNSTILE_SECRET_KEY: 'test-secret',
       })
     );
 
-    const logs = logText(errorSpy);
-    expect(logs).toContain('timed out after 8000ms');
-    expect(logs).not.toContain('network/transport error');
+    expect(response.status).toBe(403);
+    expectSingleRejectionLog('contact', 'turnstile_siteverify_error', {
+      detail: 'timeout',
+      timeout_ms: 8000,
+    });
   });
 
-  it('logs malformed siteverify responses separately from HTTP failures', async () => {
+  it('logs turnstile_siteverify_error detail=malformed_json for malformed JSON', async () => {
     fetchMock.mockResolvedValue(new Response('not json', { status: 200 }));
 
-    await contactPost(
+    const response = await contactPost(
       makeContext('/api/contact', CONTACT_PAYLOAD, {
         ...CONTACT_ENV,
         TURNSTILE_SECRET_KEY: 'test-secret',
       })
     );
 
-    const logs = logText(errorSpy);
-    expect(logs).toContain('malformed JSON');
-    expect(logs).not.toContain('siteverify HTTP');
+    expect(response.status).toBe(403);
+    expectSingleRejectionLog('contact', 'turnstile_siteverify_error', {
+      detail: 'malformed_json',
+      status: 200,
+    });
   });
 
-  it('logs siteverify HTTP failures separately from malformed responses', async () => {
+  it('logs turnstile_siteverify_error detail=http_error for HTTP 503', async () => {
     fetchMock.mockResolvedValue(jsonResponse({}, 503));
 
-    await contactPost(
+    const response = await contactPost(
       makeContext('/api/contact', CONTACT_PAYLOAD, {
         ...CONTACT_ENV,
         TURNSTILE_SECRET_KEY: 'test-secret',
       })
     );
 
-    const logs = logText(errorSpy);
-    expect(logs).toContain('HTTP 503');
-    expect(logs).not.toContain('malformed JSON');
+    expect(response.status).toBe(403);
+    expectSingleRejectionLog('contact', 'turnstile_siteverify_error', {
+      detail: 'http_error',
+      status: 503,
+    });
   });
 
-  it('logs token rejection separately from transport failures', async () => {
+  it('logs turnstile_rejected with error codes when siteverify returns success: false', async () => {
+    fetchMock.mockResolvedValue(
+      jsonResponse({ success: false, 'error-codes': ['invalid-input-response'] })
+    );
+
+    const response = await contactPost(
+      makeContext('/api/contact', CONTACT_PAYLOAD, {
+        ...CONTACT_ENV,
+        TURNSTILE_SECRET_KEY: 'test-secret',
+      })
+    );
+
+    expect(response.status).toBe(403);
+    expectSingleRejectionLog('contact', 'turnstile_rejected', {
+      error_codes: 'invalid-input-response',
+    });
+  });
+
+  it('logs turnstile_rejected for a subscribe token rejection', async () => {
+    fetchMock.mockResolvedValue(
+      jsonResponse({ success: false, 'error-codes': ['timeout-or-duplicate'] })
+    );
+
+    const response = await subscribePost(
+      makeContext('/subscribe', SUBSCRIBE_PAYLOAD, {
+        ...SUBSCRIBE_ENV,
+        TURNSTILE_SECRET_KEY: 'test-secret',
+      })
+    );
+
+    expect(response.status).toBe(403);
+    expectSingleRejectionLog('subscribe', 'turnstile_rejected', {
+      error_codes: 'timeout-or-duplicate',
+    });
+  });
+
+  it('logs turnstile_action_mismatch when the action does not match', async () => {
+    fetchMock.mockResolvedValue(
+      jsonResponse({ success: true, action: 'wrong_action' })
+    );
+
+    const response = await contactPost(
+      makeContext('/api/contact', CONTACT_PAYLOAD, {
+        ...CONTACT_ENV,
+        TURNSTILE_SECRET_KEY: 'test-secret',
+      })
+    );
+
+    expect(response.status).toBe(403);
+    expectSingleRejectionLog('contact', 'turnstile_action_mismatch', {
+      expected: 'contact',
+      actual: 'wrong_action',
+    });
+  });
+
+  it('does not log secrets, tokens, or submitted form values', async () => {
     fetchMock.mockResolvedValue(
       jsonResponse({ success: false, 'error-codes': ['invalid-input-response'] })
     );
@@ -557,10 +715,34 @@ describe('Turnstile failure logging', () => {
         TURNSTILE_SECRET_KEY: 'test-secret',
       })
     );
+    await subscribePost(
+      makeContext('/subscribe', SUBSCRIBE_PAYLOAD, {
+        ...SUBSCRIBE_ENV,
+        TURNSTILE_SECRET_KEY: 'test-secret',
+      })
+    );
+    await contactPost(
+      makeContext(
+        '/api/contact',
+        { ...CONTACT_PAYLOAD, company: 'Acme Corp' },
+        { ...CONTACT_ENV, TURNSTILE_SECRET_KEY: 'test-secret' }
+      )
+    );
 
-    const logs = logText(warnSpy);
-    expect(logs).toContain('rejected the token');
-    expect(logs).toContain('invalid-input-response');
-    expect(logs).not.toContain('network/transport error');
+    const logs = rejectionLogs().join('\n');
+    expect(logs).toContain('bot_rejection');
+
+    for (const sensitive of [
+      'test-secret',
+      'test-token',
+      'brevo-key',
+      'jane@example.com',
+      'Jane Doe',
+      'Test message',
+      'Test Guide',
+      'Acme Corp',
+    ]) {
+      expect(logs).not.toContain(sensitive);
+    }
   });
 });
