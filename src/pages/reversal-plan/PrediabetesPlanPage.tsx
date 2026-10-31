@@ -26,10 +26,11 @@ export default function PrediabetesPlanPage() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Guide",
-    "headline": "5-Step Prediabetes Plan",
+    "headline": "The 5-Step Prediabetes Plan",
     "description": "A 5-step lifestyle plan for prediabetes covering diet, movement, tracking, supplements and sleep. Educational only.",
     "image": "https://thrivehealth360.org/images/reverse-prediabetes-hero-og.webp",
     "url": "https://thrivehealth360.org/prediabetes-plan",
+    "dateModified": "2026-10-29",
     "author": {
       "@type": "Organization",
       "name": "ThriveHealth360"
@@ -278,7 +279,7 @@ export default function PrediabetesPlanPage() {
                   
                   <div className={`bg-white border-l-4 ${colors.border} rounded-r-lg p-8 mb-8`}>
                     <h4 className="font-bold text-2xl text-gray-900 mb-4 flex items-center gap-3">
-                      <Icon className="w-7 h-7" style={{ color: `var(--color-${step.color}-600)` }} />
+                      <Icon className={`w-7 h-7 ${colors.text}`} />
                       Why {step.title} Matters
                     </h4>
                     <p className="text-base text-gray-700 mb-5">
@@ -287,7 +288,7 @@ export default function PrediabetesPlanPage() {
                     <ul className="space-y-4 text-lg text-gray-700">
                       {step.points.map((point, i) => (
                         <li key={i} className="flex items-start gap-3">
-                          <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" style={{ color: `var(--color-${step.color}-600)` }} />
+                          <CheckCircle2 className={`w-6 h-6 flex-shrink-0 mt-0.5 ${colors.text}`} />
                           <span>{point}</span>
                         </li>
                       ))}
@@ -295,7 +296,7 @@ export default function PrediabetesPlanPage() {
                   </div>
 
                   <Link to={step.link} className={`inline-flex items-center gap-2 ${colors.text} font-bold text-lg hover:opacity-80 transition`}>
-                    Read Complete {step.title} Guide <ArrowRight className="w-5 h-5" />
+                    Read the Complete Guide: {step.title} <ArrowRight className="w-5 h-5" />
                   </Link>
                   {step.id === 'step-4' && (
                     <p className="mt-3 text-sm text-gray-500 italic">
