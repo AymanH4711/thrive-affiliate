@@ -6,14 +6,9 @@ import {
   Apple,
   Utensils,
   ShoppingCart,
-  BarChart3,
-  Heart,
   Clock,
   Zap,
   ArrowRight,
-  Coffee,
-  Leaf,
-  Moon,
   AlertTriangle,
   Info
 } from 'lucide-react';
@@ -25,14 +20,26 @@ export default function PrediabetesDietPage() {
     if (element) element.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Redesign Your Diet: The Prediabetes Diet Guide",
+    "description": "Complete prediabetes diet guide. Learn which foods stabilize blood sugar, meal timing strategies, and a 7-day meal plan to support healthy blood sugar levels.",
+    "image": "https://thrivehealth360.org/images/og-default.png",
+    "url": "https://thrivehealth360.org/prediabetes-diet",
+    "author": { "@type": "Organization", "name": "ThriveHealth360" },
+    "dateModified": "2026-10-29"
+  };
+
   return (
     <>
       <SEO
-        title="Prediabetes Diet Plan: What to Eat & Avoid | Thrive"
-        description="Complete prediabetes diet guide. Learn which foods stabilize blood sugar, meal timing strategies, and a 7-day meal plan to reverse prediabetes naturally."
+        title="Prediabetes Diet Plan: What to Eat & Avoid | ThriveHealth360"
+        description="Complete prediabetes diet guide. Learn which foods stabilize blood sugar, meal timing strategies, and a 7-day meal plan to support healthy blood sugar levels."
         keywords="prediabetes diet, blood sugar diet, foods for blood sugar, what to eat with prediabetes, diabetes diet"
         image="/images/og-default.png"
         url="/prediabetes-diet"
+        schema={schema}
       />
       <main className="min-h-screen bg-white font-sans text-gray-800">
         
@@ -46,7 +53,7 @@ export default function PrediabetesDietPage() {
               Step 1 of 5
             </span>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              Master Your Diet
+              Redesign Your Diet
             </h1>
             <p className="text-2xl text-emerald-100 mb-4">The Prediabetes Diet Guide</p>
             <p className="text-xl text-emerald-50 leading-relaxed max-w-2xl">
@@ -136,13 +143,12 @@ export default function PrediabetesDietPage() {
           <div className="container mx-auto px-4 max-w-4xl">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Why Diet is Central to Reversal</h2>
             <p className="text-xl text-gray-700 mb-8 leading-relaxed">
-              Food directly influences your blood sugar response. Research shows that sustained dietary changes can meaningfully lower HbA1c and improve insulin sensitivity—often without medication—when combined with a healthy lifestyle.
+              Food directly influences your blood sugar response. Research shows that sustained dietary changes can meaningfully lower HbA1c and improve insulin sensitivity, working alongside — not replacing — any medication your doctor has prescribed.
             </p>
             
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 gap-6">
               {[
-                { stat: 'Up to 1.5%', desc: 'Potential HbA1c reduction from diet & lifestyle changes (results vary)' },
-                { stat: '20–30%', desc: 'Reduction in post-meal glucose spikes with smart food ordering' },
+                { stat: '~39%', desc: 'Lower post-meal glucose response when vegetables and protein are eaten before carbs, in a study of adults with prediabetes (Shukla et al. 2019)' },
                 { stat: '4–12 Weeks', desc: 'Typical timeframe to see measurable fasting glucose improvements' },
               ].map((item, i) => (
                 <div key={i} className="bg-emerald-50 border border-emerald-200 rounded-xl p-6 text-center">
@@ -182,11 +188,12 @@ export default function PrediabetesDietPage() {
                 },
                 {
                   category: 'Low-Glycemic Fruits',
-                  items: ['Berries (blueberries, strawberries)', 'Cherries', 'Apples (with skin)', 'Pears', 'Grapefruit', 'Kiwi']
+                  items: ['Berries (blueberries, strawberries)', 'Cherries', 'Apples (with skin)', 'Pears', 'Grapefruit', 'Kiwi'],
+                  note: 'Grapefruit can interact with statins and some blood-pressure medicines — check with your pharmacist if you take either.'
                 },
                 {
                   category: 'Beneficial Beverages',
-                  items: ['Water (still or sparkling)', 'Unsweetened green or herbal tea', 'Black coffee (moderate)', 'Apple cider vinegar water (diluted)', 'Low-fat milk or unsweetened plant milk']
+                  items: ['Water (still or sparkling)', 'Unsweetened green or herbal tea', 'Black coffee (moderate)', 'Low-fat milk or unsweetened plant milk']
                 },
               ].map((section, i) => (
                 <div key={i} className="bg-white border border-emerald-200 rounded-xl p-6">
@@ -202,6 +209,9 @@ export default function PrediabetesDietPage() {
                       </li>
                     ))}
                   </ul>
+                  {'note' in section && (
+                    <p className="mt-4 text-sm text-amber-700">{section.note}</p>
+                  )}
                 </div>
               ))}
             </div>
@@ -284,7 +294,7 @@ export default function PrediabetesDietPage() {
                 {
                   title: 'Apple Cider Vinegar Before Meals',
                   desc: 'Some small studies suggest that diluted apple cider vinegar consumed before a meal may modestly reduce post-meal glucose. Evidence is preliminary—consult your doctor before using regularly.',
-                  tip: 'Mix 1–2 tsp (not tablespoons) in a large glass of water before meals. Do not take undiluted.'
+                  tip: 'Mix about 4 tsp (20 mL — the dose used in published studies) in a large glass of water before meals. Do not take undiluted.'
                 },
                 {
                   title: 'Consistent Meal Timing',
@@ -500,8 +510,10 @@ export default function PrediabetesDietPage() {
                   <ul className="space-y-2">
                     {section.items.map((item, j) => (
                       <li key={j} className="flex items-center gap-3 text-gray-700">
-                        <input type="checkbox" className="w-4 h-4 text-emerald-600 cursor-pointer" />
-                        {item}
+                        <label className="flex items-center gap-3 cursor-pointer">
+                          <input type="checkbox" className="w-4 h-4 text-emerald-600 cursor-pointer" />
+                          {item}
+                        </label>
                       </li>
                     ))}
                   </ul>
@@ -519,7 +531,7 @@ export default function PrediabetesDietPage() {
               <div>
                 <p className="text-sm font-bold text-gray-700 mb-1">Affiliate Disclosure</p>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  Some links on this page may be affiliate links. This means that if you click a link and make a purchase, Thrive may earn a small commission at <strong>no extra cost to you</strong>. We only recommend products and services we genuinely believe may be helpful for people managing prediabetes. Affiliate relationships do not influence our editorial content or the dietary information provided on this page. Please read our full{' '}
+                  Some links on this page may be affiliate links. This means that if you click a link and make a purchase, ThriveHealth360 may earn a small commission at <strong>no extra cost to you</strong>. We only recommend products and services we genuinely believe may be helpful for people managing prediabetes. Affiliate relationships do not influence our editorial content or the dietary information provided on this page. Please read our full{' '}
                   <Link to="/affiliate-disclosure" className="underline text-emerald-700 hover:text-emerald-600">
                     Affiliate Disclosure Policy
                   </Link>{' '}
