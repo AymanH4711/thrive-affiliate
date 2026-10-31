@@ -45,7 +45,7 @@ export default function InsulinResistanceManagement() {
     <>
       <SEO
         title="Insulin Resistance Management Guide | Thrive Health"
-        description="Complete guide to understanding insulin resistance. Learn the 'Lock & Key' mechanism, 6 warning signs, and the proven 3-pillar reversal protocol. Start healing."
+        description="Complete guide to understanding insulin resistance. Learn the 'Lock & Key' mechanism, 6 warning signs, and a science-backed 3-pillar approach to reversal. Start healing."
         keywords="insulin resistance, insulin sensitivity, metabolic syndrome, how to reverse insulin resistance, PCOS"
         image="/images/insulin-resistance-hero-thumb-og.webp"
         url="/insulin-resistance-management"
@@ -472,7 +472,7 @@ export default function InsulinResistanceManagement() {
               to="/supplements/insulin-sensitivity"
               className="inline-flex items-center justify-center gap-2 bg-emerald-600 text-white font-bold px-10 py-4 rounded-xl hover:bg-emerald-700 transition shadow-lg"
             >
-              Shop Insulin Sensitivity Supplements
+              See Our Insulin Sensitivity Coverage
               <ArrowRight className="w-5 h-5" aria-hidden="true" />
             </Link>
             <p className="mt-4 text-xs text-gray-500 italic">
