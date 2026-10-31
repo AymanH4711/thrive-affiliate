@@ -86,7 +86,7 @@ export default function InsulinResistanceManagement() {
                     to="/prediabetes-plan"
                     className="inline-flex items-center justify-center gap-2 border-2 border-emerald-600 text-emerald-600 font-semibold px-6 py-3 rounded-lg hover:bg-emerald-50 transition"
                   >
-                    How to Reverse It
+                    The 5-Step Prediabetes Plan
                     <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </Link>
                 </div>
