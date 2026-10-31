@@ -30,7 +30,6 @@ export default function BloodSugarSupportCategory() {
         // product link once provided.
         recommendedBrand: "Thorne Berberine-500",
         affiliateLink: "https://discover.insulinherb.com/berberine-v2/?aff=Ayman_Hathoot",
-        rating: 4.9,
         icon: Pill
       },
       {
@@ -181,9 +180,9 @@ export default function BloodSugarSupportCategory() {
                      <div className={`p-2 ${colors.iconBg} rounded-lg shadow-sm border ${colors.lightBorder}`}>
                        <product.icon className="w-6 h-6" />
                      </div>
-                     {product.type === 'guide' ? (
+                     {product.type === 'guide' || !product.rating ? (
                        <div className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded text-xs font-bold text-gray-600 border border-gray-200">
-                         Digital Guide
+                         {product.type === 'guide' ? 'Digital Guide' : 'Supplement'}
                        </div>
                      ) : (
                        <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded text-xs font-bold text-yellow-700 border border-yellow-100">
@@ -234,7 +233,7 @@ export default function BloodSugarSupportCategory() {
                        <a
                          href={product.affiliateLink}
                          target="_blank"
-                         rel="noopener noreferrer"
+                         rel="noopener noreferrer sponsored"
                          className={`flex items-center justify-center gap-2 w-full bg-gray-900 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-gray-200 ${colors.button}`}
                        >
                          Check Price
