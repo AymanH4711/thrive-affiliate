@@ -15,6 +15,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { SEO } from "@/components/seo/SEO";
+import { MedicalDisclaimer } from "@/components/clinical/MedicalDisclaimer";
 
 export default function InsulinResistanceManagement() {
   
@@ -112,15 +113,7 @@ export default function InsulinResistanceManagement() {
         <section className="py-4 bg-amber-50 border-b-2 border-amber-200">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                <div>
-                  <p className="font-bold text-sm text-amber-900 mb-1">Medical Disclaimer</p>
-                  <p className="text-sm text-amber-800 leading-relaxed">
-                    The information on this page is for <strong>educational purposes only</strong> and does not constitute medical advice. These statements have not been evaluated by the U.S. Food and Drug Administration (FDA). No content here is intended to diagnose, treat, cure, or prevent any disease. Insulin resistance is a serious metabolic condition — always consult a qualified healthcare provider before starting any supplement regimen, making significant dietary changes, or beginning a new exercise protocol, especially if you are taking medications or have an existing health condition. Individual results may vary and reversal is not guaranteed.
-                  </p>
-                </div>
-              </div>
+              <MedicalDisclaimer variant="educational" />
             </div>
           </div>
         </section>
@@ -242,7 +235,7 @@ export default function InsulinResistanceManagement() {
           <div className="container mx-auto px-4 max-w-4xl">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">6 Warning Signs You're Developing Resistance</h2>
             <p className="text-xl text-gray-700 mb-8 leading-relaxed">
-              Insulin resistance is often silent at first. Watch for these early signals—most people have 2–3 before diagnosis.
+              Insulin resistance is often silent at first — most people have no noticeable symptoms and are only found through lab testing. Watch for these possible signals:
             </p>
             
             <div className="grid md:grid-cols-2 gap-6">
@@ -274,7 +267,7 @@ export default function InsulinResistanceManagement() {
           <div className="container mx-auto px-4 max-w-4xl">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">The 3-Pillar Reversal Protocol</h2>
             <p className="text-xl text-gray-700 mb-8 leading-relaxed">
-              Reverse insulin resistance by targeting the root causes. This science-backed protocol can improve insulin sensitivity by up to 25–50% in 3–6 months — with results varying based on individual starting point, adherence, and which lifestyle factors are addressed.
+              Reverse insulin resistance by targeting the root causes — nutrition, movement, and recovery together, sustained over time, can meaningfully improve insulin sensitivity, with results varying based on individual starting point, adherence, and which lifestyle factors are addressed.
             </p>
             
             <div className="space-y-8">
@@ -357,7 +350,7 @@ export default function InsulinResistanceManagement() {
                   <h3 className="text-xl font-bold text-white">Pillar 3: Recovery</h3>
                 </div>
                 <div className="px-6 py-6">
-                  <p className="text-gray-700 mb-4">Manage stress and sleep to lower cortisol. Poor sleep worsens resistance by 25%.</p>
+                  <p className="text-gray-700 mb-4">Manage stress and sleep to lower cortisol. Poor sleep can measurably reduce insulin sensitivity, even after a single night of inadequate sleep.</p>
                   <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <div className="bg-purple-50 p-4 rounded-lg">
                       <h4 className="font-bold text-gray-900 mb-2">Do This</h4>
@@ -456,11 +449,11 @@ export default function InsulinResistanceManagement() {
               </div>
               <div className="p-6 border border-gray-200 rounded-xl">
                 <h3 className="font-bold text-lg text-emerald-700 mb-2">Magnesium Glycinate</h3>
-                <p className="text-sm text-gray-600">Most people with insulin resistance are deficient in magnesium.</p>
+                <p className="text-sm text-gray-600">Magnesium is involved in insulin signaling, and many people don't get enough from diet alone.</p>
               </div>
               <div className="p-6 border border-gray-200 rounded-xl">
                 <h3 className="font-bold text-lg text-emerald-700 mb-2">Chromium Picolinate</h3>
-                <p className="text-sm text-gray-600">Helps improve the body's response to insulin.</p>
+                <p className="text-sm text-gray-600">Studied for a possible role in insulin signaling, though evidence is mixed outside of documented deficiency. Discuss with your healthcare provider before use.</p>
               </div>
             </div>
           </div>
