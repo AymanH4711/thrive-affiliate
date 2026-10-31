@@ -226,7 +226,7 @@ export default function PrediabetesSupportHub() {
               </div>
               <div className="space-y-4">
                 {[
-                  { icon: Heart,       title: 'It Is Common',    desc: 'Nearly 1 in 3 US adults has prediabetes. Globally, an estimated 541 million adults have impaired glucose tolerance (IDF Diabetes Atlas, 2021).' },
+                  { icon: Heart,       title: 'It Is Common',    desc: 'Nearly 1 in 3 US adults has prediabetes. Globally, an estimated 635 million adults have impaired glucose tolerance (IDF Diabetes Atlas, 2024 data).' },
                   { icon: TrendingDown,title: 'It Is Reversible', desc: 'Diet, exercise, sleep, and stress management can normalise blood sugar and restore insulin sensitivity — even without medication.' },
                   { icon: Shield,      title: 'It Is Time-Sensitive', desc: 'Without action, 15–30% of people with prediabetes develop type 2 diabetes within 5 years. Early action dramatically reduces that risk.' },
                   { icon: Users,       title: 'It Is Often Silent', desc: 'Most people have no obvious symptoms. A simple blood test — fasting glucose or A1C — is the only way to know for certain.' },
