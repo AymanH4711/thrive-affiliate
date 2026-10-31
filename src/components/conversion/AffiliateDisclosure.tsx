@@ -13,10 +13,24 @@ interface AffiliateDisclosureProps {
       — if other context values get used elsewhere with different intended
       copy, add a case for them below rather than assuming this covers it. */
   context?: 'supplement-reviews' | string;
+  /** Set false on a page that carries no affiliate links, so the disclosure
+      describes this page honestly instead of implying a product link exists.
+      Defaults to true, which preserves the original site-scoped copy at every
+      existing call site. Takes priority over `context`. */
+  hasAffiliateLinks?: boolean;
 }
 
-export const AffiliateDisclosure: React.FC<AffiliateDisclosureProps> = ({ compact = false, className = '', context }) => {
+export const AffiliateDisclosure: React.FC<AffiliateDisclosureProps> = ({ compact = false, className = '', context, hasAffiliateLinks = true }) => {
   if (compact) {
+    if (!hasAffiliateLinks) {
+      return (
+        <p className={`text-xs text-slate-500 ${className}`}>
+          <span className="font-bold uppercase tracking-wider text-[10px] text-slate-600 mr-1">Affiliate Disclosure:</span>
+          this page does not currently link to a specific product.
+        </p>
+      );
+    }
+
     return (
       <p className={`text-xs text-slate-500 ${className}`}>
         <span className="font-bold uppercase tracking-wider text-[10px] text-slate-600 mr-1">Affiliate Disclosure:</span>
@@ -25,7 +39,9 @@ export const AffiliateDisclosure: React.FC<AffiliateDisclosureProps> = ({ compac
     );
   }
 
-  const bodyText = context === 'supplement-reviews'
+  const bodyText = !hasAffiliateLinks
+    ? 'ThriveHealth360 may earn a commission from affiliate partnerships on some pages, but this page does not currently link to a specific product. Affiliate relationships never influence our editorial content or recommendations.'
+    : context === 'supplement-reviews'
     ? 'ThriveHealth360 is committed to providing transparent, evidence-based wellness insights. Some of the supplement reviews and recommendations on this site contain affiliate links. This means that if you click a link and make a purchase, we may receive a small commission at absolutely no extra cost to you. These commissions help support our dedicated research team and keep our deep-dive resources completely free for everyone. Thank you for your support!'
     : 'ThriveHealth360 is committed to providing transparent, evidence-based wellness insights. Some of the links on this website are affiliate links. This means that if you click a link and make a purchase, we may receive a small commission at absolutely no extra cost to you. These commissions help support our dedicated research team and keep our deep-dive resources completely free for everyone. Thank you for your support!';
 

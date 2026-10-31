@@ -1,6 +1,7 @@
 // src/pages/reversal-plan/PrediabetesPlanPage.tsx
 import { Link } from 'react-router-dom';
 import { SEO } from "@/components/seo/SEO";
+import { AffiliateDisclosure } from "@/components/conversion/AffiliateDisclosure";
 import { AdvisorModeBox } from "@/components/clinical/AdvisorModeBox";
 import { EvidenceStrengthBadge } from "@/components/clinical/EvidenceStrengthBadge";
 import { 
@@ -387,17 +388,9 @@ export default function PrediabetesPlanPage() {
         </article>
 
         {/* AFFILIATE DISCLOSURE */}
-        <section id="affiliate-disclosure" className="py-6 bg-blue-50 border-t-2 border-blue-200">
+        <section id="affiliate-disclosure" className="py-6 bg-gray-50 border-t border-gray-200">
           <div className="container mx-auto px-4 max-w-7xl">
-            <div className="flex items-start gap-4">
-              <AlertCircle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
-              <div>
-                <p className="font-bold text-base text-blue-900 mb-2">Affiliate Disclosure</p>
-                <p className="text-base text-blue-800 leading-relaxed">
-                  <strong>Transparency notice:</strong> This page contains affiliate links to supplement and wellness products. ThriveHealth360 may earn a commission if you purchase through these links, at no additional cost to you. This financial relationship may influence which products we feature and how they are presented. We apply editorial and quality standards to all recommendations; however, you should conduct your own research and consult a qualified healthcare professional before purchasing any supplement. This disclosure is provided in accordance with the FTC's guidelines on endorsements and testimonials (16 CFR §255).
-                </p>
-              </div>
-            </div>
+            <AffiliateDisclosure hasAffiliateLinks={false} />
           </div>
         </section>
 
