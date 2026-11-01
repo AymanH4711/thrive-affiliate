@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { SEO } from "@/components/seo/SEO";
 import { MedicalDisclaimer } from "@/components/clinical/MedicalDisclaimer";
+import { AffiliateDisclosure } from "@/components/conversion/AffiliateDisclosure";
 
 export default function InsulinResistanceManagement() {
   
@@ -475,10 +476,6 @@ export default function InsulinResistanceManagement() {
               See Our Insulin Sensitivity Coverage
               <ArrowRight className="w-5 h-5" aria-hidden="true" />
             </Link>
-            <p className="mt-4 text-xs text-gray-500 italic">
-              * Some product links are affiliate links. We may earn a commission at no extra cost to you.{' '}
-              <a href="#affiliate-disclosure" className="underline hover:text-gray-700">See full disclosure below.</a>
-            </p>
           </div>
         </section>
 
@@ -486,15 +483,7 @@ export default function InsulinResistanceManagement() {
         <section id="affiliate-disclosure" className="py-4 bg-blue-50 border-t-2 border-blue-200">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                <div>
-                  <p className="font-bold text-sm text-blue-900 mb-1">Affiliate Disclosure</p>
-                  <p className="text-sm text-blue-800 leading-relaxed">
-                    <strong>Transparency notice:</strong> This page contains affiliate links to supplement and wellness products. ThriveHealth360 may earn a commission if you purchase through these links, at <strong>no additional cost to you</strong>. This financial relationship may influence which products we feature and how they are presented. We apply editorial and quality standards to all recommendations; however, you should conduct your own research and consult a qualified healthcare professional before purchasing any supplement. This disclosure is provided in accordance with the FTC&apos;s guidelines on endorsements and testimonials (16 CFR §255).
-                  </p>
-                </div>
-              </div>
+              <AffiliateDisclosure hasAffiliateLinks={false} />
             </div>
           </div>
         </section>
