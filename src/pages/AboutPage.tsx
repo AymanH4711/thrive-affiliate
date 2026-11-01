@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Shield, Award, BookOpen, Stethoscope, Globe, CheckCircle, ShieldCheck } from 'lucide-react';
+import { Heart, Shield, Award, BookOpen, Stethoscope, Globe, CheckCircle, ShieldCheck, UserCheck } from 'lucide-react';
 import { SEO } from '@/components/seo/SEO';
 
 /**
@@ -12,6 +12,12 @@ const Card: React.FC<{ children: React.ReactNode; className?: string }> = ({ chi
     {children}
   </div>
 );
+
+// Role only — there is no reviewer name or photo to show, and inventing either
+// is worse than showing none. Role text is the one fact we can state.
+const REVIEWER = {
+  role: "4th-year Doctor of Physical Therapy student, Cairo University",
+};
 
 const AboutPage: React.FC = () => {
   const values = [
@@ -198,6 +204,83 @@ const AboutPage: React.FC = () => {
               <div className="flex gap-4">
                 <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
                 <p className="text-gray-700 leading-relaxed">We do not accept payment for positive reviews, and affiliate relationships never influence which products we recommend or how we rank them.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Content Review Process */}
+        <section className="py-20">
+          <div className="container mx-auto px-6 max-w-4xl">
+            <div className="text-center mb-8">
+              <span className="text-emerald-600 font-bold uppercase tracking-widest text-sm">Editorial Process</span>
+              <h2 className="text-3xl font-bold text-gray-900 mt-2 tracking-tight">How We Review What We Publish</h2>
+            </div>
+            <div className="text-left bg-white p-10 rounded-3xl border-2 border-emerald-50 shadow-lg">
+              <p className="text-gray-700 leading-relaxed mb-8">
+                I read every article, guide, and product page end-to-end before it goes live and whenever
+                it's updated. Where something touches movement, exercise safety, or physiology beyond
+                general knowledge, I flag the specific passage for our physical therapy reviewer to check
+                before it's published.
+              </p>
+
+              {/* Reviewer identity — icon and role only, no name or photo */}
+              <div className="flex items-center gap-4 bg-gray-50 border border-gray-200 rounded-2xl p-5 mb-8">
+                <div className="bg-emerald-100 p-3 rounded-full flex-shrink-0">
+                  <UserCheck className="w-6 h-6 text-emerald-600" aria-hidden="true" />
+                </div>
+                <p className="text-gray-700 text-sm font-medium leading-relaxed">{REVIEWER.role}</p>
+              </div>
+
+              <h3 className="font-bold text-gray-900 text-lg mb-4">What I check on every page</h3>
+              <div className="space-y-4 mb-8">
+                <div className="flex gap-4">
+                  <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900 text-sm">Source verification, line by line</h4>
+                    <p className="text-gray-600 text-sm leading-relaxed">Every claim is traced back to the specific study or official guidance it came from, not to an abstract or a secondhand summary of it.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900 text-sm">Overclaim detection</h4>
+                    <p className="text-gray-600 text-sm leading-relaxed">I look for sentences that outrun the evidence — a small single trial presented as settled, animal or lab work presented as a human outcome, or an effect size rounded up on the way into the text.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900 text-sm">Plain-language accuracy</h4>
+                    <p className="text-gray-600 text-sm leading-relaxed">The simple version has to stay true to the detailed one. If a plain-language explanation would change what the study actually found, it gets rewritten.</p>
+                  </div>
+                </div>
+              </div>
+
+              <h3 className="font-bold text-gray-900 text-lg mb-2">What gets flagged for clinical review</h3>
+              <p className="text-gray-500 text-sm mb-4">Only when a passage calls for it — not on every page.</p>
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900 text-sm">Metabolic & physiological accuracy</h4>
+                    <p className="text-gray-600 text-sm leading-relaxed">How the body actually works — glucose and insulin dynamics, metabolic pathways, and what a lab value does or does not mean.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900 text-sm">Movement & exercise safety</h4>
+                    <p className="text-gray-600 text-sm leading-relaxed">Whether an exercise instruction is safe and appropriate for the reader it is written for, including people with neuropathy, retinopathy, or cardiovascular risk.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mt-8 text-sm text-amber-800 leading-relaxed">
+                <strong>Editorial Note:</strong> Our physical therapy reviewer is a 4th-year Doctor of Physical
+                Therapy student at Cairo University, not a licensed clinician. This reviewer's role is limited to
+                checking flagged passages for movement and physiological accuracy; it is not a medical review of the
+                site's content, and it does not replace advice from your own healthcare provider.
               </div>
             </div>
           </div>
