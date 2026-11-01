@@ -5,12 +5,13 @@
 
 import { Link } from 'react-router-dom';
 import {
-  ArrowRight, ChevronRight, CheckCircle, Info,
+  ArrowRight, ChevronRight, CheckCircle,
   BookOpen, Activity, Moon, Utensils,
   Gauge, Pill, Users, TrendingDown,
   AlertTriangle, Heart, Shield
 } from 'lucide-react';
 import { SEO } from '@/components/seo/SEO';
+import { AffiliateDisclosure } from '@/components/conversion/AffiliateDisclosure';
 
 export default function PrediabetesSupportHub() {
 
@@ -423,22 +424,7 @@ export default function PrediabetesSupportHub() {
                 {/* ── AFFILIATE DISCLOSURE ─────────────────────────────────────── */}
         <section className="bg-gray-50 border-t border-gray-200 py-6">
           <div className="container mx-auto px-4 max-w-5xl">
-            <div className="flex gap-3">
-              <Info className="w-5 h-5 text-gray-500 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-bold text-gray-700 mb-1">Affiliate Disclosure</p>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  <strong>Transparency notice:</strong> This page contains affiliate links to supplement and wellness
-                  products. ThriveHealth360 may earn a commission if you purchase through these links, at no additional
-                  cost to you. This financial relationship may influence which products we feature and how they are
-                  presented. We apply editorial and quality standards to all recommendations; however, you should
-                  conduct your own research and consult a qualified healthcare professional before purchasing any
-                  supplement. This disclosure is provided in accordance with the FTC's guidelines on endorsements and
-                  testimonials (16 CFR §255).{' '}
-                  <Link to="/affiliate-disclosure" className="underline text-emerald-700 font-semibold">Full Disclosure Policy →</Link>
-                </p>
-              </div>
-            </div>
+            <AffiliateDisclosure hasAffiliateLinks={false} />
           </div>
         </section>
 

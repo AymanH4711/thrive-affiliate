@@ -1,6 +1,7 @@
 // src/pages/glucose-monitoring/GlucoseMonitoringTools.tsx
 import { Link } from 'react-router-dom';
 import { SEO } from "@/components/seo/SEO";
+import { AffiliateDisclosure } from "@/components/conversion/AffiliateDisclosure";
 import {
   Smartphone,
   Activity,
@@ -520,10 +521,6 @@ export default function GlucoseMonitoringTools() {
           <section className="mb-16" id="top-devices">
             <h2 className="text-3xl font-bold text-gray-900 mb-3">Top Device Picks for 2026</h2>
             <p className="text-sm text-gray-500 mb-2">Based on accuracy, usability, international availability, and value. Always verify current availability and pricing in your country.</p>
-            <p className="text-xs text-gray-400 italic mb-6">
-              * Some product links on this page are affiliate links. We may earn a commission at no extra cost to you.{' '}
-              <a href="#affiliate-disclosure" className="underline hover:text-gray-600">See full disclosure below.</a>
-            </p>
             
             <div className="space-y-4">
               {[
@@ -673,25 +670,7 @@ export default function GlucoseMonitoringTools() {
         {/* ── AFFILIATE DISCLOSURE ── */}
         <section id="affiliate-disclosure" className="bg-gray-100 border-t border-gray-200">
           <div className="container mx-auto px-4 max-w-4xl py-6">
-            <div className="flex gap-3">
-              <Info className="w-5 h-5 text-gray-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-              <div>
-                <p className="text-sm font-bold text-gray-700 mb-1">Affiliate Disclosure</p>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  <strong>Transparency notice:</strong> This page contains affiliate links to glucose monitoring
-                  products and devices. ThriveHealth360 may earn a commission if you purchase through these links,
-                  at no additional cost to you. This financial relationship may influence which products we feature
-                  and how they are presented. We apply editorial and quality standards to all recommendations;
-                  however, you should conduct your own research and consult a qualified healthcare professional
-                  before purchasing any device. Device suitability, insurance coverage, and availability vary
-                  by country. This disclosure is provided in accordance with the FTC's guidelines on endorsements
-                  and testimonials (16 CFR §255).{' '}
-                  <Link to="/affiliate-disclosure" className="underline text-purple-700 hover:text-purple-600 font-semibold">
-                    Full Disclosure Policy →
-                  </Link>
-                </p>
-              </div>
-            </div>
+            <AffiliateDisclosure hasAffiliateLinks={false} />
           </div>
         </section>
 

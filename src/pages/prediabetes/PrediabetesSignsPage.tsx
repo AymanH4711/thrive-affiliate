@@ -583,7 +583,7 @@ export default function PrediabetesSignsPage() {
               </Link>
             </div>
             <p className="text-xs text-gray-500 mt-4">
-              The 5-step plan includes optional supplement information and affiliate links; see its{' '}
+              The 5-step plan includes optional supplement information; see its{' '}
               <Link to="/prediabetes-plan#affiliate-disclosure" className="underline hover:text-gray-700">
                 affiliate disclosure
               </Link>{' '}

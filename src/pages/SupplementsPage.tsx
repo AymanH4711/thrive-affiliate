@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, CheckCircle, AlertCircle, Pill, Heart, Zap, ShieldCheck, Activity, Home } from 'lucide-react';
 import { TIMELINES, SUPPLEMENT_CLAIMS } from "../config/contentGuidelines";
 import { SEO } from "@/components/seo/SEO";
+import { AffiliateDisclosure } from "@/components/conversion/AffiliateDisclosure";
 
 export default function SupplementsPage() {
   // Static color map — dynamic Tailwind classes like `bg-${color}-600` are purged at build time
@@ -38,8 +39,8 @@ export default function SupplementsPage() {
       description: 'Natural compounds explored for their effects on metabolism, energy levels, and healthy weight management',
       icon: Zap,
       color: 'blue',
-      productCount: 2,
-      products: ['Green Tea Extract', 'Magnesium Glycinate'],
+      productCount: 0,
+      products: [],
       pillarLink: '/weight-wellness',
       pillarName: 'Weight & Wellness',
       bestFor: 'Weight loss support, low energy, metabolism boost'
@@ -50,8 +51,8 @@ export default function SupplementsPage() {
       description: 'Nutrient-based options researched for their potential to support how your cells respond to insulin',
       icon: Activity,
       color: 'purple',
-      productCount: 1,
-      products: ['Alpha-Lipoic Acid (ALA)'],
+      productCount: 0,
+      products: [],
       pillarLink: '/insulin-resistance-management',
       pillarName: 'Insulin Resistance Management',
       bestFor: 'Insulin resistance, metabolic syndrome, lab-confirmed IR'
@@ -81,7 +82,7 @@ export default function SupplementsPage() {
     <>
       <SEO
         title="Natural Supplements for Blood Sugar | Shop Now"
-        description="Shop science-backed supplements for blood sugar support, metabolic health & insulin sensitivity. Compare products, read reviews, and find the best for your needs."
+        description="Shop science-backed supplements for blood sugar support, metabolic health & insulin sensitivity. Browse our vetted categories and see what's available now."
         keywords="blood sugar supplements, prediabetes supplements, berberine, cinnamon supplement, natural blood sugar support"
         image="/images/og-default.png"
         url="/supplements"
@@ -148,8 +149,8 @@ export default function SupplementsPage() {
                 <h2 className="text-xl font-bold text-gray-900 mb-3">New Here? Start With The Right Category</h2>
                 <div className="space-y-2 text-gray-700">
                   <p><span className="font-semibold text-emerald-600">Blood Sugar Support</span> – If you have prediabetes, high A1C (5.7%+), or blood sugar spikes</p>
-                  <p><span className="font-semibold text-blue-600">Metabolic & Weight</span> – If seeking fat loss support, metabolism boost, or better energy</p>
-                  <p><span className="font-semibold text-purple-600">Insulin Sensitivity</span> – If you have insulin resistance confirmed by labs</p>
+                  <p><span className="font-semibold text-blue-600">Metabolic & Weight</span> – If seeking fat loss support, metabolism boost, or better energy (category coming soon)</p>
+                  <p><span className="font-semibold text-purple-600">Insulin Sensitivity</span> – If you have insulin resistance confirmed by labs (category coming soon)</p>
                   <p><span className="font-semibold text-teal-600">General Wellness</span> – If focused on prevention, anti-aging, and overall health</p>
                 </div>
                 <p className="text-sm text-gray-600 mt-4 italic">💡 Not sure? Start with Blood Sugar Support or consult your healthcare provider.</p>
@@ -164,7 +165,7 @@ export default function SupplementsPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-3">Shop by Category</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">Click any category to view supplements and detailed product information</p>
+            <p className="text-gray-600 max-w-2xl mx-auto">Click any category to view what's currently available</p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
@@ -189,7 +190,7 @@ export default function SupplementsPage() {
                 </div>
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500 font-medium">{cat.productCount} {cat.productCount === 1 ? 'product' : 'products'}</span>
+                  <span className="text-xs text-gray-500 font-medium">{cat.productCount === 0 ? 'Coming Soon' : `${cat.productCount} ${cat.productCount === 1 ? 'product' : 'products'}`}</span>
                   <span className={`inline-flex items-center gap-1 ${colors.text} font-medium text-sm group-hover:gap-2 transition-all`}>
                     View <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </span>
@@ -262,7 +263,7 @@ export default function SupplementsPage() {
               },
               {
                 q: "Which category should I start with?",
-                a: "Start with Blood Sugar Support if you have prediabetes or diabetes. If you have insulin resistance confirmed by labs, try Insulin Sensitivity. Always consult your healthcare provider for personalized guidance."
+                a: "Start with Blood Sugar Support if you have prediabetes or diabetes. If you have insulin resistance confirmed by labs, our Insulin Sensitivity category is coming soon — in the meantime, our Blood Sugar Support category covers related options. Always consult your healthcare provider for personalized guidance."
               },
               {
                 q: "Are supplements safe to take together?",
@@ -290,15 +291,7 @@ export default function SupplementsPage() {
       <section id="affiliate-disclosure" className="py-4 bg-blue-50 border-t-2 border-blue-200">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
-              <div>
-                <p className="font-bold text-sm text-blue-900 mb-1">Affiliate Disclosure</p>
-                <p className="text-sm text-blue-800 leading-relaxed">
-                  <strong>Transparency notice:</strong> This page contains affiliate links to supplement products. ThriveHealth360 may earn a commission if you purchase through these links, at <strong>no additional cost to you</strong>. This financial relationship may influence which products or categories we feature and how they are presented. We apply editorial and quality standards to all recommendations; however, you should conduct your own research and consult a qualified healthcare professional before purchasing any supplement. This disclosure is provided in accordance with the FTC&apos;s guidelines on endorsements and testimonials (16 CFR §255).
-                </p>
-              </div>
-            </div>
+            <AffiliateDisclosure hasAffiliateLinks={false} />
           </div>
         </div>
       </section>
