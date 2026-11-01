@@ -124,17 +124,18 @@ const ReversePrediabetes2026: React.FC = () => {
       name: 'ThriveHealth',
       logo: { '@type': 'ImageObject', url: 'https://thrivehealth360.org/images/logo.png' },
     },
-    reviewedBy: {
-      '@type': 'Organization',
-      name: 'ThriveHealth Medical Advisory Board',
-    },
+    // reviewedBy removed: there is no real "Medical Advisory Board" — that
+    // was a fabricated claim, the same category of problem fixed sitewide
+    // in SEO.tsx. Do not re-add this field unless a real, named reviewer
+    // exists (see SEO.tsx's reviewedByName/factCheckedBy pattern instead).
+    // lastReviewed removed with it: that date was the claimed review date,
+    // not a content date — datePublished/dateModified carry the real dates.
     mainEntity: {
       '@type': 'MedicalCondition',
       name: 'Prediabetes',
       associatedAnatomy: 'Pancreas',
       code: { '@type': 'MedicalCode', codeValue: 'R73.03', codingSystem: 'ICD-10' },
-    },
-    lastReviewed: '2026-04-07',
+    }
   };
 
   useEffect(() => {
@@ -895,12 +896,10 @@ const ReversePrediabetes2026: React.FC = () => {
                 </div>
               ))}
             </div>
-            <div className="mt-6 bg-gray-100 border border-gray-200 rounded-xl p-4 flex items-center gap-3">
-              <Heart className="w-5 h-5 text-rose-500 flex-shrink-0" />
-              <p className="text-sm text-gray-700">
-                <strong>Reviewed by the ThriveHealth360 Medical Advisory Board</strong> — April 2026.
-              </p>
-            </div>
+            {/* Reviewed-by claim removed: there is no real "Medical Advisory Board" — that
+                was a fabricated claim, the same category of problem fixed sitewide in
+                SEO.tsx. Do not re-add a reviewer claim unless a real, named reviewer
+                exists (see SEO.tsx's reviewedByName/factCheckedBy pattern instead). */}
           </section>
 
           {/* ── DYNAMIC SILO LINKS ── */}

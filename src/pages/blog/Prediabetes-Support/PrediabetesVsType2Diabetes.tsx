@@ -814,10 +814,14 @@ const PrediabetesVsType2Diabetes: React.FC = () => {
                 </div>
               ))}
             </div>
+            {/* Reviewed-by claim removed: there is no real "Medical Advisory Board" — that
+                was a fabricated claim, the same category of problem fixed sitewide in
+                SEO.tsx. Do not re-add a reviewer claim unless a real, named reviewer
+                exists (see SEO.tsx's reviewedByName/factCheckedBy pattern instead). */}
             <div className="mt-6 bg-gray-100 border border-gray-300 rounded-lg p-4">
               <p className="text-sm text-gray-700 flex items-center gap-2">
                 <Heart className="w-5 h-5 text-rose-500" />
-                <strong>Reviewed by the ThriveHealth Medical Advisory Board</strong> – March 2026. Updated with 2026 CDC National Diabetes Statistics Report data.
+                Updated with 2026 CDC National Diabetes Statistics Report data.
               </p>
             </div>
           </section>

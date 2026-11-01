@@ -5,7 +5,6 @@ import {
   ArrowLeft,
   CheckCircle2,
   AlertCircle,
-  Heart,
   Zap,
   ArrowRight,
   Mail,
@@ -58,10 +57,12 @@ const BerberineVsMetformin: React.FC = () => {
         url: 'https://thrivehealth360.org/images/logo.png'
       }
     },
-    reviewedBy: {
-      '@type': 'Organization',
-      name: 'ThriveHealth Medical Advisory Board'
-    },
+    // reviewedBy removed: there is no real "Medical Advisory Board" — that
+    // was a fabricated claim, the same category of problem fixed sitewide
+    // in SEO.tsx. Do not re-add this field unless a real, named reviewer
+    // exists (see SEO.tsx's reviewedByName/factCheckedBy pattern instead).
+    // lastReviewed removed with it: that date was the claimed review date,
+    // not a content date — datePublished/dateModified carry the real dates.
     mainEntity: {
       '@type': 'MedicalCondition',
       name: 'Prediabetes',
@@ -71,8 +72,7 @@ const BerberineVsMetformin: React.FC = () => {
         codeValue: 'E11.9',
         codingSystem: 'ICD-10'
       }
-    },
-    lastReviewed: '2026-02-15'
+    }
   }), []);
 
   useEffect(() => {
@@ -622,12 +622,10 @@ const BerberineVsMetformin: React.FC = () => {
                 </div>
               ))}
             </div>
-            <div className="mt-6 bg-gray-100 border border-gray-300 rounded-lg p-4">
-              <p className="text-sm text-gray-700 flex items-center gap-2">
-                <Heart className="w-5 h-5 text-rose-500" />
-                <strong>Reviewed by the ThriveHealth Medical Advisory Board</strong> – February 2026.
-              </p>
-            </div>
+            {/* Reviewed-by claim removed: there is no real "Medical Advisory Board" — that
+                was a fabricated claim, the same category of problem fixed sitewide in
+                SEO.tsx. Do not re-add a reviewer claim unless a real, named reviewer
+                exists (see SEO.tsx's reviewedByName/factCheckedBy pattern instead). */}
           </section>
 
           {/* CTA */}
