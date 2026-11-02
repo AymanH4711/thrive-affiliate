@@ -44,7 +44,7 @@ const prediabetesFAQs = [
   },
   {
     question: "If I have prediabetes, will I definitely get type 2 diabetes?",
-    answer: "No. Without intervention, 30-40% develop type 2 within 5 years (the CDC reports this from 2023 data). But with lifestyle changes, 71% can prevent or significantly delay it. The Diabetes Prevention Program showed a 58% reduction in progression with intensive lifestyle intervention. Early action dramatically improves your odds—you have a reversibility window of 3-6 months."
+    answer: "No. Without intervention, 30-40% develop type 2 within 5 years (the CDC reports this from 2023 data). The Diabetes Prevention Program showed that intensive lifestyle intervention reduced progression by 58% overall, and by 71% specifically among participants over 60 — so acting sooner tends to help more, though there's no fixed deadline after which change stops being worthwhile."
   },
   {
     question: "What causes prediabetes?",
@@ -412,7 +412,7 @@ const PrediabetesVsType2Diabetes: React.FC = () => {
                 <div className="space-y-2 text-sm text-emerald-800">
                   <p><strong>DPP Study Result:</strong> 58% reduction in diabetes progression with lifestyle changes</p>
                   <p><strong>Without Intervention:</strong> 30-40% progress to type 2 within 5 years</p>
-                  <p><strong>With Lifestyle Changes:</strong> 71% can prevent or delay type 2 diabetes</p>
+                  <p><strong>With Lifestyle Changes:</strong> Up to 71% reduction in progression (DPP, participants over 60)</p>
                   <p><strong>DiRECT Trial:</strong> 46% remission rate with intensive weight loss</p>
                   <p><strong>Time Frame:</strong> Significant improvements within 3-6 months</p>
                 </div>
@@ -425,7 +425,7 @@ const PrediabetesVsType2Diabetes: React.FC = () => {
                 The 2026 CDC report shows that diabetes and prediabetes affect nearly <strong>half of all American adults</strong>. Yet this crisis is largely preventable and reversible—especially at the prediabetes stage.
               </p>
               <p className="text-amber-800">
-                <strong>The window to act is now.</strong> If you're in the prediabetes category, you have a 3-6 month window to reverse course through lifestyle changes before permanent metabolic damage sets in. The next 3-6 months of your life could be the difference between managing a chronic condition for decades or returning to normal health.
+                <strong>Acting sooner helps more.</strong> If you're in the prediabetes category, starting lifestyle changes now gives you the best chance of seeing meaningful improvement within 3-6 months — but there's no fixed deadline after which change stops being worthwhile.
               </p>
             </div>
           </section>
@@ -788,7 +788,7 @@ const PrediabetesVsType2Diabetes: React.FC = () => {
             <div className="bg-blue-50 border-2 border-blue-300 rounded-xl p-6">
               <p className="text-blue-900 flex items-start">
                 <Heart className="w-6 h-6 mr-3 text-blue-600 flex-shrink-0 mt-0.5" />
-                <span><strong>Your Success Depends on Action.</strong> The science is clear: 58% of people who take action with lifestyle changes prevent type 2 diabetes. The next 3-6 months of your life could be the difference between reversing prediabetes completely or managing a chronic condition for life. You have this window. Use it.</span>
+                <span><strong>Your Success Depends on Action.</strong> The science is clear: intensive lifestyle intervention reduced progression to type 2 diabetes by 58% in the Diabetes Prevention Program. Starting sooner gives you more time to see results — but there's no deadline after which change stops helping. Start today.</span>
               </p>
             </div>
           </section>
@@ -879,16 +879,6 @@ const PrediabetesVsType2Diabetes: React.FC = () => {
                     <p className="text-sm text-gray-700 mb-2">
                       <span className="font-semibold">Why related:</span> {link.reason}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <p className="text-xs text-gray-500">
-                        Relevance: <span className="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded font-semibold">
-                          {(link.relevanceScore * 100).toFixed(0)}%
-                        </span>
-                      </p>
-                      <span className="text-xs text-gray-400 italic">
-                        Suggested placement: {link.placement}
-                      </span>
-                    </div>
                   </li>
                 ))}
               </ul>
