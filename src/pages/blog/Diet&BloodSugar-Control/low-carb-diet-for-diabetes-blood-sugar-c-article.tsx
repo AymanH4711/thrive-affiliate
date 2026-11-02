@@ -539,6 +539,8 @@ const LowCarbDietForDiabetesBloodSugarControlEvidenceBasArticle: React.FC = () =
       readTime={readTime}
       publishedDate={publishedDate}
       referencesCount={verifiedCount}
+      // Affiliate link is the in-body CTA below, not an affiliateCTA prop.
+      hasAffiliateLinks
     >
       {/* ---- Back link ---- */}
       <div className="mb-6">

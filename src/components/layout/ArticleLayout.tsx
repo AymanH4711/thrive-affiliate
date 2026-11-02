@@ -105,6 +105,12 @@ export interface ArticleLayoutProps {
   /** Also renders the bottom affiliate-disclosure banner (via CategoryDisclaimer)
       whenever provided — that part is independent of the sticky CTA below. */
   affiliateCTA?: ArticleLayoutAffiliateCTA;
+  /** Controls the header disclosure line only. Defaults to whether an
+      affiliateCTA was supplied — set false explicitly on an article with no
+      affiliate link at all, or true when the article carries an in-body
+      affiliate link but no layout CTA, so the header never claims links that
+      aren't there. */
+  hasAffiliateLinks?: boolean;
   /** Set true to keep affiliateCTA's bottom disclosure banner while skipping the
       dismissible sticky bottom CTA specifically — e.g. when the article already
       has its own in-body CTA block and the sticky one would be redundant.
@@ -228,6 +234,7 @@ export function ArticleLayout({
   publishedDate,
   referencesCount,
   affiliateCTA,
+  hasAffiliateLinks = Boolean(affiliateCTA),
   hideStickyCTA = false,
   hideTopDisclaimer = false,
   backLinkTo = '/blog',
@@ -293,12 +300,14 @@ export function ArticleLayout({
               )}
             </div>
 
-            <div className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded px-3 py-2 mb-4">
-              <strong>Disclosure:</strong> Some links in this article are affiliate links. If you
-              buy through them, we may earn a commission at no extra cost to you. This doesn't
-              affect our editorial content.{' '}
-              <Link to="/affiliate-disclosure" className="underline">Learn more</Link>.
-            </div>
+            {hasAffiliateLinks && (
+              <div className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded px-3 py-2 mb-4">
+                <strong>Disclosure:</strong> Some links in this article are affiliate links. If you
+                buy through them, we may earn a commission at no extra cost to you. This doesn't
+                affect our editorial content.{' '}
+                <Link to="/affiliate-disclosure" className="underline">Learn more</Link>.
+              </div>
+            )}
             {typeof referencesCount === 'number' && referencesCount > 0 && (
               <div className="flex flex-wrap gap-2 mb-2">
                 <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">
