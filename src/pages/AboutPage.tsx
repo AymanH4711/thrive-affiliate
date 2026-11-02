@@ -99,7 +99,9 @@ const AboutPage: React.FC = () => {
                   about blood sugar and metabolic health, and I wanted to build a resource — backed by the
                   same peer-reviewed research I leaned on myself — that could help other people going
                   through the same thing. Our small team reviews recent studies from PubMed and CrossRef to
-                  keep the content current as new research comes out.
+                  keep the content current as new research comes out. That team includes a physical
+                  therapy student who checks the passages we flag about movement, exercise safety, or
+                  physiology — you can read more about how that works below.
                 </p>
                 <p className="text-gray-700 leading-relaxed mb-4">
                   My background is in software development — I built this site myself — and I hold a
