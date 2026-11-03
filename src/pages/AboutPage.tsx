@@ -39,7 +39,7 @@ const AboutPage: React.FC = () => {
     {
       icon: Heart,
       title: 'Integrity',
-      description: 'Our recommendations are based on research, not commission rates.'
+      description: 'Our recommendations are based on evidence quality, third-party testing, and ingredient transparency.'
     },
   ];
 
@@ -205,7 +205,7 @@ const AboutPage: React.FC = () => {
               </div>
               <div className="flex gap-4">
                 <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
-                <p className="text-gray-700 leading-relaxed">We do not accept payment for positive reviews, and affiliate relationships never influence which products we recommend or how we rank them.</p>
+                <p className="text-gray-700 leading-relaxed">We do not accept payment for positive reviews, and commission doesn't determine which products we cover or how we rank and describe them — those calls are based on evidence quality, third-party testing, and ingredient transparency.</p>
               </div>
             </div>
           </div>
@@ -294,7 +294,7 @@ const AboutPage: React.FC = () => {
             <h2 className="text-2xl font-bold mb-6 text-gray-900 underline decoration-emerald-500 decoration-4 underline-offset-8">Affiliate & Compensation Disclosure</h2>
             <Card>
               <p className="text-gray-700 leading-relaxed text-left text-sm p-2">
-                <strong>Material Connection Disclosure (FTC 16 CFR §255):</strong> ThriveHealth360 participates in affiliate marketing programmes, including the Digistore24 affiliate marketplace and partnerships with selected supplement brands. We have a material connection with these sellers — when you click an affiliate link and make a qualifying purchase, we earn a commission at <strong>no additional cost to you</strong>. Where products have been gifted, sponsored, or provided for review, this is disclosed in the relevant article. These relationships never influence our editorial content, product rankings, or health guidance. We only recommend products that pass our independent vetting process regardless of commission rate. This disclosure applies to US readers (FTC), UK readers (ASA/CAP), Australian readers (ACCC), and Canadian readers (Competition Act).{' '}
+                <strong>Material Connection Disclosure (FTC 16 CFR §255):</strong> ThriveHealth360 participates in affiliate marketing programmes, including the Digistore24 affiliate marketplace and partnerships with selected supplement brands. We have a material connection with these sellers — when you click an affiliate link and make a qualifying purchase, we earn a commission at <strong>no additional cost to you</strong>. Where products have been gifted, sponsored, or provided for review, this is disclosed in the relevant article. That financial relationship doesn't determine which products we cover, how we rank them, or how we describe them — those calls are based on evidence quality, third-party testing, and ingredient transparency. We only recommend products that pass our independent vetting process regardless of commission rate. This disclosure applies to US readers (FTC), UK readers (ASA/CAP), Australian readers (ACCC), and Canadian readers (Competition Act).{' '}
                 <Link to="/affiliate-disclosure" className="text-emerald-600 font-semibold hover:text-emerald-700">Read our full Affiliate Disclosure Policy →</Link>
               </p>
             </Card>

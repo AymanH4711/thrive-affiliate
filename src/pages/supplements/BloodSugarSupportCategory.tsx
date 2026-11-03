@@ -286,7 +286,7 @@ export default function BloodSugarSupportCategory() {
                 <div>
                   <h3 className="font-bold text-sm text-blue-900 mb-1">💰 Affiliate Disclosure</h3>
                   <p className="text-xs text-blue-800 leading-relaxed font-semibold">
-                    <strong>Transparency notice:</strong> This page contains affiliate links to supplement products, including the brands listed above. ThriveHealth360 may earn a commission if you purchase through these links, at <strong>no additional cost to you</strong>. Affiliate relationships do not influence our product descriptions, benefit claims, or the scientific information presented on this page. We only recommend products that meet our research and quality standards. This disclosure is provided in accordance with the FTC&apos;s guidelines on endorsements and testimonials.
+                    <strong>Transparency notice:</strong> This page contains affiliate links to supplement products, including the brands listed above. ThriveHealth360 may earn a commission if you purchase through these links, at <strong>no additional cost to you</strong>. Commission doesn't determine which products we list or how we describe them; our product descriptions, benefit claims, and the scientific information here are based on evidence quality, third-party testing, and ingredient transparency. We only recommend products that meet our research and quality standards. This disclosure is provided in accordance with the FTC&apos;s guidelines on endorsements and testimonials.
                   </p>
                 </div>
               </div>

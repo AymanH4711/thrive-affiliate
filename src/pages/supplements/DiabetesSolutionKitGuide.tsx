@@ -226,7 +226,7 @@ export default function DiabetesSolutionKitGuide() {
                 <div>
                   <h3 className="font-bold text-sm text-blue-900 mb-1">💰 Affiliate Disclosure</h3>
                   <p className="text-xs text-blue-800 leading-relaxed font-semibold">
-                    <strong>Transparency notice:</strong> This page contains an affiliate link to the guide described above. ThriveHealth360 may earn a commission if you purchase through this link, at <strong>no additional cost to you</strong>. Affiliate relationships do not influence our description or the information presented on this page. This disclosure is provided in accordance with the FTC&apos;s guidelines on endorsements and testimonials.
+                    <strong>Transparency notice:</strong> This page contains an affiliate link to the guide described above. ThriveHealth360 may earn a commission if you purchase through this link, at <strong>no additional cost to you</strong>. Commission doesn't determine which products we cover or how we describe them; our description here is based on the guide's own contents and the evidence it cites. This disclosure is provided in accordance with the FTC&apos;s guidelines on endorsements and testimonials.
                   </p>
                 </div>
               </div>

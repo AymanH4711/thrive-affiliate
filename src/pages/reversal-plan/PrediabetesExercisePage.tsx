@@ -435,7 +435,7 @@ export default function PrediabetesExercisePage() {
               <div>
                 <p className="text-sm font-bold text-gray-700 mb-1">Affiliate Disclosure</p>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  Some links on this page may be affiliate links. This means that if you click a link and make a purchase, Thrive may earn a small commission at <strong>no extra cost to you</strong>. We only recommend products and services — such as fitness equipment, resistance bands, or tracking apps — that we genuinely believe may be helpful for people managing prediabetes. Affiliate relationships do not influence our editorial content or the exercise information provided on this page. Please read our full{' '}
+                  Some links on this page may be affiliate links. This means that if you click a link and make a purchase, Thrive may earn a small commission at <strong>no extra cost to you</strong>. We only recommend products and services — such as fitness equipment, resistance bands, or tracking apps — that we genuinely believe may be helpful for people managing prediabetes. Commission doesn't determine which products we cover or how we describe them; our exercise guidance is based on published clinical evidence and current physical-activity guidelines. Please read our full{' '}
                   <Link to="/affiliate-disclosure" className="underline text-blue-700 hover:text-blue-600">
                     Affiliate Disclosure Policy
                   </Link>{' '}

@@ -303,8 +303,9 @@ export function ArticleLayout({
             {hasAffiliateLinks && (
               <div className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded px-3 py-2 mb-4">
                 <strong>Disclosure:</strong> Some links in this article are affiliate links. If you
-                buy through them, we may earn a commission at no extra cost to you. This doesn't
-                affect our editorial content.{' '}
+                buy through them, we may earn a commission at no extra cost to you. That doesn't
+                determine which products we cover or how we describe them — our assessments are
+                based on evidence quality, third-party testing, and ingredient transparency.{' '}
                 <Link to="/affiliate-disclosure" className="underline">Learn more</Link>.
               </div>
             )}

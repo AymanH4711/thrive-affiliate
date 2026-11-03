@@ -41,7 +41,7 @@ const AffiliateDisclosurePage: React.FC = () => {
       icon: ShieldCheck,
       title: 'Editorial Independence',
       description:
-        'Affiliate relationships never influence which supplements we recommend, how we rank products, which studies we cite, or what health guidance we provide. A product with a higher commission rate is not given preferential treatment over one with no commission.',
+        'Affiliate relationships create a financial incentive, but they do not determine which supplements we recommend, how we rank products, which studies we cite, or what health guidance we provide. Those calls are based on evidence quality, third-party testing, and ingredient transparency. A product with a higher commission rate is not given preferential treatment over one with no commission.',
     },
     {
       icon: Star,
@@ -131,7 +131,7 @@ const AffiliateDisclosurePage: React.FC = () => {
           </p>
           <ul className="list-none space-y-2">
             {[
-              'Any article or review involving a gifted or sponsored product will include a clear disclosure statement at the top of that page (e.g. "Disclosure: This product was provided to us free of charge for review. Our assessment is independent.").',
+              'Any article or review involving a gifted or sponsored product will include a clear disclosure statement at the top of that page (e.g. "Disclosure: This product was provided to us free of charge for review. Our assessment is based on the product itself, not on the gift.").',
               'Receiving a product for free does not guarantee a positive review — negative findings are reported honestly.',
               'We do not accept payment for positive reviews, guaranteed placements, or editorial coverage.',
               'Sponsored content (where a brand has paid for content creation, not just commission) is labelled as "Sponsored" in the article header.',
@@ -152,12 +152,13 @@ const AffiliateDisclosurePage: React.FC = () => {
           <p className="text-gray-700 leading-relaxed mb-4">
             Affiliate income supports the cost of running ThriveHealth360 — including research 
             time, content production, and site maintenance — which allows us to keep our 
-            educational content free to readers. However, it does not influence our editorial 
-            decisions. Specifically:
+            educational content free to readers. However, it doesn't determine which
+            products we cover or how we describe them — those calls are based on evidence
+            quality, third-party testing, and ingredient transparency. Specifically:
           </p>
           <ul className="list-none space-y-2">
             {[
-              'Products are evaluated based on evidence quality, third-party testing, and ingredient transparency — not commission rates.',
+              'Products are evaluated based on evidence quality, third-party testing, and ingredient transparency.',
               'Negative findings in the research are reported honestly, even when they concern affiliated products.',
               'We do not accept payments for positive reviews, sponsored placements, or guaranteed mentions.',
               'If a product we have previously recommended is later found to have safety concerns or misleading claims, we will update our content accordingly.',
@@ -228,7 +229,7 @@ const AffiliateDisclosurePage: React.FC = () => {
     <>
       <SEO
         title="Affiliate Disclosure Policy | ThriveHealth360"
-        description="Read the full Affiliate Disclosure Policy for ThriveHealth360. We earn commissions from qualifying purchases at no extra cost to you. Our editorial content is always independent."
+        description="Read the full Affiliate Disclosure Policy for ThriveHealth360. We earn commissions from qualifying purchases at no extra cost to you. Commission doesn't determine which products we cover or how we describe them."
         url="/affiliate-disclosure"
       />
 
@@ -263,8 +264,9 @@ const AffiliateDisclosurePage: React.FC = () => {
                 you click an affiliate link and make a qualifying purchase, we earn a commission 
                 at no extra cost to you. Where products have been gifted, sponsored, or 
                 provided for review, this is disclosed in the relevant article. These 
-                relationships never influence our editorial content, research references, 
-                or health guidance.
+                relationships don't determine which products we cover, which studies we cite, 
+                or what health guidance we provide — those calls are based on evidence quality, 
+                third-party testing, and ingredient transparency.
               </p>
             </div>
           </div>

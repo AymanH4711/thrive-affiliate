@@ -137,7 +137,7 @@ function CellRenderer({ value }: { value: CellValue }) {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const DEFAULT_DISCLOSURE =
-  'This table contains affiliate links. ThriveHealth360 may earn a commission if you purchase through these links, at no additional cost to you. Our editorial ratings are independent of affiliate relationships. See our full Affiliate Disclosure.';
+  'This table contains affiliate links. ThriveHealth360 may earn a commission if you purchase through these links, at no additional cost to you. Our editorial ratings are based on evidence quality and third-party testing. See our full Affiliate Disclosure.';
 
 export function ProductComparisonTable({
   title,

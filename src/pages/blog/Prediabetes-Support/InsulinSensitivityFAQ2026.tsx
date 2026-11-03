@@ -713,7 +713,7 @@ const InsulinSensitivityFAQ2026: React.FC = () => {
                 </h3>
                 <p className="text-xs text-blue-800 leading-relaxed">
                   ThriveHealth360 may earn a commission from affiliate partnerships in some articles, but this article does not currently link to a specific product.
-                  Affiliate relationships do not change the evidence criteria used here. We do not recommend a supplement for everyone, and no product should replace medical care.
+                  Commission doesn't change the evidence criteria used here. We do not recommend a supplement for everyone, and no product should replace medical care.
                 </p>
               </div>
             </div>

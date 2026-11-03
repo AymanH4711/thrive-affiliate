@@ -435,7 +435,7 @@ const BlogArticlePage = () => {
           <div className="bg-blue-50 border-b border-blue-200">
             <div className="container mx-auto px-6 lg:px-8 max-w-4xl py-3">
               <p className="text-xs text-blue-800 leading-relaxed">
-                <strong>Affiliate Disclosure:</strong> This article contains affiliate links — we have a material connection with some sellers linked below. If you purchase through our links, we earn a commission at no extra cost to you. This financial relationship may influence which products we feature and how they are presented.{' '}
+                <strong>Affiliate Disclosure:</strong> This article contains affiliate links — we have a material connection with some sellers linked below. If you purchase through our links, we earn a commission at no extra cost to you. This financial relationship doesn't determine which products we cover or how we describe them — our assessments are based on evidence quality, third-party testing, and ingredient transparency.{' '}
                 <Link to="/affiliate-disclosure" className="underline font-semibold">Full policy (16 CFR §255) →</Link>
               </p>
             </div>

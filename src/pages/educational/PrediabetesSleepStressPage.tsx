@@ -477,7 +477,7 @@ export default function PrediabetesSleepStressPage() {
                 <div>
                   <h3 className="font-bold text-sm text-blue-900 mb-1">💰 Affiliate Disclosure</h3>
                   <p className="text-xs text-blue-800 leading-relaxed font-semibold">
-                    <strong>Transparency notice:</strong> This page may contain affiliate links to sleep, wellness, and stress-management products. Thrive Health may earn a commission if you purchase through these links, at <strong>no additional cost to you</strong>. Affiliate relationships do not influence our editorial content, health recommendations, or the scientific information presented. We only recommend products that meet our research and quality standards. This disclosure is provided in accordance with the FTC&apos;s guidelines on endorsements and testimonials.
+                    <strong>Transparency notice:</strong> This page may contain affiliate links to sleep, wellness, and stress-management products. Thrive Health may earn a commission if you purchase through these links, at <strong>no additional cost to you</strong>. Commission doesn't determine which products we cover or how we describe them; our health recommendations and the scientific information here are based on published clinical evidence. We only recommend products that meet our research and quality standards. This disclosure is provided in accordance with the FTC&apos;s guidelines on endorsements and testimonials.
                   </p>
                 </div>
               </div>

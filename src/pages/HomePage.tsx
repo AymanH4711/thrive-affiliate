@@ -414,7 +414,7 @@ export default function HomePage() {
               <div>
                 <p className="text-sm font-bold text-gray-700 mb-1">Affiliate & Compensation Disclosure</p>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  <strong>Material Connection Disclosure (FTC 16 CFR §255):</strong> Some links on Thrive Health are affiliate links – meaning we earn a commission if you click and purchase, at <strong>no extra cost to you</strong>. Compensation never influences our editorial content or clinical references. Read our full{' '}
+                  <strong>Material Connection Disclosure (FTC 16 CFR §255):</strong> Some links on Thrive Health are affiliate links – meaning we earn a commission if you click and purchase, at <strong>no extra cost to you</strong>. Compensation doesn't determine which products we cover or how we describe them — our assessments are based on evidence quality, third-party testing, and ingredient transparency. Read our full{' '}
                   <a href="/affiliate-disclosure" className="underline text-emerald-700 hover:text-emerald-600 font-semibold">Affiliate Disclosure Policy</a>.
                 </p>
               </div>

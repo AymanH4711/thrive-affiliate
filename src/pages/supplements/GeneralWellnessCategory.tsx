@@ -247,7 +247,7 @@ export default function GeneralWellnessCategory() {
                 <div>
                   <h3 className="font-bold text-sm text-blue-900 mb-1">💰 Affiliate Disclosure</h3>
                   <p className="text-xs text-blue-800 leading-relaxed font-semibold">
-                    <strong>Transparency notice:</strong> This page contains affiliate links, including the resource listed above. ThriveHealth360 may earn a commission if you purchase through these links, at <strong>no additional cost to you</strong>. Affiliate relationships do not influence our descriptions or the information presented on this page. This disclosure is provided in accordance with the FTC&apos;s guidelines on endorsements and testimonials.
+                    <strong>Transparency notice:</strong> This page contains affiliate links, including the resource listed above. ThriveHealth360 may earn a commission if you purchase through these links, at <strong>no additional cost to you</strong>. Commission doesn't determine which products we list or how we describe them; our descriptions and the information here are based on evidence quality and ingredient transparency. This disclosure is provided in accordance with the FTC&apos;s guidelines on endorsements and testimonials.
                   </p>
                 </div>
               </div>

@@ -413,7 +413,7 @@ export default function NaturalBloodSugar() {
                 <div>
                   <p className="font-bold text-sm text-blue-900 mb-1">Affiliate Disclosure</p>
                   <p className="text-sm text-blue-800 leading-relaxed">
-                    <strong>Transparency notice:</strong> This page contains affiliate links. ThriveHealth360 may earn a commission if you purchase through these links, at <strong>no additional cost to you</strong>. This financial relationship may influence which products we feature and how they are presented. We apply editorial and quality standards to all recommendations; however, you should conduct your own research and consult a qualified healthcare professional before purchasing any supplement. This disclosure is provided in accordance with the FTC's guidelines on endorsements and testimonials (16 CFR §255).
+                    <strong>Transparency notice:</strong> This page contains affiliate links. ThriveHealth360 may earn a commission if you purchase through these links, at <strong>no additional cost to you</strong>. This financial relationship doesn't determine which products we cover or how we describe them — our assessments are based on evidence quality, third-party testing, and ingredient transparency; however, you should conduct your own research and consult a qualified healthcare professional before purchasing any supplement. This disclosure is provided in accordance with the FTC's guidelines on endorsements and testimonials (16 CFR §255).
                   </p>
                 </div>
               </div>

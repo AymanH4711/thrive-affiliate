@@ -876,7 +876,7 @@ const PrediabetesVsType2Diabetes: React.FC = () => {
                 <h4 className="font-bold text-blue-900 mb-3">💰 Affiliate Disclosure</h4>
                 <p className="text-xs text-blue-800 leading-relaxed">
                   This post contains affiliate links to products we genuinely recommend. We earn a small commission at no extra cost to you when you purchase through these links.
-                  This does not influence our recommendations—we recommend these products based on their quality, evidence, and customer outcomes.
+                  Commission doesn't determine which products we cover or how we describe them—our assessments are based on evidence quality, third-party testing, and ingredient transparency.
                 </p>
               </div>
             </div>

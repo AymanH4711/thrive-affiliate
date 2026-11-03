@@ -91,7 +91,9 @@ export default function TermsOfService() {
               additional cost to you.
             </p>
             <p>
-              Affiliate relationships do not influence our editorial content or product recommendations.
+              Commission doesn't determine which products we cover or how we rank and describe
+              them; those calls are based on evidence quality, third-party testing, and
+              ingredient transparency.
               We only promote products we believe may genuinely benefit our readers. Read our full{' '}
               <Link to="/affiliate-disclosure" className="text-emerald-600 hover:underline">Affiliate Disclosure</Link>{' '}
               for details.

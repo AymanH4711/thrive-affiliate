@@ -40,7 +40,7 @@ export const AffiliateDisclosure: React.FC<AffiliateDisclosureProps> = ({ compac
   }
 
   const bodyText = !hasAffiliateLinks
-    ? 'ThriveHealth360 may earn a commission from affiliate partnerships on some pages, but this page does not currently link to a specific product. Affiliate relationships never influence our editorial content or recommendations.'
+    ? 'ThriveHealth360 may earn a commission from affiliate partnerships on some pages, but this page does not currently link to a specific product. Affiliate relationships create a financial incentive, but commission does not determine which products we cover or how we describe them.'
     : context === 'supplement-reviews'
     ? 'ThriveHealth360 is committed to providing transparent, evidence-based wellness insights. Some of the supplement reviews and recommendations on this site contain affiliate links. This means that if you click a link and make a purchase, we may receive a small commission at absolutely no extra cost to you. These commissions help support our dedicated research team and keep our deep-dive resources completely free for everyone. Thank you for your support!'
     : 'ThriveHealth360 is committed to providing transparent, evidence-based wellness insights. Some of the links on this website are affiliate links. This means that if you click a link and make a purchase, we may receive a small commission at absolutely no extra cost to you. These commissions help support our dedicated research team and keep our deep-dive resources completely free for everyone. Thank you for your support!';
