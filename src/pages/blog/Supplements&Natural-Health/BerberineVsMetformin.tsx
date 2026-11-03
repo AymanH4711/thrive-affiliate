@@ -669,16 +669,6 @@ const BerberineVsMetformin: React.FC = () => {
                       <p className="text-sm text-gray-700 mb-2">
                         <span className="font-semibold">Why related:</span> {link.reason}
                       </p>
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs text-gray-500">
-                          Relevance: <span className="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded font-semibold">
-                            {(link.relevanceScore * 100).toFixed(0)}%
-                          </span>
-                        </p>
-                        <span className="text-xs text-gray-400 italic">
-                          Suggested placement: {link.placement}
-                        </span>
-                      </div>
                     </li>
                   ))}
                 </ul>
