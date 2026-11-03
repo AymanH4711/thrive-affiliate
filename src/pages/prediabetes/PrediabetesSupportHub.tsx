@@ -59,8 +59,8 @@ export default function PrediabetesSupportHub() {
   ];
 
   const stats = [
-    { value: '98M+',  label: 'Adults in the US with prediabetes',         source: 'CDC 2024' },
-    { value: '80%',   label: 'Who are unaware they have it',               source: 'CDC 2024' },
+    { value: '115.2M', label: 'Adults in the US with prediabetes',        source: 'CDC 2026' },
+    { value: '80%',   label: 'Who are unaware they have it',               source: 'CDC 2026' },
     { value: '58%',   label: 'Risk reduction with lifestyle changes',      source: 'DPP Trial' },
     { value: '5–7%',  label: 'Weight loss that significantly lowers risk', source: 'NIH' },
   ];
@@ -227,7 +227,7 @@ export default function PrediabetesSupportHub() {
               </div>
               <div className="space-y-4">
                 {[
-                  { icon: Heart,       title: 'It Is Common',    desc: 'Nearly 1 in 3 US adults has prediabetes. Globally, an estimated 635 million adults have impaired glucose tolerance (IDF Diabetes Atlas, 2024 data).' },
+                  { icon: Heart,       title: 'It Is Common',    desc: 'Nearly 1 in 2.3 US adults has prediabetes. Globally, an estimated 635 million adults have impaired glucose tolerance (IDF Diabetes Atlas, 2024 data).' },
                   { icon: TrendingDown,title: 'It Is Reversible', desc: 'Diet, exercise, sleep, and stress management can normalise blood sugar and restore insulin sensitivity — even without medication.' },
                   { icon: Shield,      title: 'It Is Time-Sensitive', desc: 'Without action, 15–30% of people with prediabetes develop type 2 diabetes within 5 years. Early action dramatically reduces that risk.' },
                   { icon: Users,       title: 'It Is Often Silent', desc: 'Most people have no obvious symptoms. A simple blood test — fasting glucose or A1C — is the only way to know for certain.' },

@@ -110,7 +110,7 @@ const faqs = [
   },
   {
     question: "Can I have prediabetes without symptoms?",
-    answer: "Absolutely. Over 80% of people with prediabetes don't know they have it because symptoms can be subtle or absent. That's why testing is crucial even if you feel fine."
+    answer: "Absolutely. About 8 in 10 people with prediabetes don't know they have it because symptoms can be subtle or absent. That's why testing is crucial even if you feel fine."
   },
   {
     question: "What's the difference between prediabetes and Type 2 diabetes?",
@@ -363,7 +363,7 @@ const FiveWarningSignsPrediabetes = () => {
           <section className="mb-12">
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
               If you're struggling with persistent fatigue, increased thirst, or other subtle changes in how you feel,
-              you might be ignoring your body's warning signals. Nearly 98 million American adults have prediabetes,
+              you might be ignoring your body's warning signals. An estimated 115.2 million American adults have prediabetes,
               and most don't even know it. The tricky part? Many people have NO symptoms at all.
               This is why we call it the "silent" condition.
             </p>
@@ -419,7 +419,7 @@ const FiveWarningSignsPrediabetes = () => {
                 </ul>
                 <div className="mt-4 pt-4 border-t border-emerald-200">
                   <p className="text-emerald-800 text-sm">
-                    <strong>CRITICAL:</strong> Nearly 98 million Americans have prediabetes—most don't know it
+                    <strong>CRITICAL:</strong> An estimated 115.2 million Americans have prediabetes—most don't know it
                   </p>
                   <p className="text-emerald-800 text-sm">
                     <strong>GOOD NEWS:</strong> Research shows many people can improve or reverse prediabetes with sustained lifestyle changes
@@ -472,9 +472,9 @@ const FiveWarningSignsPrediabetes = () => {
             </div>
 
             <p className="text-gray-700 mb-6">
-              According to the American Diabetes Association (2024), citing CDC data, approximately 98 million American
-              adults aged 18 and older have prediabetes—that's more than 1 in 3 adults. Even more concerning? Of those with
-              prediabetes, more than 80% don't know they have it. This is precisely why understanding the warning signs
+              According to the CDC's 2026 National Diabetes Statistics Report, an estimated 115.2 million American
+              adults aged 18 and older have prediabetes—that's more than 1 in 2.3 adults. Even more concerning? Of those with
+              prediabetes, about 8 in 10 don't know they have it. This is precisely why understanding the warning signs
               becomes your first line of defense.
             </p>
 
