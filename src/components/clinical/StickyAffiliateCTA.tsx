@@ -4,12 +4,13 @@
 // scrolled past a threshold (default 600px, roughly past the hero/intro),
 // stays fixed at the bottom of the viewport, and is dismissible.
 //
-// NOTE: your structure doc lists src/hooks/useAffiliateCTA.ts [NEW] as the
-// intended home for the scroll-trigger logic below. It's kept inline here
-// since that hook file wasn't available to build against — if/when you
-// write useAffiliateCTA.ts, the useState/useEffect block below is a
-// reasonable starting point to extract into it, and this component would
-// then just call the hook instead.
+// NOTE: src/hooks/useAffiliateCTA.ts existed briefly and has been removed. It
+// never worked: its only call site destructured { ctaConfig } from a hook that
+// returned the config object directly, the render block read five fields the
+// hook never returned (headline/subheadline/ctaUrl/ctaText/variant), and its
+// only mapping branch matched a hardcoded 'berberine' productId that the caller
+// could never pass (it passed location.pathname). No importer remains. It is
+// not a starting point to rebuild from.
 //
 // Usage:
 //   import { StickyAffiliateCTA } from '@/components/conversion/StickyAffiliateCTA';

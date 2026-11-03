@@ -1,8 +1,7 @@
-import { useParams, Link, Navigate, useLocation } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import { SEO } from '../components/seo/SEO';
-import { useAffiliateCTA } from '../hooks/useAffiliateCTA';
 import { useAuthorityPack } from '../hooks/useAuthorityPack';
 import { useProducts } from '../hooks/useProducts';
 import { formatDate } from '../lib/utils';
@@ -35,7 +34,6 @@ const articles: Record<string, any> = {
     readTime: '10 min read',
     image: '/images/blog/best-foods-blood-sugar-cover.webp',
     hasAffiliateLinks: false,
-    lastReviewed: 'April 2026',
     url: '/blog/best-foods-blood-sugar',
     keywords: 'prediabetes diet, blood sugar diet, foods for blood sugar, what to eat with prediabetes, diabetes diet',
     author: 'Thrive Health Editorial Team',
@@ -82,7 +80,8 @@ const articles: Record<string, any> = {
       }
     ],
     resources: [
-      { text: 'Download the printable food list', action: 'download' },
+      // The printable food-list PDF was never produced (no matching file in
+      // public/downloads), so the download link was removed.
       { text: 'Get sample meal plans', action: 'cta' },
       { text: 'Find 10 easy recipes', action: 'link' },
       { text: 'Use a food tracking app', action: 'link' }
@@ -101,7 +100,6 @@ const articles: Record<string, any> = {
     readTime: '7 min read',
     image: '/images/og-default.png',
     hasAffiliateLinks: false,
-    lastReviewed: 'April 2026',
     url: '/blog/post-meal-walks',
     keywords: 'prediabetes exercise, best exercises for blood sugar, strength training, walking for blood sugar control',
     author: 'Thrive Health Editorial Team',
@@ -134,7 +132,8 @@ const articles: Record<string, any> = {
       }
     ],
     resources: [
-      { text: 'Download the 3-walk daily protocol', action: 'download' },
+      // The 3-walk protocol PDF was never produced, so the download link was
+      // removed rather than pointing at a file that does not exist.
       { text: 'Get a walking tracker app', action: 'link' },
       { text: 'Find local walking routes', action: 'link' },
       { text: 'Join a walking community', action: 'link' }
@@ -152,8 +151,7 @@ const articles: Record<string, any> = {
     pillarId: 'glucose-monitoring',
     readTime: '9 min read',
     image: '/images/og-default.png',
-    hasAffiliateLinks: true,
-    lastReviewed: 'April 2026',
+    hasAffiliateLinks: false,
     url: '/blog/cgm-vs-bgm',
     keywords: 'CGM glucose monitor, Dexcom, Freestyle Libre, glucose meter, continuous glucose monitor',
     author: 'Thrive Health Editorial Team',
@@ -190,8 +188,10 @@ const articles: Record<string, any> = {
       }
     ],
     resources: [
-      { text: 'Buy a glucose meter on Amazon', action: 'affiliate', affiliateId: 'glucose-meter' },
-      { text: 'Compare CGM pricing', action: 'affiliate', affiliateId: 'cgm-comparison' },
+      // No affiliate purchase link: no real glucose-meter or CGM-pricing affiliate
+      // URL exists anywhere on the site (src/data/affiliateLinks.ts is all
+      // YOUR_ID/YOUR_CODE placeholders and is not imported). The old /buy/* hrefs
+      // had no matching route and silently bounced readers to the homepage.
       { text: 'Download glucose tracking apps', action: 'link' },
       { text: 'Learn to interpret glucose graphs', action: 'link' }
     ],
@@ -208,7 +208,6 @@ const articles: Record<string, any> = {
     pillarId: 'insulin-resistance',
     readTime: '8 min read',
     hasAffiliateLinks: true,
-    lastReviewed: 'April 2026',
     image: '/images/blog/berberine-vs-metformin-comparison.webp',
     url: '/blog/berberine-vs-metformin',
     keywords: 'berberine, blood sugar supplement, berberine research, natural blood sugar support',
@@ -247,8 +246,10 @@ const articles: Record<string, any> = {
       }
     ],
     resources: [
-      { text: 'Buy quality berberine (500mg capsules)', action: 'affiliate', affiliateId: 'berberine' },
-      { text: 'Download berberine tracking sheet', action: 'download' },
+      // Real affiliate destination, mirrored from the same offer already linked in
+      // BerberineVsMetformin.tsx:369. Do not replace with /buy/berberine: no such
+      // route exists.
+      { text: 'Buy quality berberine (500mg capsules)', action: 'affiliate', url: 'https://www.digistore24.com/redir/352613/Ayman_Hathoot/' },
       { text: 'Learn about berberine + metformin combo', action: 'link' },
       { text: 'Find research papers on berberine', action: 'link' }
     ],
@@ -265,8 +266,7 @@ const articles: Record<string, any> = {
     pillarId: 'natural-blood-sugar', // TODO: placeholder — no dedicated sleep/stress authority pack exists yet
     readTime: '8 min read',
     image: '/images/og-default.png',
-    hasAffiliateLinks: true,
-    lastReviewed: 'April 2026',
+    hasAffiliateLinks: false,
     url: '/blog/sleep-blood-sugar',
     keywords: 'prediabetes sleep, stress management blood sugar, sleep and diabetes, cortisol and insulin resistance',
     author: 'Thrive Health Editorial Team',
@@ -307,9 +307,9 @@ const articles: Record<string, any> = {
       }
     ],
     resources: [
-      { text: 'Download sleep optimization guide', action: 'download' },
-      { text: 'Get 30-day sleep protocol', action: 'download' },
-      { text: 'Buy quality sleep supplements', action: 'affiliate', affiliateId: 'sleep-supplements' },
+      // Both guide PDFs and the sleep-supplement purchase link were removed: none of
+      // them was ever produced (no matching file in public/downloads) and no real
+      // sleep-supplement affiliate URL exists.
       { text: 'Join sleep improvement community', action: 'link' }
     ],
     stats: [
@@ -325,8 +325,7 @@ const articles: Record<string, any> = {
     pillarId: 'insulin-resistance',
     readTime: '12 min read',
     image: '/images/og-default.png',
-    hasAffiliateLinks: true,
-    lastReviewed: 'April 2026',
+    hasAffiliateLinks: false,
     url: '/blog/ceylon-cinnamon-diabetes',
     keywords: 'ceylon cinnamon, diabetes, prediabetes, blood sugar, natural supplement, insulin sensitivity, coumarin',
     author: 'Thrive Health Editorial Team',
@@ -365,9 +364,10 @@ const articles: Record<string, any> = {
       }
     ],
     resources: [
-      { text: 'Compare Ceylon Cinnamon brands on iHerb', action: 'affiliate', affiliateId: 'ceylon-cinnamon' },
-      { text: 'Download the 7-Day Blood Sugar Reset Guide', action: 'download' },
-      { text: 'Track your glucose progress with a meter', action: 'affiliate', affiliateId: 'glucose-meter' },
+      // Points at the one reset guide that actually exists. The old generated name
+      // (/downloads/download-the-7-day-blood-sugar-reset-guide.pdf) was never
+      // produced; public/_redirects only maps the capitalised alias of the real file.
+      { text: 'Download the 7-Day Blood Sugar Reset Guide', action: 'download', url: '/downloads/7-day-blood-sugar-reset.pdf' },
       { text: 'Consult your doctor about supplement interactions', action: 'link' }
     ],
     stats: [
@@ -404,8 +404,6 @@ const getSectionIcon = (iconName?: string) => {
 
 const BlogArticlePage = () => {
   const { articleId } = useParams();
-  const location = useLocation();
-  const { ctaConfig } = useAffiliateCTA(location.pathname);
   const article = articles[articleId as string];
   const authorityPack = useAuthorityPack(article?.pillarId);
   const products = useProducts(article?.pillarId);
@@ -468,9 +466,9 @@ const BlogArticlePage = () => {
                 <span className="flex items-center">
                   <Clock className="w-4 h-4 mr-2" aria-hidden="true" /> {article.readTime}
                 </span>
-                {article.lastReviewed && (
-                  <span className="text-gray-500">Last reviewed: {article.lastReviewed}</span>
-                )}
+                {/* No "last reviewed" line: there is no named medical reviewer, and the
+                    note below states the article has not been reviewed by a physician.
+                    The real content date lives in the article's dateModified/schema. */}
               </div>
 
               {/* Evidence Strength Badge */}
@@ -534,12 +532,15 @@ const BlogArticlePage = () => {
                 Next Steps & Resources
               </h3>
               <ul className="space-y-3 mb-8">
+                {/* Affiliate and download resources must carry an explicit `url`. There is
+                    no /buy/* route, and download targets are no longer derived from the
+                    label (the derived filenames mostly did not exist). */}
                 {article.resources.map((resource: any, index: number) => (
                   <li key={index} className="flex items-start">
                     <span className="text-emerald-600 mr-3 font-bold">→</span>
                     {resource.action === 'affiliate' ? (
                       <a 
-                        href={`/buy/${resource.affiliateId}`} 
+                        href={resource.url}
                         className="text-emerald-700 hover:text-emerald-800 underline flex items-center gap-1"
                       >
                         {resource.text}
@@ -547,7 +548,7 @@ const BlogArticlePage = () => {
                       </a>
                     ) : resource.action === 'download' ? (
                       <a 
-                        href={`/downloads/${resource.text.toLowerCase().replace(/\s+/g, '-')}.pdf`}
+                        href={resource.url}
                         className="text-emerald-700 hover:text-emerald-800 underline flex items-center gap-1"
                       >
                         {resource.text}
@@ -649,20 +650,12 @@ const BlogArticlePage = () => {
           </div>
         </article>
 
-        {/* STICKY AFFILIATE CTA (if applicable) */}
-        {article.hasAffiliateLinks && ctaConfig && (
-          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg p-4 z-50">
-            <div className="container mx-auto max-w-4xl flex items-center justify-between">
-              <div className="flex-1">
-                <p className="font-semibold text-gray-900">{ctaConfig.headline}</p>
-                <p className="text-sm text-gray-600">{ctaConfig.subheadline}</p>
-              </div>
-              <Button variant={ctaConfig.variant || 'primary'} href={ctaConfig.ctaUrl}>
-                {ctaConfig.ctaText}
-              </Button>
-            </div>
-          </div>
-        )}
+        {/* Sticky affiliate CTA removed together with useAffiliateCTA. The hook
+            returned {text,url,badge,description} but this block destructured
+            {ctaConfig} and read headline/subheadline/ctaUrl/ctaText/variant, none of
+            which existed — so the CTA never rendered. Its only reachable fallback was
+            a bare, untagged https://amazon.com. No article carried a real CTA URL, so
+            there was nothing to read. Re-add only with a real per-article url. */}
       </div>
     </>
   );

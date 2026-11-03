@@ -567,37 +567,10 @@ const BerberineVsMetformin: React.FC = () => {
             </div>
           </section>
 
-          {/* CTA #2 — End of Article */}
-          <section className="mb-16">
-            <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-8">
-              <div className="flex items-start gap-4">
-                <span className="text-4xl flex-shrink-0">💊</span>
-                <div className="flex-1">
-                  <p className="text-xs font-bold uppercase tracking-widest text-amber-700 mb-1">
-                    Supplements &amp; Natural Health
-                  </p>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                    Want a Natural First Step Before Talking to Your Doctor About Metformin?
-                  </h3>
-                  <p className="text-gray-700 mb-4 leading-relaxed">
-                    Before committing to a prescription, many readers find it helpful to see the full landscape
-                    of clinically studied natural options — ranked by evidence strength, purity, and value.
-                    We compared the top 5 blood sugar supplements using 2024–2026 peer-reviewed data.
-                  </p>
-                  <Link
-                    to="/blog/best-diabetes-supplements"
-                    className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-3 rounded-xl transition shadow-md"
-                  >
-                    Read: Best Diabetes Supplements of 2026 — Ranked &amp; Compared
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                  <p className="text-xs text-gray-500 mt-3">
-                    Evidence-based · GMP-certified picks only · 2024–2026 clinical data
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
+          {/* ── CTA #2 removed — cross-silo link pointed to /blog/best-diabetes-supplements,
+              which does not exist (none of its 5 ranked products could be matched to
+              real verifiable listings). The "we compared the top 5" claim was therefore
+              unsupported. Do not re-add until a real ranking page exists. ── */}
 
           {/* References */}
           <section className="mb-16">

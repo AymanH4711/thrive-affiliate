@@ -18,7 +18,6 @@ import {
   AlertCircle,
   Heart,
   Zap,
-  ArrowRight,
   TrendingDown,
   Shield,
   Microscope
@@ -126,11 +125,10 @@ const citations = [
   },
   {
     authors: 'Centers for Disease Control and Prevention (CDC)',
-    year: 2026,
-    title: 'National Diabetes Statistics Report: Updated prevalence and incidence of diabetes and prediabetes in the United States, 2023–2026',
-    journal: 'CDC Vital Statistics',
-    url: 'https://gis.cdc.gov/grasp/diabetes/diabetesatlas-statsreport.html',
-    published: 'March 11, 2026',
+    year: 'n.d.',
+    title: 'National Diabetes Statistics Report',
+    journal: 'CDC, continuously updated',
+    url: 'https://www.cdc.gov/diabetes/php/data-research/index.html',
     note: 'Latest data: 115.2 million US adults with prediabetes (43.5% of adult population); 39.8 million with total diabetes'
   },
   {
@@ -343,7 +341,7 @@ const PrediabetesVsType2Diabetes: React.FC = () => {
             <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 mb-6">
               <p className="text-blue-900 font-semibold flex items-start">
                 <Zap className="w-5 h-5 mr-3 text-blue-600 flex-shrink-0 mt-0.5" />
-                <span><strong>The Statistic That Should Get Your Attention:</strong> The CDC's March 2026 National Diabetes Statistics Report finds that approximately <strong>115.2 million American adults have prediabetes</strong>—that's <strong>43.5% of the adult population</strong>, or nearly 1 in 2.3 adults. Yet <strong>only 21.4% are aware</strong> they have it. The vast majority are driving toward that red light without realizing it.</span>
+                <span><strong>The Statistic That Should Get Your Attention:</strong> The CDC's National Diabetes Statistics Report, most recently updated September 2026, finds that approximately <strong>115.2 million American adults have prediabetes</strong>—that's <strong>43.5% of the adult population</strong>, or nearly 1 in 2.3 adults. Yet <strong>only 21.4% are aware</strong> they have it. The vast majority are driving toward that red light without realizing it.</span>
               </p>
             </div>
           </section>
@@ -352,7 +350,7 @@ const PrediabetesVsType2Diabetes: React.FC = () => {
           <section className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">The Diabetes Epidemic: 2026 CDC Data</h2>
             <p className="text-gray-700 mb-8 text-lg">
-              The most recent National Diabetes Statistics Report (March 2026) reveals the scale of the diabetes crisis in America. Here's what you need to know:
+              The most recent National Diabetes Statistics Report (updated September 2026) reveals the scale of the diabetes crisis in America. Here's what you need to know:
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-8">
@@ -399,7 +397,7 @@ const PrediabetesVsType2Diabetes: React.FC = () => {
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-400 rounded-xl p-6">
                 <h3 className="text-2xl font-bold text-blue-900 mb-3">📊 Key Demographics</h3>
                 <div className="space-y-2 text-sm text-blue-800">
-                  <p><strong>Total U.S. Population:</strong> 12.0% have diagnosed diabetes</p>
+                  <p><strong>Total U.S. Population:</strong> 12.0% have diabetes (diagnosed or undiagnosed)</p>
                   <p><strong>Type 1 Diabetes:</strong> 2.1 million people (including 314,000 children)</p>
                   <p><strong>New Diagnoses (2023):</strong> 1.512 million new cases of diabetes</p>
                   <p><strong>Incidence Rate:</strong> 6.4 per 1,000 people per year</p>
@@ -826,38 +824,10 @@ const PrediabetesVsType2Diabetes: React.FC = () => {
             </div>
           </section>
 
-          {/* ── CTA #2 — END OF CONTENT — Supplements Cross-Link ── */}
-          <section className="mb-12">
-            <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-8">
-              <div className="flex items-start gap-4">
-                <span className="text-4xl flex-shrink-0">💊</span>
-                <div className="flex-1">
-                  <p className="text-xs font-bold uppercase tracking-widest text-amber-700 mb-1">
-                    Supplements &amp; Natural Health
-                  </p>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                    Learn About Supplements: The Natural Support Option for Prediabetes
-                  </h3>
-                  <p className="text-gray-700 mb-4 leading-relaxed">
-                    Diet and exercise are the foundation. But clinically studied supplements — berberine,
-                    Ceylon cinnamon, and chromium picolinate — target the exact insulin resistance
-                    pathways described in this article. We ranked the top 5 options using 2024–2026
-                    peer-reviewed clinical data, so you can make an informed decision with your doctor.
-                  </p>
-                  <Link
-                    to="/blog/best-diabetes-supplements"
-                    className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-3 rounded-xl transition shadow-md"
-                  >
-                    Read: Best Diabetes Supplements of 2026 — Ranked &amp; Compared
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                  <p className="text-xs text-gray-500 mt-3">
-                    Evidence-based · GMP-certified picks only · 2024–2026 clinical data
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
+          {/* ── CTA #2 removed — cross-silo link pointed to /blog/best-diabetes-supplements,
+              which does not exist (none of its 5 ranked products could be matched to
+              real verifiable listings). The "we ranked the top 5" claim was therefore
+              unsupported. Do not re-add until a real ranking page exists. ── */}
 
           {/* Related Articles Section */}
           <section id="related" className="mb-16">
