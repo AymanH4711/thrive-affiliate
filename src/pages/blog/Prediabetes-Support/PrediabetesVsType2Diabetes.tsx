@@ -377,7 +377,7 @@ const PrediabetesVsType2Diabetes: React.FC = () => {
                 <div className="space-y-3">
                   <div>
                     <p className="text-5xl font-bold text-red-900">39.8M</p>
-                    <p className="text-sm text-red-700">Total diabetes cases</p>
+                    <p className="text-sm text-red-700">Total diabetes cases (adults)</p>
                   </div>
                   <div className="border-t border-red-300 pt-3">
                     <div>

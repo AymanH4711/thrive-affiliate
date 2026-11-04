@@ -5,7 +5,6 @@ import { SEO } from '../components/seo/SEO';
 import { useAuthorityPack } from '../hooks/useAuthorityPack';
 import { useProducts } from '../hooks/useProducts';
 import { formatDate } from '../lib/utils';
-import { articleSiloMap } from "../data/articleSiloMap";
 import { 
   ArrowLeft, 
   Clock, 
@@ -418,6 +417,15 @@ const BlogArticlePage = () => {
     return <Navigate to={article._redirect} replace />;
   }
 
+  // Related articles come from this same record rather than articleSiloMap:
+  // it is the only source that carries a canonical `url` for every article,
+  // while articleSiloMap entries expose `slug` (and one of those slugs,
+  // cgm-vs-blood-meter, matches no route). Matching on pillarId keeps the
+  // pairing in the same taxonomy the authority-pack and product lookups use.
+  const relatedArticles = Object.entries(articles)
+    .filter(([slug, item]) => slug !== articleId && !item._redirect && item.pillarId === article.pillarId)
+    .slice(0, 2);
+
   return (
     <>
       <SEO
@@ -615,15 +623,13 @@ const BlogArticlePage = () => {
             )}
 
             {/* RELATED ARTICLES */}
-            <Card className="mb-8 bg-white p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Related Articles</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {articleSiloMap
-                  .filter((item: any) => item.category === article.category && item.url !== article.url)
-                  .slice(0, 2)
-                  .map((relatedItem: any, index: number) => (
-                    <Link 
-                      key={index}
+            {relatedArticles.length > 0 && (
+              <Card className="mb-8 bg-white p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Related Articles</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {relatedArticles.map(([slug, relatedItem]) => (
+                    <Link
+                      key={slug}
                       to={relatedItem.url}
                       className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-emerald-300 hover:bg-emerald-50 transition-colors"
                     >
@@ -636,8 +642,9 @@ const BlogArticlePage = () => {
                       </div>
                     </Link>
                   ))}
-              </div>
-            </Card>
+                </div>
+              </Card>
+            )}
 
             {/* PER-ARTICLE MEDICAL DISCLAIMER */}
             <div className="mt-8 bg-amber-50 border border-amber-200 rounded-2xl p-6">
