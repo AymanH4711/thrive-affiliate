@@ -259,6 +259,10 @@ const articles: Record<string, any> = {
     ]
   },
   'sleep-blood-sugar': {
+    // Superseded by the dedicated sleep pillar page, which carries the same
+    // topic with sourced claims. Kept as a redirect (content retained below
+    // for reference / a future rewrite), same pattern as the entry above.
+    _redirect: '/prediabetes-sleep-stress',
     title: 'Sleep & Blood Sugar: The 7-9 Hour Science',
     description: 'How poor sleep raises fasting glucose and what to do about it. Sleep optimization protocol for glucose control.',
     category: 'Sleep & Stress',
