@@ -71,7 +71,9 @@ export const blogMeta: BlogArticleMeta = {
   excerpt: "A comprehensive comparison between Continuous Glucose Monitors and traditional blood glucose meters — accuracy, cost, and which is right for you. Coming soon.",
   readTime: "Coming soon",
   image: "/images/og-default.png",
-  path: "/blog/cgm-vs-blood-glucose-meter",
+  // Must match the route registered in App.tsx (/blog/cgm-vs-bgm). The old
+  // value had no route and silently redirected to /blog via the SPA fallback.
+  path: "/blog/cgm-vs-bgm",
   category: "monitoring",
   isPublished: false,
 };
