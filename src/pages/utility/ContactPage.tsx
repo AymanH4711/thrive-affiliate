@@ -15,7 +15,7 @@ const TOPIC_TAGS = [
 
 const RESPONSE_STEPS = [
   { step: '01', title: 'Submit your message', desc: 'Fill out the form with as much detail as you can.' },
-  { step: '02', title: 'Confirmation sent', desc: 'You\'ll receive an auto-confirmation to your inbox.' },
+  { step: '02', title: 'Editorial review', desc: 'Your message is reviewed by our editorial team.' },
   { step: '03', title: 'We respond', desc: 'Our editorial team aims to reply within 2 business days (Mon–Fri, 9AM–5PM GMT). Messages sent Friday or before a public holiday will be answered the next working day.' },
 ];
 
@@ -26,8 +26,9 @@ export default function ContactPage() {
     email: '',
     subject: '',
     message: '',
-    // Hidden honeypot field. Real visitors never see or fill this.
-    company: '',
+    // Honeypot field. Deliberately non-semantic and off-screen so browser
+    // autofill cannot target it. Real visitors never see or fill this.
+    hp_contact_7c3a91: '',
   });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
@@ -51,9 +52,9 @@ export default function ContactPage() {
     setError('');
 
     // Honeypot: silently accept, but never send, anything a bot fills in.
-    if (formData.company.trim()) {
+    if (formData.hp_contact_7c3a91.trim()) {
       setSubmitted(true);
-      setFormData({ name: '', email: '', subject: '', message: '', company: '' });
+      setFormData({ name: '', email: '', subject: '', message: '', hp_contact_7c3a91: '' });
       setTimeout(() => setSubmitted(false), 5000);
       return;
     }
@@ -86,7 +87,7 @@ export default function ContactPage() {
 
       if (response.ok && data.success) {
         setSubmitted(true);
-        setFormData({ name: '', email: '', subject: '', message: '', company: '' });
+        setFormData({ name: '', email: '', subject: '', message: '', hp_contact_7c3a91: '' });
         setTimeout(() => setSubmitted(false), 5000);
         return;
       }
@@ -140,7 +141,7 @@ export default function ContactPage() {
 
     await emailjs.sendForm(serviceId, templateId, formRef.current);
     setSubmitted(true);
-    setFormData({ name: '', email: '', subject: '', message: '', company: '' });
+    setFormData({ name: '', email: '', subject: '', message: '', hp_contact_7c3a91: '' });
     setTimeout(() => setSubmitted(false), 5000);
   };
 
@@ -324,19 +325,25 @@ export default function ContactPage() {
                   />
                 </div>
 
-                {/* Honeypot: hidden from people, tempting to simple bots. */}
-                <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
-                  <label htmlFor="contact-company">Company</label>
-                  <input
-                    id="contact-company"
-                    type="text"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleChange}
-                    tabIndex={-1}
-                    autoComplete="off"
-                  />
-                </div>
+                {/* Honeypot: off-screen and non-semantic so autofill ignores it. */}
+                <input
+                  type="text"
+                  name="hp_contact_7c3a91"
+                  id="hp_contact_7c3a91"
+                  value={formData.hp_contact_7c3a91}
+                  onChange={handleChange}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  tabIndex={-1}
+                  style={{
+                    position: 'absolute',
+                    left: '-9999px',
+                    top: 'auto',
+                    width: '1px',
+                    height: '1px',
+                    overflow: 'hidden',
+                  }}
+                />
 
                 {/* GDPR / Privacy consent notice — required for UK/EU/AU/CA readers */}
                 <p className="text-xs text-gray-500 leading-relaxed border border-gray-100 bg-gray-50 rounded-xl px-4 py-3">

@@ -35,7 +35,10 @@ interface ContactRequestBody {
   email?: string;
   subject?: string;
   message?: string;
-  company?: string; // honeypot; must stay empty
+  // Honeypot fields; both must stay empty. hp_contact_7c3a91 is the current
+  // name; company is the legacy name kept for tabs running a cached bundle.
+  hp_contact_7c3a91?: string;
+  company?: string;
   turnstileToken?: string;
 }
 
@@ -117,7 +120,11 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   const email = typeof body.email === 'string' ? body.email.trim().slice(0, 320) : '';
   const subject = typeof body.subject === 'string' ? body.subject.trim().slice(0, 200) : '';
   const message = typeof body.message === 'string' ? body.message.trim().slice(0, 5000) : '';
-  const honeypot = typeof body.company === 'string' ? body.company.trim() : '';
+  const honeypot =
+    (typeof body.hp_contact_7c3a91 === 'string'
+      ? body.hp_contact_7c3a91.trim()
+      : '') ||
+    (typeof body.company === 'string' ? body.company.trim() : '');
 
   if (honeypot) {
     // Pretend the message was accepted so simple bots do not learn what failed.
