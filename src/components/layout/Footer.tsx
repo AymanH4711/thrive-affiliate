@@ -1,6 +1,6 @@
 // src/components/layout/Footer.tsx
 import { Link } from 'react-router-dom';          // FIX 1: real router Link (was mock — caused full page reloads)
-import { Facebook, Twitter, Instagram } from 'lucide-react';
+import { Facebook } from 'lucide-react';
 import Logo from '../Logo';                        // FIX 2: real Logo component (was mock with wrong image path)
 
 export default function Footer() {
@@ -24,8 +24,20 @@ export default function Footer() {
               <a href="#" aria-label="Facebook" className="bg-white p-2.5 rounded-full shadow-sm text-gray-400 hover:text-emerald-600 transition border border-gray-100">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" aria-label="Twitter / X" className="bg-white p-2.5 rounded-full shadow-sm text-gray-400 hover:text-emerald-600 transition border border-gray-100">
-                <Twitter className="w-5 h-5" />
+              <a
+                href="https://x.com/thrivehealth360"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X — @thrivehealth360"
+                title="@thrivehealth360 on X"
+                className="bg-white p-2.5 rounded-full shadow-sm text-gray-400 hover:text-emerald-600 transition border border-gray-100"
+              >
+                <img
+                  src="/images/brand/X.svg"
+                  alt=""
+                  aria-hidden="true"
+                  className="w-5 h-5 object-contain"
+                />
               </a>
               <a
                 href="https://www.instagram.com/thrivehealth360/"
@@ -33,9 +45,14 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 aria-label="Instagram — @thrivehealth360"
                 title="@thrivehealth360 on Instagram"
-                className="bg-[linear-gradient(45deg,#f09433_0%,#e6683c_25%,#dc2743_50%,#cc2366_75%,#bc1888_100%)] p-2.5 rounded-full shadow-sm text-white hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#dc2743] focus-visible:ring-offset-2 transition border border-transparent"
+                className="bg-white p-2.5 rounded-full shadow-sm text-gray-400 hover:text-emerald-600 transition border border-gray-100"
               >
-                <Instagram className="w-5 h-5" />
+                <img
+                  src="/images/brand/Instagram.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="w-5 h-5 object-contain"
+                />
               </a>
               {/* ── Pinterest Link ────────────────────────────────────────── */}
               <a
