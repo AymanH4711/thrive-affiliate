@@ -187,7 +187,7 @@ export default function PrivacyPolicy() {
           <Section title="10. Security">
             <p>
               We implement reasonable technical and organisational measures to protect your data — including HTTPS
-              encryption, access controls, and secure hosting via Netlify. No method of transmission over the
+              encryption, access controls, and secure hosting via Cloudflare. No method of transmission over the
               internet is 100% secure; we cannot guarantee absolute security.
             </p>
           </Section>
