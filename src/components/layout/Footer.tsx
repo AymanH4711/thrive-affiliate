@@ -21,7 +21,14 @@ export default function Footer() {
               science-backed protocols, natural strategies, and clinical research.
             </p>
             <div className="flex gap-4">
-              <a href="#" aria-label="Facebook" className="bg-white p-2.5 rounded-full shadow-sm text-gray-400 hover:text-emerald-600 transition border border-gray-100">
+              <a
+                href="https://www.facebook.com/profile.php?id=61596516590704"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook — ThriveHealth360"
+                title="ThriveHealth360 on Facebook"
+                className="bg-white p-2.5 rounded-full shadow-sm text-gray-400 hover:text-emerald-600 transition border border-gray-100"
+              >
                 <Facebook className="w-5 h-5" />
               </a>
               <a
